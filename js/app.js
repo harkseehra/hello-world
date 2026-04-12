@@ -25,6 +25,31 @@ const state = {
   entries:  [],
 };
 
+// ── Vocab ─────────────────────────────────────────────────────────────────────
+let vocab = {};   // Persian word (normalized) → short English gloss
+
+const FA_DIAC = /[\u064B-\u065F\u0670\u0640]/g;
+function normFa(w) {
+  return w
+    .replace(FA_DIAC, '')          // strip tashkeel + kashida
+    .replace(/[آأإٱ]/g, 'ا')      // alef variants
+    .replace(/\u064A/g, '\u06CC') // Arabic ya → Farsi ya
+    .replace(/\u0643/g, '\u06A9');// Arabic kaf → Farsi kaf
+}
+
+fetch('data/vocab.json')
+  .then(r => r.json())
+  .then(d => {
+    vocab = d;
+    // Re-render the current page so word spans get applied
+    if (state.pages.length) {
+      const pg = state.pages[state.page];
+      if (state.mode === 'focus') renderFocusPage(pg);
+      else renderScholarPage(pg);
+    }
+  })
+  .catch(() => {});   // tooltips gracefully absent if file missing
+
 // ── DOM ───────────────────────────────────────────────────────────────────────
 const html           = document.documentElement;
 const progressBar    = document.getElementById('progress-bar');
@@ -58,6 +83,7 @@ const pager          = document.getElementById('pager');
 const pagerPrevBtn   = document.getElementById('pager-prev');
 const pagerNextBtn   = document.getElementById('pager-next');
 const pagerInfo      = document.getElementById('pager-info');
+const vocabPopup     = document.getElementById('vocab-popup');
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 
@@ -385,9 +411,19 @@ function makeCard(entry) {
     faWrap.dir       = 'rtl';
 
     (entry.farsi || '').split(' / ').forEach(h => {
-      const span = document.createElement('span');
-      span.textContent = h.trim();
-      faWrap.appendChild(span);
+      const hSpan = document.createElement('span');
+      h.trim().split(/\s+/).forEach((w, i, arr) => {
+        const key = normFa(w.replace(/[^\u0600-\u06FF]/g, ''));
+        const wSpan = document.createElement('span');
+        wSpan.textContent = w;
+        if (key && vocab[key]) {
+          wSpan.className      = 'fa-word';
+          wSpan.dataset.gloss  = vocab[key];
+        }
+        hSpan.appendChild(wSpan);
+        if (i < arr.length - 1) hSpan.appendChild(document.createTextNode('\u200C '));
+      });
+      faWrap.appendChild(hSpan);
     });
 
     const enEl = document.createElement('p');
@@ -443,10 +479,20 @@ function makeScholarRow(entry) {
     fa.dir       = 'rtl';
 
     (entry.farsi || '').split(' / ').forEach(h => {
-      const span = document.createElement('span');
-      span.textContent   = h.trim();
-      span.style.display = 'block';
-      fa.appendChild(span);
+      const hSpan = document.createElement('span');
+      hSpan.style.display = 'block';
+      h.trim().split(/\s+/).forEach((w, i, arr) => {
+        const key = normFa(w.replace(/[^\u0600-\u06FF]/g, ''));
+        const wSpan = document.createElement('span');
+        wSpan.textContent = w;
+        if (key && vocab[key]) {
+          wSpan.className      = 'fa-word';
+          wSpan.dataset.gloss  = vocab[key];
+        }
+        hSpan.appendChild(wSpan);
+        if (i < arr.length - 1) hSpan.appendChild(document.createTextNode('\u200C '));
+      });
+      fa.appendChild(hSpan);
     });
 
     const en = document.createElement('div');
@@ -700,6 +746,42 @@ scholarGrid.addEventListener('scroll',  updateProgress, { passive: true });
 // Force focus mode if window shrinks to mobile while in scholar view
 window.addEventListener('resize', () => {
   if (isMobile() && state.mode === 'scholar') setMode('focus');
+}, { passive: true });
+
+// ── Vocab popup (mobile tap) ──────────────────────────────────────────────────
+
+function showVocabPopup(word, gloss) {
+  // Sanitize: use textContent (not innerHTML) for the word to prevent XSS
+  vocabPopup.innerHTML = '';
+  const wordEl = document.createElement('span');
+  wordEl.className  = 'vp-word';
+  wordEl.lang       = 'fa';
+  wordEl.dir        = 'rtl';
+  wordEl.textContent = word;
+  const glossEl = document.createTextNode(gloss);
+  vocabPopup.appendChild(wordEl);
+  vocabPopup.appendChild(glossEl);
+  vocabPopup.classList.add('visible');
+}
+
+function hideVocabPopup() {
+  vocabPopup.classList.remove('visible');
+}
+
+[focusScroll, scholarGrid].forEach(container => {
+  container.addEventListener('touchend', e => {
+    const span = e.target.closest('.fa-word');
+    if (span) {
+      e.preventDefault();
+      showVocabPopup(span.textContent, span.dataset.gloss || '');
+    }
+  }, { passive: false });
+});
+
+document.addEventListener('touchstart', e => {
+  if (!e.target.closest('#vocab-popup') && !e.target.closest('.fa-word')) {
+    hideVocabPopup();
+  }
 }, { passive: true });
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
