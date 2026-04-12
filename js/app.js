@@ -509,7 +509,10 @@ function buildTOC(entries) {
 
 // ── Mode ──────────────────────────────────────────────────────────────────────
 
+function isMobile() { return window.innerWidth <= 600; }
+
 function setMode(m) {
+  if (m === 'scholar' && isMobile()) return;
   state.mode        = m;
   html.dataset.mode = m;
 
@@ -693,6 +696,11 @@ document.addEventListener('click', e => {
 
 focusScroll.addEventListener('scroll',  updateProgress, { passive: true });
 scholarGrid.addEventListener('scroll',  updateProgress, { passive: true });
+
+// Force focus mode if window shrinks to mobile while in scholar view
+window.addEventListener('resize', () => {
+  if (isMobile() && state.mode === 'scholar') setMode('focus');
+}, { passive: true });
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
 

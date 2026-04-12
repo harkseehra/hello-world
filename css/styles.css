@@ -1005,6 +1005,7 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
 @media (max-width: 600px) {
   #btn-menu  { display: flex; }
   #book-tabs { display: none;  }
+  #btn-mode  { display: none;  }
 }
 
 
