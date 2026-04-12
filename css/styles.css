@@ -1006,6 +1006,8 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
   #btn-menu  { display: flex; }
   #book-tabs { display: none;  }
   #btn-mode  { display: none;  }
+  #nav-actions { margin-left: auto; padding: 0 16px; }
+  #site-logo   { padding: 0 16px; }
 }
 
 
