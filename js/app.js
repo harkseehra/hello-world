@@ -4,10 +4,10 @@
 // ── Size tables ───────────────────────────────────────────────────────────────
 const SIZE_STEPS  = 6;
 const SIZE_EN     = [16, 18, 20, 22, 24, 26];
-const SIZE_FA     = [20, 22, 24, 26, 28, 30];     // Naskh
-const SIZE_FA_N   = [24, 26, 28, 30, 32, 34];     // Nastaliq
+const SIZE_FA     = [20, 22, 24, 26, 28, 30];     // Naskh (Vazirmatn)
+const SIZE_FA_N   = [20, 22, 24, 26, 28, 30];     // IranSans (same metrics as Naskh)
 const LH_FA       = [2.10, 2.10, 2.10, 2.10, 2.15, 2.20];
-const LH_FA_N     = [2.60, 2.60, 2.60, 2.60, 2.65, 2.70];
+const LH_FA_N     = [2.10, 2.10, 2.10, 2.10, 2.15, 2.20];
 const LH_EN       = [1.80, 1.80, 1.80, 1.80, 1.85, 1.85];
 
 const VERSES_PER_PAGE = 10;
@@ -155,11 +155,11 @@ function setEnColor(c, save = true) {
 
 function applySizes() {
   const s        = state.sizeStep;
-  const nastaliq = state.font === 'nastaliq';
+  const iransans = state.font === 'iransans';
   const serif    = html.dataset.enFont === 'serif';
 
-  html.style.setProperty('--fz-fa', (nastaliq ? SIZE_FA_N[s] : SIZE_FA[s]) + 'px');
-  html.style.setProperty('--lh-fa',  nastaliq ? LH_FA_N[s]  : LH_FA[s]);
+  html.style.setProperty('--fz-fa', (iransans ? SIZE_FA_N[s] : SIZE_FA[s]) + 'px');
+  html.style.setProperty('--lh-fa',  iransans ? LH_FA_N[s]  : LH_FA[s]);
   html.style.setProperty('--fz-en', (SIZE_EN[s] + (serif ? 2 : 0)) + 'px');
   html.style.setProperty('--lh-en',  LH_EN[s]);
 
