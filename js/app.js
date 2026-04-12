@@ -31,6 +31,7 @@ const progressBar    = document.getElementById('progress-bar');
 const bookTabs       = document.querySelectorAll('.book-tab');
 const btnMode        = document.getElementById('btn-mode');
 const btnMenu        = document.getElementById('btn-menu');
+const btnThemeToggle = document.getElementById('btn-theme-toggle');
 const btnSearch      = document.getElementById('btn-search');
 const btnSettings    = document.getElementById('btn-settings');
 const mobileMenu     = document.getElementById('mobile-menu');
@@ -643,6 +644,10 @@ btnSettings.addEventListener('click', e => {
 themeOpts.addEventListener('click', e => {
   const btn = e.target.closest('[data-theme]');
   if (btn) setTheme(btn.dataset.theme);
+});
+
+btnThemeToggle.addEventListener('click', () => {
+  setTheme(state.theme === 'dark' ? 'light' : 'dark');
 });
 
 fontOpts.addEventListener('click', e => {
