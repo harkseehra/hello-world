@@ -30,8 +30,10 @@ const html           = document.documentElement;
 const progressBar    = document.getElementById('progress-bar');
 const bookTabs       = document.querySelectorAll('.book-tab');
 const btnMode        = document.getElementById('btn-mode');
+const btnMenu        = document.getElementById('btn-menu');
 const btnSearch      = document.getElementById('btn-search');
 const btnSettings    = document.getElementById('btn-settings');
+const mobileMenu     = document.getElementById('mobile-menu');
 const settingsPanel  = document.getElementById('settings-panel');
 const themeOpts      = document.getElementById('theme-options');
 const fontOpts       = document.getElementById('font-options');
@@ -528,6 +530,17 @@ function setMode(m) {
 
 // ── Panels ────────────────────────────────────────────────────────────────────
 
+function openMenu()  {
+  mobileMenu.classList.add('open');
+  mobileMenu.removeAttribute('aria-hidden');
+  btnMenu.setAttribute('aria-expanded', 'true');
+}
+function closeMenu() {
+  mobileMenu.classList.remove('open');
+  mobileMenu.setAttribute('aria-hidden', 'true');
+  btnMenu.setAttribute('aria-expanded', 'false');
+}
+
 function openSettings()  {
   settingsPanel.classList.add('open');
   btnSettings.setAttribute('aria-expanded', 'true');
@@ -610,6 +623,15 @@ bookTabs.forEach(t => t.addEventListener('click', () => switchBook(parseInt(t.da
 
 btnMode.addEventListener('click', () => setMode(state.mode === 'focus' ? 'scholar' : 'focus'));
 
+btnMenu.addEventListener('click', e => {
+  e.stopPropagation();
+  mobileMenu.classList.contains('open') ? closeMenu() : openMenu();
+});
+
+mobileMenu.addEventListener('click', e => {
+  if (e.target.closest('.book-tab')) closeMenu();
+});
+
 btnSettings.addEventListener('click', e => {
   e.stopPropagation();
   settingsPanel.classList.contains('open') ? closeSettings() : openSettings();
@@ -651,7 +673,7 @@ document.addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
   if (e.key === 'ArrowRight' && state.mode === 'focus') goToPage(state.page + 1,  1);
   if (e.key === 'ArrowLeft'  && state.mode === 'focus') goToPage(state.page - 1, -1);
-  if (e.key === 'Escape') { closeSearch(); closeTOC(); closeSettings(); }
+  if (e.key === 'Escape') { closeSearch(); closeTOC(); closeSettings(); closeMenu(); }
   if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
 });
 
@@ -666,6 +688,7 @@ document.getElementById('site-logo').addEventListener('click', e => {
 
 document.addEventListener('click', e => {
   if (!settingsPanel.contains(e.target) && e.target !== btnSettings) closeSettings();
+  if (!mobileMenu.contains(e.target) && e.target !== btnMenu) closeMenu();
 });
 
 focusScroll.addEventListener('scroll',  updateProgress, { passive: true });

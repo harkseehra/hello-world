@@ -39,6 +39,13 @@
     </div>
 
     <div id="nav-actions">
+      <button id="btn-menu" class="nav-btn" aria-label="Open menu" aria-expanded="false">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <line x1="2" y1="4.5"  x2="14" y2="4.5"  stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="2" y1="8"    x2="14" y2="8"    stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="2" y1="11.5" x2="14" y2="11.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </button>
       <button id="btn-search" class="nav-btn" aria-label="Search">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
           <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.4"/>
@@ -54,6 +61,18 @@
       </button>
     </div>
   </nav>
+
+  <!-- ── Mobile menu ── -->
+  <div id="mobile-menu" aria-hidden="true">
+    <div id="mobile-book-tabs" role="tablist" aria-label="Select book">
+      <button class="book-tab active" role="tab" aria-selected="true"  data-book="1">Book 1</button>
+      <button class="book-tab"        role="tab" aria-selected="false" data-book="2">Book 2</button>
+      <button class="book-tab"        role="tab" aria-selected="false" data-book="3">Book 3</button>
+      <button class="book-tab"        role="tab" aria-selected="false" data-book="4">Book 4</button>
+      <button class="book-tab"        role="tab" aria-selected="false" data-book="5">Book 5</button>
+      <button class="book-tab"        role="tab" aria-selected="false" data-book="6">Book 6</button>
+    </div>
+  </div>
 
   <!-- ── Settings panel ── -->
   <div id="settings-panel" aria-hidden="true" role="dialog" aria-label="Display options">

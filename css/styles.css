@@ -932,7 +932,83 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
 }
 
 
-/* ── 16. Reduced motion ──────────────────────────────────────── */
+/* ── 16. Mobile burger menu ──────────────────────────────────── */
+
+/* Burger button — hidden on desktop, visible on mobile */
+#btn-menu { display: none; }
+
+/* Mobile menu panel — slides down from nav */
+#mobile-menu {
+  position: fixed;
+  top: calc(var(--nav-h) + var(--progress-h));
+  left: 0; right: 0;
+  background: var(--c-nav-bg);
+  border-bottom: 1px solid var(--c-nav-border);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.09);
+  z-index: 895;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition: opacity     var(--dur-fast) var(--ease-out),
+              transform   var(--dur-mid)  var(--ease-out),
+              background  var(--dur-mid)  var(--ease-out),
+              border-color var(--dur-mid) var(--ease-out);
+}
+#mobile-menu.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* Book list inside mobile menu */
+#mobile-book-tabs {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 0 10px;
+}
+
+#mobile-book-tabs .book-tab {
+  height: 44px;
+  padding: 0 20px;
+  justify-content: flex-start;
+  font-size: 15px;
+  border-left: 2px solid transparent;
+  transition: opacity     var(--dur-fast) var(--ease-out),
+              background  var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              color        var(--dur-mid)  var(--ease-out);
+}
+#mobile-book-tabs .book-tab:hover {
+  opacity: 0.80;
+  background: rgba(0,0,0,0.04);
+}
+[data-theme="dark"]  #mobile-book-tabs .book-tab:hover { background: rgba(255,255,255,0.06); }
+[data-theme="sepia"] #mobile-book-tabs .book-tab:hover { background: rgba(60,40,20,0.05); }
+
+#mobile-book-tabs .book-tab.active {
+  border-left-color: var(--c-accent);
+  color: var(--c-accent);
+  opacity: 1;
+}
+
+/* Active-indicator pill doesn't make sense vertically — hide it */
+#mobile-book-tabs .book-tab.active::after { display: none; }
+
+/* Burger button active state */
+#btn-menu[aria-expanded="true"] {
+  opacity: 1;
+  background: rgba(0,0,0,0.05);
+}
+[data-theme="dark"]  #btn-menu[aria-expanded="true"] { background: rgba(255,255,255,0.07); }
+[data-theme="sepia"] #btn-menu[aria-expanded="true"] { background: rgba(60,40,20,0.06); }
+
+@media (max-width: 600px) {
+  #btn-menu  { display: flex; }
+  #book-tabs { display: none;  }
+}
+
+
+/* ── 18. Reduced motion ──────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
