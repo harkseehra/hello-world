@@ -3,8 +3,9 @@
    ═══════════════════════════════════════════════════════════════ */
 
 @font-face {
-  font-family: 'IranNastaliq';
-  src: url('../fonts/IranNastaliq.ttf') format('truetype');
+  font-family: 'IRANSansWeb';
+  src: url('../fonts/IRANSansWeb.woff2') format('woff2'),
+       url('../fonts/IRANSansWeb.ttf')   format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -38,7 +39,7 @@
 
   /* Font stacks */
   --font-fa-naskh:    'Vazirmatn', sans-serif;
-  --font-fa-nastaliq: 'IranNastaliq', serif;
+  --font-fa-iransans: 'IRANSansWeb', sans-serif;
   --font-fa:          var(--font-fa-naskh);
 
   --font-en-sans:  'DM Sans', system-ui, sans-serif;
@@ -67,8 +68,8 @@
 }
 
 /* ── Font toggles ────────────────────────────────────────────── */
-[data-font="nastaliq"] {
-  --font-fa: var(--font-fa-nastaliq);
+[data-font="iransans"] {
+  --font-fa: var(--font-fa-iransans);
   /* fz-fa / lh-fa set by JS applySizes() */
 }
 
