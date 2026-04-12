@@ -50,6 +50,45 @@ fetch('data/vocab.json')
   })
   .catch(() => {});   // tooltips gracefully absent if file missing
 
+// Tokenize an English string into lowercase words for matching
+const EN_STOP = new Set(['a','an','the','of','in','to','and','or','is','it',
+  'be','as','by','for','on','at','his','her','her','its','he','she','they',
+  'that','this','with','from','not','but','all','are','was','were','have',
+  'has','had','do','did','so','my','thy','thine','thou','thee','ye','me']);
+
+function enTokens(text) {
+  return (text || '').toLowerCase().replace(/[^a-z\s]/g, ' ').split(/\s+/)
+    .filter(w => w.length > 2 && !EN_STOP.has(w));
+}
+
+// Given a Steingass gloss and the verse's English translation,
+// return the single best matching English word from the translation,
+// or fall back to the first meaningful word of the gloss.
+function glossFromTranslation(steingassGloss, englishVerse) {
+  const enToks = enTokens(englishVerse);
+  if (enToks.length === 0) return steingassGloss;
+
+  const glossToks = steingassGloss.toLowerCase()
+    .replace(/[^a-z\s]/g, ' ').split(/\s+/)
+    .filter(w => w.length > 2 && !EN_STOP.has(w));
+
+  // 1) Exact match: gloss word appears verbatim in translation
+  for (const gw of glossToks) {
+    if (enToks.includes(gw)) return gw;
+  }
+
+  // 2) Stem match: first 4 chars of gloss word matches start of a translation word
+  for (const gw of glossToks) {
+    if (gw.length < 4) continue;
+    const stem = gw.slice(0, 4);
+    const hit = enToks.find(ew => ew.startsWith(stem));
+    if (hit) return hit;
+  }
+
+  // 3) Fallback: first meaningful word of the Steingass gloss
+  return glossToks[0] || steingassGloss;
+}
+
 // ── DOM ───────────────────────────────────────────────────────────────────────
 const html           = document.documentElement;
 const progressBar    = document.getElementById('progress-bar');
@@ -417,8 +456,8 @@ function makeCard(entry) {
         const wSpan = document.createElement('span');
         wSpan.textContent = w;
         if (key && vocab[key]) {
-          wSpan.className      = 'fa-word';
-          wSpan.dataset.gloss  = vocab[key];
+          wSpan.className     = 'fa-word';
+          wSpan.dataset.gloss = glossFromTranslation(vocab[key], entry.english);
         }
         hSpan.appendChild(wSpan);
         if (i < arr.length - 1) hSpan.appendChild(document.createTextNode('\u200C '));
@@ -486,8 +525,8 @@ function makeScholarRow(entry) {
         const wSpan = document.createElement('span');
         wSpan.textContent = w;
         if (key && vocab[key]) {
-          wSpan.className      = 'fa-word';
-          wSpan.dataset.gloss  = vocab[key];
+          wSpan.className     = 'fa-word';
+          wSpan.dataset.gloss = glossFromTranslation(vocab[key], entry.english);
         }
         hSpan.appendChild(wSpan);
         if (i < arr.length - 1) hSpan.appendChild(document.createTextNode('\u200C '));
