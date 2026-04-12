@@ -36,7 +36,6 @@ const btnSearch      = document.getElementById('btn-search');
 const btnSettings    = document.getElementById('btn-settings');
 const mobileMenu     = document.getElementById('mobile-menu');
 const settingsPanel  = document.getElementById('settings-panel');
-const themeOpts      = document.getElementById('theme-options');
 const fontOpts       = document.getElementById('font-options');
 const enFontOpts     = document.getElementById('en-font-options');
 const faColorOpts    = document.getElementById('fa-color-options');
@@ -95,9 +94,6 @@ function initFont() {
 function applyTheme(t) {
   state.theme        = t;
   html.dataset.theme = t;
-  document.querySelectorAll('[data-theme]').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.theme === t);
-  });
   // Keep toggle aria-label in sync with current state
   btnThemeToggle.setAttribute('aria-label', t === 'dark' ? 'Switch to day mode' : 'Switch to dark mode');
   btnThemeToggle.setAttribute('aria-pressed', t === 'dark' ? 'true' : 'false');
@@ -642,11 +638,6 @@ mobileMenu.addEventListener('click', e => {
 btnSettings.addEventListener('click', e => {
   e.stopPropagation();
   settingsPanel.classList.contains('open') ? closeSettings() : openSettings();
-});
-
-themeOpts.addEventListener('click', e => {
-  const btn = e.target.closest('[data-theme]');
-  if (btn) setTheme(btn.dataset.theme);
 });
 
 btnThemeToggle.addEventListener('click', () => {
