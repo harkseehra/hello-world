@@ -410,8 +410,8 @@ BOOKS = [
     (6, 'دفتر ششم',  'Book Six'),
 ]
 
-PDF_DIR = '/Users/harkseehra/Desktop/Masnavi.ca/project files'
-OUT_DIR = '/Users/harkseehra/Desktop/Masnavi.ca'
+PDF_DIR = '/home/user/hello-world/project files'
+OUT_DIR = '/home/user/hello-world'
 
 if __name__ == '__main__':
     import sys
