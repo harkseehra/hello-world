@@ -98,6 +98,9 @@ function applyTheme(t) {
   document.querySelectorAll('[data-theme]').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.theme === t);
   });
+  // Keep toggle aria-label in sync with current state
+  btnThemeToggle.setAttribute('aria-label', t === 'dark' ? 'Switch to day mode' : 'Switch to dark mode');
+  btnThemeToggle.setAttribute('aria-pressed', t === 'dark' ? 'true' : 'false');
 }
 
 function setTheme(t, save = true) {
