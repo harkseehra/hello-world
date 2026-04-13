@@ -234,7 +234,7 @@ def group_farsi_couplets(farsi_items):
         if group:
             last_orig_y = group[-1][2]
             gap = orig_y - last_orig_y
-            if gap > 60:
+            if gap > 120:
                 flush()
 
         group.append(item)
@@ -414,10 +414,48 @@ PDF_DIR = '/home/user/hello-world/project files'
 OUT_DIR = '/home/user/hello-world'
 
 if __name__ == '__main__':
-    import sys
-    preview = '--all' not in sys.argv
+    import sys, os
+    args = sys.argv[1:]
 
-    if preview:
+    # Single-book mode: python3 extract_book.py 4
+    single_book = None
+    if args and args[0].isdigit():
+        single_book = int(args[0])
+        args = args[1:]
+
+    preview = '--all' not in args and single_book is None
+
+    if single_book is not None:
+        # Extract one book only
+        book_row = next((b for b in BOOKS if b[0] == single_book), None)
+        if book_row is None:
+            print(f"Unknown book number {single_book}. Must be 1–6.")
+            sys.exit(1)
+        num, fa, en = book_row
+        pdf = f'{PDF_DIR}/masnavi {num} faen.pdf'
+        print(f'Extracting Book {num}…', end=' ', flush=True)
+        result = extract_book(pdf, book_number=num,
+                              book_title_fa=fa, book_title_en=en)
+        os.makedirs(f'{OUT_DIR}/data', exist_ok=True)
+        out = f'{OUT_DIR}/data/book{num}.json'
+        with open(out, 'w', encoding='utf-8') as f:
+            json.dump(result, f, ensure_ascii=False, indent=2)
+        total_verses = sum(
+            sum(1 for e in s['entries'] if e['type'] == 'verse')
+            for s in result['sections']
+        )
+        single_fa = sum(
+            sum(1 for e in s['entries']
+                if e['type'] == 'verse' and '/' not in (e.get('farsi') or ''))
+            for s in result['sections']
+        )
+        flags = result['extraction_flags']
+        print(f"{total_verses} verses, {single_fa} single-hemistich, "
+              f"{len(flags)} flagged pages"
+              + (f" ← REVIEW" if flags else " ✓"))
+        print(f"Saved → {out}")
+
+    elif preview:
         # Preview: first 8 pages of Book 1
         pdf  = f'{PDF_DIR}/masnavi 1 faen.pdf'
         print('Extracting preview (first 8 pages of Book 1)…')
@@ -428,7 +466,6 @@ if __name__ == '__main__':
         print('='*70)
         count = 0
         for sec in result['sections']:
-            title = sec['title_en'] or sec['title_fa'] or '(untitled section)'
             print(f"\n── {sec['title_en']}")
             if sec['title_fa']:
                 print(f"   {sec['title_fa']}")
@@ -447,7 +484,6 @@ if __name__ == '__main__':
 
     else:
         # Full extraction: all 6 books
-        import os
         os.makedirs(f'{OUT_DIR}/data', exist_ok=True)
         for num, fa, en in BOOKS:
             pdf = f'{PDF_DIR}/masnavi {num} faen.pdf'

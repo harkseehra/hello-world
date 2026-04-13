@@ -14,83 +14,75 @@
 /* ── 1. Tokens ───────────────────────────────────────────────── */
 
 :root {
-  /* Accent — Asa-Gao (朝顔, morning glory) */
-  --c-accent:      #5B5FCE;
-  --c-accent-rgb:  91, 95, 206;
+  --c-accent:      #bf0000;
+  --c-accent-rgb:  191, 0, 0;
 
-  /* Light — Apple system background behind cards */
-  --c-bg:          #F2F2F7;
-  --c-text-fa:     #007868;   /* Ku-jaku — peacock teal */
-  --c-text-en:     #1747B0;   /* Asa-Gao — school royal blue */
-  --c-heading:     #007F7A;   /* Ku-jaku teal */
-  --c-heading-text: #1C1C1E;  /* near-black for heading cards */
-  --c-verse-num:   rgba(91, 95, 206, 0.55);
-  --c-divider:     rgba(0, 0, 0, 0.08);
-  --c-nav-bg:      #FFFFFF;
-  --c-nav-border:  rgba(0, 0, 0, 0.09);
+  /* Light mode */
+  --c-bg:           #F2F2F7;
+  --c-text-fa:      #3c2f2f;
+  --c-text-en:      #3c2f2f;
+  --c-heading:      #8B5E3C;
+  --c-heading-text: #1C1C1E;
+  --c-verse-num:    rgba(191, 0, 0, 0.40);
+  --c-divider:      rgba(0, 0, 0, 0.08);
+  --c-nav-bg:       #FFFFFF;
+  --c-nav-border:   rgba(0, 0, 0, 0.09);
 
-  /* Cards */
-  --c-card-bg:            #FFFFFF;
-  --c-card-border:        rgba(0, 0, 0, 0.07);
-  --c-card-shadow:        0 1px 4px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.04);
-  --c-card-radius:        18px;
-  --c-heading-card-bg:    #EBEBF0;
-  --c-heading-card-border:rgba(0, 0, 0, 0.06);
+  --c-card-bg:             #FFFFFF;
+  --c-card-border:         rgba(0, 0, 0, 0.07);
+  --c-card-shadow:         0 1px 4px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.04);
+  --c-card-radius:         18px;
+  --c-heading-card-bg:     #EBEBF0;
+  --c-heading-card-border: rgba(0, 0, 0, 0.06);
 
   /* Font stacks */
-  --font-fa-naskh:    'Vazirmatn', sans-serif;
+  --font-fa-mirza:    'Mirza', serif;
   --font-fa-iransans: 'IRANSansWeb', sans-serif;
-  --font-fa:          var(--font-fa-naskh);
+  --font-fa-harmattan:'Harmattan', sans-serif;
+  --font-fa:          var(--font-fa-mirza);
 
-  --font-en-sans:  'DM Sans', system-ui, sans-serif;
-  --font-en-serif: 'Crimson Text', Georgia, serif;
-  --font-en:       var(--font-en-sans);          /* toggled by data-en-font */
+  --font-en-sans:  'Schibsted Grotesk', system-ui, sans-serif;
+  --font-en-serif: 'Amiri', Georgia, serif;
+  --font-en:       var(--font-en-sans);
 
-  --font-mono:     'JetBrains Mono', monospace;
-
-  /* Type scale — Normal */
-  --fz-fa:         22px;
-  --lh-fa:         2.10;
-  --fz-en:         18px;
-  --lh-en:         1.80;
-  --fz-verse-num:  11px;
+  /* Type scale — set by JS */
+  --fz-fa:        24px;
+  --lh-fa:        2.15;
+  --fz-en:        18px;
+  --lh-en:        1.80;
+  --fz-verse-num: 11px;
 
   /* Layout */
-  --nav-h:         52px;
-  --progress-h:     2px;
-  --col-w:         min(660px, 100vw - 56px);
+  --nav-h:      52px;
+  --progress-h:  2px;
+  --col-w:      min(660px, 100vw - 56px);
 
-  /* Motion */
+  /* Motion — deliberately slower for a calm, elegant feel */
   --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --dur-fast:    140ms;
-  --dur-mid:     260ms;
+  --dur-fast:    220ms;
+  --dur-mid:     400ms;
 }
 
 /* ── Font toggles ────────────────────────────────────────────── */
-[data-font="iransans"] {
-  --font-fa: var(--font-fa-iransans);
-  /* fz-fa / lh-fa set by JS applySizes() */
-}
+[data-font="mirza"]     { --font-fa: var(--font-fa-mirza); }
+[data-font="iransans"]  { --font-fa: var(--font-fa-iransans); }
+[data-font="harmattan"] { --font-fa: var(--font-fa-harmattan); }
+[data-en-font="serif"]  { --font-en: var(--font-en-serif); }
 
-[data-en-font="serif"] {
-  --font-en: var(--font-en-serif);
-  /* fz-en / lh-en set by JS applySizes() */
-}
-
-/* ── Dark — Grok ─────────────────────────────────────────────── */
+/* ── Dark ────────────────────────────────────────────────────── */
 [data-theme="dark"] {
-  --c-bg:         #0D0D0D;
-  --c-text-fa:    #E0E1E0;   /* moon white */
-  --c-text-en:    #7EB0E8;   /* sky blue */
-  --c-heading:    #B4B8B4;
-  --c-heading-text: #E0E1E0; /* moon white for heading cards */
-  --c-accent:     #8284F2;
-  --c-accent-rgb: 130, 132, 242;
-  --c-verse-num:  rgba(224, 225, 224, 0.50);
-  --c-divider:    rgba(255, 255, 255, 0.09);
-  --c-nav-bg:     #0D0D0D;
-  --c-nav-border: rgba(255, 255, 255, 0.09);
+  --c-bg:           #0D0D0D;
+  --c-text-fa:      #7EB8DA;
+  --c-text-en:      #7EB8DA;
+  --c-heading:      #7EB8DA;
+  --c-heading-text: #E0E1E0;
+  --c-accent:       #7EB8DA;
+  --c-accent-rgb:   126, 184, 218;
+  --c-verse-num:    rgba(126, 184, 218, 0.45);
+  --c-divider:      rgba(255, 255, 255, 0.09);
+  --c-nav-bg:       #0D0D0D;
+  --c-nav-border:   rgba(255, 255, 255, 0.09);
 
   --c-card-bg:             #1C1C1E;
   --c-card-border:         rgba(255, 255, 255, 0.08);
@@ -99,46 +91,34 @@
   --c-heading-card-border: rgba(255, 255, 255, 0.06);
 }
 
-/* ── Sepia ───────────────────────────────────────────────────── */
-[data-theme="sepia"] {
-  --c-bg:         #EDE8DC;   /* warm mat behind cards */
-  --c-text-fa:    #2B5957;
-  --c-text-en:    #3D408A;
-  --c-heading:    #8B5E3C;
+/* ── کاغذ (Kaghaz — warm paper) ──────────────────────────────── */
+[data-theme="kaghaz"] {
+  --c-bg:           #fff4e6;
+  --c-text-fa:      #3c2f2f;
+  --c-text-en:      #3c2f2f;
+  --c-heading:      #8B5E3C;
   --c-heading-text: #1A1208;
-  --c-accent:     #5B5FCE;
-  --c-accent-rgb: 91, 95, 206;
-  --c-verse-num:  rgba(91, 95, 206, 0.50);
-  --c-divider:    rgba(60, 40, 20, 0.09);
-  --c-nav-bg:     #FAF6EE;
-  --c-nav-border: rgba(60, 40, 20, 0.09);
+  --c-accent:       #bf0000;
+  --c-accent-rgb:   191, 0, 0;
+  --c-verse-num:    rgba(191, 0, 0, 0.38);
+  --c-divider:      rgba(60, 40, 20, 0.09);
+  --c-nav-bg:       #fff8ed;
+  --c-nav-border:   rgba(60, 40, 20, 0.09);
 
-  --c-card-bg:             #FAF6EE;
+  --c-card-bg:             #fffaf2;
   --c-card-border:         rgba(60, 40, 20, 0.08);
   --c-card-shadow:         0 1px 3px rgba(60,40,20,0.07);
-  --c-heading-card-bg:     #F0EAE0;
+  --c-heading-card-bg:     #fef4e0;
   --c-heading-card-border: rgba(60, 40, 20, 0.06);
 }
 
-/* ── Farsi colour tokens ─────────────────────────────────────── */
-[data-theme="light"][data-fa-color="peacock"],
-[data-theme="sepia"][data-fa-color="peacock"]  { --c-text-fa: #007868; }          /* vivid teal */
-
-[data-theme="light"][data-fa-color="irozumi"],
-[data-theme="sepia"][data-fa-color="irozumi"]  { --c-text-fa: #3C3D3E; }          /* grayish ink */
-
-[data-theme="dark"][data-fa-color="peacock"]   { --c-text-fa: #4ECDC4; }          /* bright teal on black */
-[data-theme="dark"][data-fa-color="irozumi"]   { --c-text-fa: #E0E1E0; }          /* moon white on black */
-
-/* ── English colour tokens ───────────────────────────────────── */
-[data-theme="light"][data-en-color="asagao"],
-[data-theme="sepia"][data-en-color="asagao"]   { --c-text-en: #1747B0; }          /* school royal blue */
-
-[data-theme="light"][data-en-color="konpeki"]  { --c-text-en: #0077CC; }          /* cerulean */
-[data-theme="sepia"][data-en-color="konpeki"]  { --c-text-en: #0066AA; }
-
-[data-theme="dark"][data-en-color="asagao"]    { --c-text-en: #7EB0E8; }          /* sky blue on black */
-[data-theme="dark"][data-en-color="konpeki"]   { --c-text-en: #56C0FF; }          /* bright cerulean on black */
+/* ── Unified text colour swatches ────────────────────────────── */
+/* Light / Kaghaz */
+[data-color="warm"]                          { --c-text-fa: #3c2f2f; --c-text-en: #3c2f2f; }
+[data-color="coral"]                         { --c-text-fa: #ff6f69; --c-text-en: #ff6f69; }
+/* Dark */
+[data-theme="dark"][data-color="warm"]       { --c-text-fa: #7EB8DA; --c-text-en: #7EB8DA; }
+[data-theme="dark"][data-color="coral"]      { --c-text-fa: #88C0A8; --c-text-en: #88C0A8; }
 
 
 /* ── 2. Reset ────────────────────────────────────────────────── */
@@ -203,22 +183,29 @@ button:focus-visible, a:focus-visible {
 #site-logo {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   padding: 0 20px;
-  color: var(--c-text-fa);
-  font-family: var(--font-en-sans);
-  font-size: 14px;
-  font-weight: 600;
   white-space: nowrap;
   flex-shrink: 0;
   cursor: pointer;
-  opacity: 0.80;
-  transition: opacity var(--dur-fast) var(--ease-out),
-              color var(--dur-mid) var(--ease-out);
+  opacity: 0.85;
+  transition: opacity var(--dur-fast) var(--ease-out);
 }
 #site-logo:hover { opacity: 1; }
-#site-logo [lang="fa"] { font-size: 15px; font-weight: 500; }
-.logo-sep { opacity: 0.25; }
+
+.logo-icon {
+  color: var(--c-text-fa);
+  flex-shrink: 0;
+  transition: color var(--dur-mid) var(--ease-out);
+}
+
+.logo-fa {
+  color: #bf0000;
+  font-family: var(--font-fa);
+  font-size: 17px;
+  font-weight: 600;
+  transition: font-family var(--dur-fast) var(--ease-out);
+}
 
 /* Book tabs */
 #book-tabs {
@@ -287,7 +274,7 @@ button:focus-visible, a:focus-visible {
 }
 .nav-btn:hover { opacity: 0.72; background: rgba(0,0,0,0.05); }
 [data-theme="dark"]  .nav-btn:hover { background: rgba(255,255,255,0.07); }
-[data-theme="sepia"] .nav-btn:hover { background: rgba(60,40,20,0.06); }
+[data-theme="kaghaz"] .nav-btn:hover { background: rgba(60,40,20,0.06); }
 
 #btn-settings[aria-expanded="true"] {
   opacity: 1;
@@ -353,8 +340,8 @@ button:focus-visible, a:focus-visible {
   transition: all var(--dur-fast) var(--ease-out);
 }
 .settings-opt:hover { opacity: 0.85; background: rgba(0,0,0,0.04); }
-[data-theme="dark"]  .settings-opt:hover { background: rgba(255,255,255,0.06); }
-[data-theme="sepia"] .settings-opt:hover { background: rgba(60,40,20,0.05); }
+[data-theme="dark"]   .settings-opt:hover  { background: rgba(255,255,255,0.06); }
+[data-theme="kaghaz"] .settings-opt:hover  { background: rgba(60,40,20,0.05); }
 
 .settings-opt.active {
   opacity: 1;
@@ -362,6 +349,62 @@ button:focus-visible, a:focus-visible {
   border-color: rgba(var(--c-accent-rgb), 0.28);
   color: var(--c-accent);
   font-weight: 600;
+}
+
+/* ── Colour swatches ─────────────────────────────────────────── */
+.color-swatch {
+  flex: none !important;
+  padding: 6px !important;
+  border: 1px solid transparent !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  transition: background var(--dur-fast) var(--ease-out) !important;
+}
+.color-swatch:hover { background: rgba(0,0,0,0.06) !important; }
+[data-theme="dark"] .color-swatch:hover { background: rgba(255,255,255,0.08) !important; }
+
+.swatch-dot {
+  display: block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--sw);
+  transition: box-shadow var(--dur-fast) var(--ease-out),
+              background var(--dur-mid)  var(--ease-out);
+}
+[data-theme="dark"] .swatch-dot { background: var(--sw-dark); }
+
+.color-swatch.active { border-color: rgba(var(--c-accent-rgb), 0.40) !important; }
+.color-swatch.active .swatch-dot {
+  box-shadow: 0 0 0 2px var(--c-bg), 0 0 0 4px var(--sw);
+}
+[data-theme="dark"] .color-swatch.active .swatch-dot {
+  box-shadow: 0 0 0 2px var(--c-bg), 0 0 0 4px var(--sw-dark);
+}
+
+/* ── CRT scanline effect ─────────────────────────────────────── */
+[data-crt="on"] body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent     0px,
+    transparent     2px,
+    rgba(0,0,0,0.055) 2px,
+    rgba(0,0,0,0.055) 3px
+  );
+}
+[data-theme="dark"][data-crt="on"] body::after {
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent      0px,
+    transparent      2px,
+    rgba(0,0,0,0.10) 2px,
+    rgba(0,0,0,0.10) 3px
+  );
 }
 
 
@@ -441,7 +484,7 @@ button:focus-visible, a:focus-visible {
 }
 
 .heading-en {
-  font-family: var(--font-en-serif);   /* always Crimson Text, regardless of reader setting */
+  font-family: var(--font-en-serif);
   font-size: 15px;
   font-weight: 400;
   font-style: italic;
@@ -452,7 +495,7 @@ button:focus-visible, a:focus-visible {
 }
 
 .heading-fa {
-  font-family: var(--font-fa-naskh);  /* always Naskh, regardless of reader setting */
+  font-family: var(--font-fa);
   font-size: 19px;
   line-height: 2.0;
   color: var(--c-heading-text);
@@ -573,7 +616,7 @@ button:focus-visible, a:focus-visible {
   padding: 20px 28px;
 }
 .scholar-heading .scholar-cell--fa {
-  font-family: var(--font-fa-naskh);
+  font-family: var(--font-fa);
   font-size: 18px;
   line-height: 2.0;
   color: var(--c-heading-text);
@@ -799,36 +842,32 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
 [data-theme="dark"] #btn-theme-toggle:hover  { background: rgba(255,255,255,0.08); }
 [data-theme="dark"] #btn-theme-toggle:active { background: rgba(255,255,255,0.14); }
 
-/* Sun + moon overlap; CSS transitions drive the swap */
+/* All three icons overlap; CSS transitions drive the 3-way swap */
 .icon-sun,
-.icon-moon {
+.icon-moon,
+.icon-kaghaz {
   position: absolute;
   top: 50%;
   left: 50%;
   pointer-events: none;
-  transition: opacity   280ms var(--ease-out),
-              transform 340ms var(--ease-spring);
+  transition: opacity   360ms var(--ease-out),
+              transform 480ms var(--ease-spring);
 }
 
-/* Light / sepia: sun fully visible, moon rotated away */
-.icon-sun  {
-  opacity: 1;
-  transform: translate(-50%, -50%) rotate(0deg) scale(1);
-}
-.icon-moon {
-  opacity: 0;
-  transform: translate(-50%, -50%) rotate(-45deg) scale(0.5);
-}
+/* ── Default (light): sun visible, others away ── */
+.icon-sun    { opacity: 1; transform: translate(-50%, -50%) rotate(0deg)   scale(1);   }
+.icon-moon   { opacity: 0; transform: translate(-50%, -50%) rotate(-45deg) scale(0.5); }
+.icon-kaghaz { opacity: 0; transform: translate(-50%, -50%) rotate(45deg)  scale(0.5); }
 
-/* Dark: moon fully visible, sun rotated away */
-[data-theme="dark"] .icon-sun {
-  opacity: 0;
-  transform: translate(-50%, -50%) rotate(45deg) scale(0.5);
-}
-[data-theme="dark"] .icon-moon {
-  opacity: 1;
-  transform: translate(-50%, -50%) rotate(0deg) scale(1);
-}
+/* ── Dark: moon visible ── */
+[data-theme="dark"] .icon-sun    { opacity: 0; transform: translate(-50%, -50%) rotate(45deg)  scale(0.5); }
+[data-theme="dark"] .icon-moon   { opacity: 1; transform: translate(-50%, -50%) rotate(0deg)   scale(1);   }
+[data-theme="dark"] .icon-kaghaz { opacity: 0; transform: translate(-50%, -50%) rotate(-45deg) scale(0.5); }
+
+/* ── Kaghaz: paper icon visible ── */
+[data-theme="kaghaz"] .icon-sun    { opacity: 0; transform: translate(-50%, -50%) rotate(-45deg) scale(0.5); }
+[data-theme="kaghaz"] .icon-moon   { opacity: 0; transform: translate(-50%, -50%) rotate(45deg)  scale(0.5); }
+[data-theme="kaghaz"] .icon-kaghaz { opacity: 1; transform: translate(-50%, -50%) rotate(0deg)   scale(1);   }
 
 /* ── Size buttons ────────────────────────────────────────────── */
 
@@ -883,13 +922,11 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
 /* ── 12. Theme-switch animation (View Transitions API) ───────── */
 
 @media (prefers-reduced-motion: no-preference) {
-  /* Outgoing snapshot fades out gently */
   ::view-transition-old(root) {
-    animation: 220ms ease-in both vt-fade-out;
+    animation: 300ms ease-in both vt-fade-out;
   }
-  /* Incoming snapshot blooms in — slightly longer for the "settle" */
   ::view-transition-new(root) {
-    animation: 340ms cubic-bezier(0.25, 0.46, 0.45, 0.94) both vt-fade-in;
+    animation: 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94) both vt-fade-in;
   }
 }
 
@@ -1032,7 +1069,7 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
   background: rgba(0,0,0,0.04);
 }
 [data-theme="dark"]  #mobile-book-tabs .book-tab:hover { background: rgba(255,255,255,0.06); }
-[data-theme="sepia"] #mobile-book-tabs .book-tab:hover { background: rgba(60,40,20,0.05); }
+[data-theme="kaghaz"] #mobile-book-tabs .book-tab:hover { background: rgba(60,40,20,0.05); }
 
 #mobile-book-tabs .book-tab.active {
   border-left-color: var(--c-accent);
@@ -1049,7 +1086,7 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
   background: rgba(0,0,0,0.05);
 }
 [data-theme="dark"]  #btn-menu[aria-expanded="true"] { background: rgba(255,255,255,0.07); }
-[data-theme="sepia"] #btn-menu[aria-expanded="true"] { background: rgba(60,40,20,0.06); }
+[data-theme="kaghaz"] #btn-menu[aria-expanded="true"] { background: rgba(60,40,20,0.06); }
 
 @media (max-width: 600px) {
   #btn-menu  { display: flex; }
