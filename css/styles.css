@@ -397,16 +397,16 @@ button:focus-visible, a:focus-visible {
   inset: 0;
   pointer-events: none;
   z-index: 9999;
-  background-image: radial-gradient(circle, rgba(0,0,0,0.055) 1px, transparent 1px);
-  background-size: 3px 3px;
+  background-image: radial-gradient(circle, rgba(0,0,0,0.022) 1px, transparent 1px);
+  background-size: 4px 4px;
 }
 [data-theme="dark"][data-crt="on"] body::after {
-  background-image: radial-gradient(circle, rgba(0,0,0,0.10) 1px, transparent 1px);
-  background-size: 3px 3px;
+  background-image: radial-gradient(circle, rgba(0,0,0,0.045) 1px, transparent 1px);
+  background-size: 4px 4px;
 }
 [data-theme="kaghaz"][data-crt="on"] body::after {
-  background-image: radial-gradient(circle, rgba(60,40,20,0.05) 1px, transparent 1px);
-  background-size: 3px 3px;
+  background-image: radial-gradient(circle, rgba(60,40,20,0.02) 1px, transparent 1px);
+  background-size: 4px 4px;
 }
 
 
