@@ -4,10 +4,12 @@
 // ── Size tables ───────────────────────────────────────────────────────────────
 const SIZE_STEPS  = 6;
 const SIZE_EN     = [16, 18, 20, 22, 24, 26];
-const SIZE_FA     = [20, 22, 24, 26, 28, 30];     // Naskh (Vazirmatn)
-const SIZE_FA_N   = [20, 22, 24, 26, 28, 30];     // IranSans (same metrics as Naskh)
-const LH_FA       = [2.10, 2.10, 2.10, 2.10, 2.15, 2.20];
+const SIZE_FA_M   = [22, 24, 26, 28, 30, 32];     // Mirza (calligraphic, slightly larger)
+const LH_FA_M     = [2.15, 2.15, 2.20, 2.20, 2.25, 2.30];
+const SIZE_FA_N   = [20, 22, 24, 26, 28, 30];     // IranSans
 const LH_FA_N     = [2.10, 2.10, 2.10, 2.10, 2.15, 2.20];
+const SIZE_FA_H   = [20, 22, 24, 26, 28, 30];     // Harmattan
+const LH_FA_H     = [2.10, 2.10, 2.10, 2.15, 2.20, 2.25];
 const LH_EN       = [1.80, 1.80, 1.80, 1.80, 1.85, 1.85];
 
 const VERSES_PER_PAGE = 10;
@@ -16,7 +18,7 @@ const VERSES_PER_PAGE = 10;
 const state = {
   book:     1,
   mode:     'focus',
-  font:     'naskh',
+  font:     'mirza',
   theme:    'light',
   sizeStep: 1,        // step 1 → en:18 px, naskh fa:22 px
   page:     0,
@@ -25,46 +27,20 @@ const state = {
   entries:  [],
 };
 
-// ── Vocab ─────────────────────────────────────────────────────────────────────
-let vocab = {};   // Persian word (normalized) → short English gloss
-
-const FA_DIAC = /[\u064B-\u065F\u0670\u0640]/g;
-function normFa(w) {
-  return w
-    .replace(FA_DIAC, '')          // strip tashkeel + kashida
-    .replace(/[آأإٱ]/g, 'ا')      // alef variants
-    .replace(/\u064A/g, '\u06CC') // Arabic ya → Farsi ya
-    .replace(/\u0643/g, '\u06A9');// Arabic kaf → Farsi kaf
-}
-
-fetch('data/vocab.json')
-  .then(r => r.json())
-  .then(d => {
-    vocab = d;
-    // Re-render the current page so word spans get applied
-    if (state.pages.length) {
-      const pg = state.pages[state.page];
-      if (state.mode === 'focus') renderFocusPage(pg);
-      else renderScholarPage(pg);
-    }
-  })
-  .catch(() => {});   // tooltips gracefully absent if file missing
-
 // ── DOM ───────────────────────────────────────────────────────────────────────
 const html           = document.documentElement;
 const progressBar    = document.getElementById('progress-bar');
 const bookTabs       = document.querySelectorAll('.book-tab');
 const btnMode        = document.getElementById('btn-mode');
 const btnMenu        = document.getElementById('btn-menu');
+const btnThemeToggle = document.getElementById('btn-theme-toggle');
 const btnSearch      = document.getElementById('btn-search');
 const btnSettings    = document.getElementById('btn-settings');
 const mobileMenu     = document.getElementById('mobile-menu');
 const settingsPanel  = document.getElementById('settings-panel');
-const themeOpts      = document.getElementById('theme-options');
 const fontOpts       = document.getElementById('font-options');
 const enFontOpts     = document.getElementById('en-font-options');
-const faColorOpts    = document.getElementById('fa-color-options');
-const enColorOpts    = document.getElementById('en-color-options');
+const colorOpts      = document.getElementById('color-options');
 const sizeUpBtn      = document.getElementById('size-up');
 const sizeDownBtn    = document.getElementById('size-down');
 const focusView      = document.getElementById('focus-view');
@@ -83,28 +59,30 @@ const pager          = document.getElementById('pager');
 const pagerPrevBtn   = document.getElementById('pager-prev');
 const pagerNextBtn   = document.getElementById('pager-next');
 const pagerInfo      = document.getElementById('pager-info');
-const vocabPopup     = document.getElementById('vocab-popup');
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 
 function initTheme() {
   const saved = localStorage.getItem('mv-theme');
+  // Migrate old 'sepia' key → 'kaghaz'
+  const resolved = saved === 'sepia' ? 'kaghaz' : saved;
   const auto  = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  applyTheme(saved || auto);
+  applyTheme(resolved || auto);
 }
 
 function initFont() {
-  const savedFont    = localStorage.getItem('mv-font');
-  if (savedFont)    setFont(savedFont, false);
+  const savedFont = localStorage.getItem('mv-font');
+  // Migrate old 'naskh' key → 'mirza'
+  setFont((savedFont === 'naskh' ? 'mirza' : savedFont) || 'mirza', false);
 
-  const savedEnFont  = localStorage.getItem('mv-en-font');
-  if (savedEnFont)  setEnFont(savedEnFont, false);
+  const savedEnFont = localStorage.getItem('mv-en-font');
+  if (savedEnFont) setEnFont(savedEnFont, false);
 
-  const savedFaColor = localStorage.getItem('mv-fa-color');
-  if (savedFaColor) setFaColor(savedFaColor, false);
+  const savedColor = localStorage.getItem('mv-color');
+  if (savedColor)  setColor(savedColor, false);
 
-  const savedEnColor = localStorage.getItem('mv-en-color');
-  if (savedEnColor) setEnColor(savedEnColor, false);
+  const savedCRT = localStorage.getItem('mv-crt');
+  if (savedCRT)    setCRT(savedCRT === 'on', false);
 
   const savedStep = localStorage.getItem('mv-size-step');
   if (savedStep !== null) {
@@ -120,9 +98,10 @@ function initFont() {
 function applyTheme(t) {
   state.theme        = t;
   html.dataset.theme = t;
-  document.querySelectorAll('[data-theme]').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.theme === t);
-  });
+  // Aria label describes the NEXT action (what clicking will do)
+  const labels = { light: 'Switch to dark mode', dark: 'Switch to کاغذ mode', kaghaz: 'Switch to day mode' };
+  btnThemeToggle.setAttribute('aria-label', labels[t] || 'Cycle theme');
+  btnThemeToggle.setAttribute('aria-pressed', t !== 'light' ? 'true' : 'false');
 }
 
 function setTheme(t, save = true) {
@@ -157,37 +136,44 @@ function setEnFont(f, save = true) {
   applySizes();
 }
 
-// ── Farsi colour ──────────────────────────────────────────────────────────────
+// ── Unified text colour ───────────────────────────────────────────────────────
 
-function setFaColor(c, save = true) {
-  html.dataset.faColor = c;
-  if (save) localStorage.setItem('mv-fa-color', c);
-  document.querySelectorAll('[data-fa-color]').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.faColor === c);
+function setColor(c, save = true) {
+  html.dataset.color = c;
+  if (save) localStorage.setItem('mv-color', c);
+  document.querySelectorAll('[data-color]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.color === c);
   });
 }
 
-// ── English colour ────────────────────────────────────────────────────────────
+// ── CRT scanline effect ───────────────────────────────────────────────────────
 
-function setEnColor(c, save = true) {
-  html.dataset.enColor = c;
-  if (save) localStorage.setItem('mv-en-color', c);
-  document.querySelectorAll('[data-en-color]').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.enColor === c);
-  });
+function setCRT(on, save = true) {
+  html.dataset.crt = on ? 'on' : 'off';
+  const btn = document.getElementById('btn-crt');
+  if (btn) btn.classList.toggle('active', on);
+  if (save) localStorage.setItem('mv-crt', on ? 'on' : 'off');
 }
 
 // ── Size ──────────────────────────────────────────────────────────────────────
 
 function applySizes() {
-  const s        = state.sizeStep;
-  const iransans = state.font === 'iransans';
-  const serif    = html.dataset.enFont === 'serif';
+  const s     = state.sizeStep;
+  const serif = html.dataset.enFont === 'serif';
 
-  html.style.setProperty('--fz-fa', (iransans ? SIZE_FA_N[s] : SIZE_FA[s]) + 'px');
-  html.style.setProperty('--lh-fa',  iransans ? LH_FA_N[s]  : LH_FA[s]);
+  let fzFa, lhFa;
+  if (state.font === 'iransans') {
+    fzFa = SIZE_FA_N[s]; lhFa = LH_FA_N[s];
+  } else if (state.font === 'harmattan') {
+    fzFa = SIZE_FA_H[s]; lhFa = LH_FA_H[s];
+  } else {
+    fzFa = SIZE_FA_M[s]; lhFa = LH_FA_M[s];  // mirza (default)
+  }
+
+  html.style.setProperty('--fz-fa', fzFa + 'px');
+  html.style.setProperty('--lh-fa', lhFa);
   html.style.setProperty('--fz-en', (SIZE_EN[s] + (serif ? 2 : 0)) + 'px');
-  html.style.setProperty('--lh-en',  LH_EN[s]);
+  html.style.setProperty('--lh-en', LH_EN[s]);
 
   sizeUpBtn.disabled   = s >= SIZE_STEPS - 1;
   sizeDownBtn.disabled = s <= 0;
@@ -411,19 +397,9 @@ function makeCard(entry) {
     faWrap.dir       = 'rtl';
 
     (entry.farsi || '').split(' / ').forEach(h => {
-      const hSpan = document.createElement('span');
-      h.trim().split(/\s+/).forEach((w, i, arr) => {
-        const key = normFa(w.replace(/[^\u0600-\u06FF]/g, ''));
-        const wSpan = document.createElement('span');
-        wSpan.textContent = w;
-        if (key && vocab[key]) {
-          wSpan.className      = 'fa-word';
-          wSpan.dataset.gloss  = vocab[key];
-        }
-        hSpan.appendChild(wSpan);
-        if (i < arr.length - 1) hSpan.appendChild(document.createTextNode('\u200C '));
-      });
-      faWrap.appendChild(hSpan);
+      const span = document.createElement('span');
+      span.textContent = h.trim();
+      faWrap.appendChild(span);
     });
 
     const enEl = document.createElement('p');
@@ -479,20 +455,10 @@ function makeScholarRow(entry) {
     fa.dir       = 'rtl';
 
     (entry.farsi || '').split(' / ').forEach(h => {
-      const hSpan = document.createElement('span');
-      hSpan.style.display = 'block';
-      h.trim().split(/\s+/).forEach((w, i, arr) => {
-        const key = normFa(w.replace(/[^\u0600-\u06FF]/g, ''));
-        const wSpan = document.createElement('span');
-        wSpan.textContent = w;
-        if (key && vocab[key]) {
-          wSpan.className      = 'fa-word';
-          wSpan.dataset.gloss  = vocab[key];
-        }
-        hSpan.appendChild(wSpan);
-        if (i < arr.length - 1) hSpan.appendChild(document.createTextNode('\u200C '));
-      });
-      fa.appendChild(hSpan);
+      const span = document.createElement('span');
+      span.textContent   = h.trim();
+      span.style.display = 'block';
+      fa.appendChild(span);
     });
 
     const en = document.createElement('div');
@@ -686,9 +652,9 @@ btnSettings.addEventListener('click', e => {
   settingsPanel.classList.contains('open') ? closeSettings() : openSettings();
 });
 
-themeOpts.addEventListener('click', e => {
-  const btn = e.target.closest('[data-theme]');
-  if (btn) setTheme(btn.dataset.theme);
+btnThemeToggle.addEventListener('click', () => {
+  const cycle = { light: 'dark', dark: 'kaghaz', kaghaz: 'light' };
+  setTheme(cycle[state.theme] || 'light');
 });
 
 fontOpts.addEventListener('click', e => {
@@ -701,14 +667,13 @@ enFontOpts.addEventListener('click', e => {
   if (btn) setEnFont(btn.dataset.enFont);
 });
 
-faColorOpts.addEventListener('click', e => {
-  const btn = e.target.closest('[data-fa-color]');
-  if (btn) setFaColor(btn.dataset.faColor);
+colorOpts.addEventListener('click', e => {
+  const btn = e.target.closest('[data-color]');
+  if (btn) setColor(btn.dataset.color);
 });
 
-enColorOpts.addEventListener('click', e => {
-  const btn = e.target.closest('[data-en-color]');
-  if (btn) setEnColor(btn.dataset.enColor);
+document.getElementById('btn-crt').addEventListener('click', () => {
+  setCRT(html.dataset.crt !== 'on');
 });
 
 sizeUpBtn.addEventListener('click',   sizeUp);
@@ -746,42 +711,6 @@ scholarGrid.addEventListener('scroll',  updateProgress, { passive: true });
 // Force focus mode if window shrinks to mobile while in scholar view
 window.addEventListener('resize', () => {
   if (isMobile() && state.mode === 'scholar') setMode('focus');
-}, { passive: true });
-
-// ── Vocab popup (mobile tap) ──────────────────────────────────────────────────
-
-function showVocabPopup(word, gloss) {
-  // Sanitize: use textContent (not innerHTML) for the word to prevent XSS
-  vocabPopup.innerHTML = '';
-  const wordEl = document.createElement('span');
-  wordEl.className  = 'vp-word';
-  wordEl.lang       = 'fa';
-  wordEl.dir        = 'rtl';
-  wordEl.textContent = word;
-  const glossEl = document.createTextNode(gloss);
-  vocabPopup.appendChild(wordEl);
-  vocabPopup.appendChild(glossEl);
-  vocabPopup.classList.add('visible');
-}
-
-function hideVocabPopup() {
-  vocabPopup.classList.remove('visible');
-}
-
-[focusScroll, scholarGrid].forEach(container => {
-  container.addEventListener('touchend', e => {
-    const span = e.target.closest('.fa-word');
-    if (span) {
-      e.preventDefault();
-      showVocabPopup(span.textContent, span.dataset.gloss || '');
-    }
-  }, { passive: false });
-});
-
-document.addEventListener('touchstart', e => {
-  if (!e.target.closest('#vocab-popup') && !e.target.closest('.fa-word')) {
-    hideVocabPopup();
-  }
 }, { passive: true });
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
