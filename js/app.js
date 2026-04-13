@@ -55,6 +55,7 @@ const searchPanel    = document.getElementById('search-panel');
 const searchInput    = document.getElementById('search-input');
 const searchResults  = document.getElementById('search-results');
 const tocPanel       = document.getElementById('toc-panel');
+const tocBackdrop    = document.getElementById('toc-backdrop');
 const tocList        = document.getElementById('toc-list');
 const pager          = document.getElementById('pager');
 const pagerPrevBtn   = document.getElementById('pager-prev');
@@ -579,8 +580,16 @@ function closeSettings() {
   settingsPanel.classList.remove('open');
   btnSettings.setAttribute('aria-expanded', 'false');
 }
-function openTOC()  { tocPanel.classList.add('open');    tocPanel.removeAttribute('aria-hidden'); }
-function closeTOC() { tocPanel.classList.remove('open'); tocPanel.setAttribute('aria-hidden', 'true'); }
+function openTOC() {
+  tocPanel.classList.add('open');
+  tocPanel.removeAttribute('aria-hidden');
+  tocBackdrop.classList.add('visible');
+}
+function closeTOC() {
+  tocPanel.classList.remove('open');
+  tocPanel.setAttribute('aria-hidden', 'true');
+  tocBackdrop.classList.remove('visible');
+}
 function openSearch() {
   searchPanel.classList.add('open');
   searchOverlay.classList.add('open');
@@ -719,6 +728,7 @@ document.getElementById('site-logo').addEventListener('click', e => {
   e.preventDefault();
   tocPanel.classList.contains('open') ? closeTOC() : openTOC();
 });
+tocBackdrop.addEventListener('click', closeTOC);
 
 document.addEventListener('click', e => {
   if (!settingsPanel.contains(e.target) && e.target !== btnSettings) closeSettings();

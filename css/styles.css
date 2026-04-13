@@ -687,12 +687,7 @@ button:focus-visible, a:focus-visible {
   border-left-color: var(--c-accent);
 }
 .toc-fa {
-  display: block;
-  font-family: var(--font-fa);
-  font-size: 12px;
-  direction: rtl;
-  margin-top: 2px;
-  opacity: 0.62;
+  display: none;
 }
 
 
@@ -1096,7 +1091,45 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
   #btn-mode  { display: none;  }
   #nav-actions { margin-left: auto; padding: 0 16px; }
   #site-logo   { padding: 0 16px; }
+
+  /* Settings panel — full width on mobile */
+  #settings-panel {
+    left: 10px;
+    right: 10px;
+    width: auto;
+    padding: 20px;
+    gap: 20px;
+  }
+  .settings-opt {
+    padding: 11px 6px;
+    font-size: 14px;
+  }
+  .settings-label {
+    font-size: 11px;
+  }
+
+  /* TOC — full-width drawer on mobile */
+  #toc-panel {
+    width: 100%;
+    border-right: none;
+  }
+  .toc-item {
+    font-size: 15px;
+    padding: 13px 24px;
+    opacity: 0.70;
+  }
 }
+
+/* TOC backdrop overlay (mobile) */
+#toc-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.32);
+  z-index: 799;
+  transition: opacity var(--dur-mid) var(--ease-out);
+}
+#toc-backdrop.visible { display: block; }
 
 /* ── 18. Reduced motion ──────────────────────────────────────── */
 
