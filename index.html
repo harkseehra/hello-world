@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en"
   data-theme="light"
-  data-font="mirza"
+  data-font="vazir"
   data-en-font="sans"
-  data-color="warm"
+  data-fa-color="peacock"
+  data-en-color="asagao"
   data-mode="focus">
 <head>
   <meta charset="UTF-8">
@@ -12,7 +13,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Mirza:wght@400;500;600;700&family=Harmattan:wght@400;500;600;700&family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,600;1,400&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&family=Harmattan:wght@400;500;600;700&family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,600;1,400&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -85,9 +86,23 @@
     <div class="settings-section">
       <p class="settings-label">Farsi Script</p>
       <div class="settings-row" id="font-options">
-        <button class="settings-opt active" data-font="mirza">Mirza</button>
+        <button class="settings-opt active" data-font="vazir">Vazirmatn</button>
         <button class="settings-opt"        data-font="iransans">IranSans</button>
         <button class="settings-opt"        data-font="harmattan">Harmattan</button>
+      </div>
+    </div>
+
+    <div class="settings-divider"></div>
+
+    <div class="settings-section">
+      <p class="settings-label">Farsi Colour</p>
+      <div class="settings-row" id="fa-color-options">
+        <button class="settings-opt color-swatch active" data-fa-color="peacock" aria-label="Peacock">
+          <span class="swatch-dot" style="--sw: #007868; --sw-dark: #4ECDC4;"></span>
+        </button>
+        <button class="settings-opt color-swatch" data-fa-color="irozumi" aria-label="Irozumi">
+          <span class="swatch-dot" style="--sw: #3C3D3E; --sw-dark: #E0E1E0;"></span>
+        </button>
       </div>
     </div>
 
@@ -101,16 +116,14 @@
       </div>
     </div>
 
-    <div class="settings-divider"></div>
-
     <div class="settings-section">
-      <p class="settings-label">Text Colour</p>
-      <div class="settings-row" id="color-options">
-        <button class="settings-opt color-swatch active" data-color="warm" aria-label="Warm">
-          <span class="swatch-dot" style="--sw: #3c2f2f; --sw-dark: #7EB8DA;"></span>
+      <p class="settings-label">English Colour</p>
+      <div class="settings-row" id="en-color-options">
+        <button class="settings-opt color-swatch active" data-en-color="asagao" aria-label="Asa-Gao">
+          <span class="swatch-dot" style="--sw: #1747B0; --sw-dark: #7EB0E8;"></span>
         </button>
-        <button class="settings-opt color-swatch" data-color="coral" aria-label="Coral">
-          <span class="swatch-dot" style="--sw: #ff6f69; --sw-dark: #88C0A8;"></span>
+        <button class="settings-opt color-swatch" data-en-color="konpeki" aria-label="Kon-Peki">
+          <span class="swatch-dot" style="--sw: #0077CC; --sw-dark: #56C0FF;"></span>
         </button>
       </div>
     </div>

@@ -19,11 +19,11 @@
 
   /* Light mode */
   --c-bg:           #F2F2F7;
-  --c-text-fa:      #3c2f2f;
-  --c-text-en:      #3c2f2f;
-  --c-heading:      #8B5E3C;
+  --c-text-fa:      #007868;   /* Peacock — default Farsi colour */
+  --c-text-en:      #1747B0;   /* Asa-Gao — default English colour */
+  --c-heading:      #007F7A;
   --c-heading-text: #1C1C1E;
-  --c-verse-num:    rgba(191, 0, 0, 0.40);
+  --c-verse-num:    rgba(91, 95, 206, 0.50);
   --c-divider:      rgba(0, 0, 0, 0.08);
   --c-nav-bg:       #FFFFFF;
   --c-nav-border:   rgba(0, 0, 0, 0.09);
@@ -36,10 +36,10 @@
   --c-heading-card-border: rgba(0, 0, 0, 0.06);
 
   /* Font stacks */
-  --font-fa-mirza:    'Mirza', serif;
+  --font-fa-vazir:    'Vazirmatn', sans-serif;
   --font-fa-iransans: 'IRANSansWeb', sans-serif;
   --font-fa-harmattan:'Harmattan', sans-serif;
-  --font-fa:          var(--font-fa-mirza);
+  --font-fa:          var(--font-fa-vazir);
 
   --font-en-sans:  'Schibsted Grotesk', system-ui, sans-serif;
   --font-en-serif: 'Amiri', Georgia, serif;
@@ -65,7 +65,7 @@
 }
 
 /* ── Font toggles ────────────────────────────────────────────── */
-[data-font="mirza"]     { --font-fa: var(--font-fa-mirza); }
+[data-font="vazir"]     { --font-fa: var(--font-fa-vazir); }
 [data-font="iransans"]  { --font-fa: var(--font-fa-iransans); }
 [data-font="harmattan"] { --font-fa: var(--font-fa-harmattan); }
 [data-en-font="serif"]  { --font-en: var(--font-en-serif); }
@@ -73,13 +73,13 @@
 /* ── Dark ────────────────────────────────────────────────────── */
 [data-theme="dark"] {
   --c-bg:           #0D0D0D;
-  --c-text-fa:      #7EB8DA;
-  --c-text-en:      #7EB8DA;
-  --c-heading:      #7EB8DA;
+  --c-text-fa:      #4ECDC4;   /* dark Peacock default */
+  --c-text-en:      #7EB0E8;   /* dark Asa-Gao default */
+  --c-heading:      #B4B8B4;
   --c-heading-text: #E0E1E0;
-  --c-accent:       #7EB8DA;
-  --c-accent-rgb:   126, 184, 218;
-  --c-verse-num:    rgba(126, 184, 218, 0.45);
+  --c-accent:       #8284F2;
+  --c-accent-rgb:   130, 132, 242;
+  --c-verse-num:    rgba(224, 225, 224, 0.50);
   --c-divider:      rgba(255, 255, 255, 0.09);
   --c-nav-bg:       #0D0D0D;
   --c-nav-border:   rgba(255, 255, 255, 0.09);
@@ -94,13 +94,13 @@
 /* ── کاغذ (Kaghaz — warm paper) ──────────────────────────────── */
 [data-theme="kaghaz"] {
   --c-bg:           #fff4e6;
-  --c-text-fa:      #3c2f2f;
-  --c-text-en:      #3c2f2f;
+  --c-text-fa:      #2B5957;   /* Peacock muted on warm paper */
+  --c-text-en:      #3D408A;   /* Asa-Gao muted on warm paper */
   --c-heading:      #8B5E3C;
   --c-heading-text: #1A1208;
-  --c-accent:       #bf0000;
-  --c-accent-rgb:   191, 0, 0;
-  --c-verse-num:    rgba(191, 0, 0, 0.38);
+  --c-accent:       #5B5FCE;
+  --c-accent-rgb:   91, 95, 206;
+  --c-verse-num:    rgba(91, 95, 206, 0.50);
   --c-divider:      rgba(60, 40, 20, 0.09);
   --c-nav-bg:       #fff8ed;
   --c-nav-border:   rgba(60, 40, 20, 0.09);
@@ -112,13 +112,21 @@
   --c-heading-card-border: rgba(60, 40, 20, 0.06);
 }
 
-/* ── Unified text colour swatches ────────────────────────────── */
-/* Light / Kaghaz */
-[data-color="warm"]                          { --c-text-fa: #3c2f2f; --c-text-en: #3c2f2f; }
-[data-color="coral"]                         { --c-text-fa: #ff6f69; --c-text-en: #ff6f69; }
-/* Dark */
-[data-theme="dark"][data-color="warm"]       { --c-text-fa: #7EB8DA; --c-text-en: #7EB8DA; }
-[data-theme="dark"][data-color="coral"]      { --c-text-fa: #88C0A8; --c-text-en: #88C0A8; }
+/* ── Farsi colour tokens ─────────────────────────────────────── */
+[data-theme="light"][data-fa-color="peacock"],
+[data-theme="kaghaz"][data-fa-color="peacock"] { --c-text-fa: #007868; }
+[data-theme="light"][data-fa-color="irozumi"],
+[data-theme="kaghaz"][data-fa-color="irozumi"] { --c-text-fa: #3C3D3E; }
+[data-theme="dark"][data-fa-color="peacock"]   { --c-text-fa: #4ECDC4; }
+[data-theme="dark"][data-fa-color="irozumi"]   { --c-text-fa: #E0E1E0; }
+
+/* ── English colour tokens ───────────────────────────────────── */
+[data-theme="light"][data-en-color="asagao"],
+[data-theme="kaghaz"][data-en-color="asagao"]  { --c-text-en: #1747B0; }
+[data-theme="light"][data-en-color="konpeki"]  { --c-text-en: #0077CC; }
+[data-theme="kaghaz"][data-en-color="konpeki"] { --c-text-en: #0066AA; }
+[data-theme="dark"][data-en-color="asagao"]    { --c-text-en: #7EB0E8; }
+[data-theme="dark"][data-en-color="konpeki"]   { --c-text-en: #56C0FF; }
 
 
 /* ── 2. Reset ────────────────────────────────────────────────── */
@@ -382,29 +390,23 @@ button:focus-visible, a:focus-visible {
   box-shadow: 0 0 0 2px var(--c-bg), 0 0 0 4px var(--sw-dark);
 }
 
-/* ── CRT scanline effect ─────────────────────────────────────── */
+/* ── CRT pixel-dot effect (retro LCD / Game Boy feel) ───────── */
 [data-crt="on"] body::after {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 9999;
-  background: repeating-linear-gradient(
-    to bottom,
-    transparent     0px,
-    transparent     2px,
-    rgba(0,0,0,0.055) 2px,
-    rgba(0,0,0,0.055) 3px
-  );
+  background-image: radial-gradient(circle, rgba(0,0,0,0.14) 1px, transparent 1px);
+  background-size: 3px 3px;
 }
 [data-theme="dark"][data-crt="on"] body::after {
-  background: repeating-linear-gradient(
-    to bottom,
-    transparent      0px,
-    transparent      2px,
-    rgba(0,0,0,0.10) 2px,
-    rgba(0,0,0,0.10) 3px
-  );
+  background-image: radial-gradient(circle, rgba(0,0,0,0.28) 1px, transparent 1px);
+  background-size: 3px 3px;
+}
+[data-theme="kaghaz"][data-crt="on"] body::after {
+  background-image: radial-gradient(circle, rgba(60,40,20,0.12) 1px, transparent 1px);
+  background-size: 3px 3px;
 }
 
 

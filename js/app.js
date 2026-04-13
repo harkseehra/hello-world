@@ -4,8 +4,8 @@
 // ── Size tables ───────────────────────────────────────────────────────────────
 const SIZE_STEPS  = 6;
 const SIZE_EN     = [16, 18, 20, 22, 24, 26];
-const SIZE_FA_M   = [22, 24, 26, 28, 30, 32];     // Mirza (calligraphic, slightly larger)
-const LH_FA_M     = [2.15, 2.15, 2.20, 2.20, 2.25, 2.30];
+const SIZE_FA_V   = [20, 22, 24, 26, 28, 30];     // Vazirmatn
+const LH_FA_V     = [2.05, 2.05, 2.10, 2.10, 2.15, 2.20];
 const SIZE_FA_N   = [20, 22, 24, 26, 28, 30];     // IranSans
 const LH_FA_N     = [2.10, 2.10, 2.10, 2.10, 2.15, 2.20];
 const SIZE_FA_H   = [20, 22, 24, 26, 28, 30];     // Harmattan
@@ -18,7 +18,7 @@ const VERSES_PER_PAGE = 10;
 const state = {
   book:     1,
   mode:     'focus',
-  font:     'mirza',
+  font:     'vazir',
   theme:    'light',
   sizeStep: 1,        // step 1 → en:18 px, naskh fa:22 px
   page:     0,
@@ -40,7 +40,8 @@ const mobileMenu     = document.getElementById('mobile-menu');
 const settingsPanel  = document.getElementById('settings-panel');
 const fontOpts       = document.getElementById('font-options');
 const enFontOpts     = document.getElementById('en-font-options');
-const colorOpts      = document.getElementById('color-options');
+const faColorOpts    = document.getElementById('fa-color-options');
+const enColorOpts    = document.getElementById('en-color-options');
 const sizeUpBtn      = document.getElementById('size-up');
 const sizeDownBtn    = document.getElementById('size-down');
 const focusView      = document.getElementById('focus-view');
@@ -72,14 +73,18 @@ function initTheme() {
 
 function initFont() {
   const savedFont = localStorage.getItem('mv-font');
-  // Migrate old 'naskh' key → 'mirza'
-  setFont((savedFont === 'naskh' ? 'mirza' : savedFont) || 'mirza', false);
+  // Migrate old 'naskh' / 'mirza' keys → 'vazir'
+  const resolvedFont = (savedFont === 'naskh' || savedFont === 'mirza') ? 'vazir' : savedFont;
+  setFont(resolvedFont || 'vazir', false);
 
   const savedEnFont = localStorage.getItem('mv-en-font');
   if (savedEnFont) setEnFont(savedEnFont, false);
 
-  const savedColor = localStorage.getItem('mv-color');
-  if (savedColor)  setColor(savedColor, false);
+  const savedFaColor = localStorage.getItem('mv-fa-color');
+  if (savedFaColor) setFaColor(savedFaColor, false);
+
+  const savedEnColor = localStorage.getItem('mv-en-color');
+  if (savedEnColor) setEnColor(savedEnColor, false);
 
   const savedCRT = localStorage.getItem('mv-crt');
   if (savedCRT)    setCRT(savedCRT === 'on', false);
@@ -136,13 +141,23 @@ function setEnFont(f, save = true) {
   applySizes();
 }
 
-// ── Unified text colour ───────────────────────────────────────────────────────
+// ── Farsi colour ──────────────────────────────────────────────────────────────
 
-function setColor(c, save = true) {
-  html.dataset.color = c;
-  if (save) localStorage.setItem('mv-color', c);
-  document.querySelectorAll('[data-color]').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.color === c);
+function setFaColor(c, save = true) {
+  html.dataset.faColor = c;
+  if (save) localStorage.setItem('mv-fa-color', c);
+  document.querySelectorAll('[data-fa-color]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.faColor === c);
+  });
+}
+
+// ── English colour ────────────────────────────────────────────────────────────
+
+function setEnColor(c, save = true) {
+  html.dataset.enColor = c;
+  if (save) localStorage.setItem('mv-en-color', c);
+  document.querySelectorAll('[data-en-color]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.enColor === c);
   });
 }
 
@@ -167,7 +182,7 @@ function applySizes() {
   } else if (state.font === 'harmattan') {
     fzFa = SIZE_FA_H[s]; lhFa = LH_FA_H[s];
   } else {
-    fzFa = SIZE_FA_M[s]; lhFa = LH_FA_M[s];  // mirza (default)
+    fzFa = SIZE_FA_V[s]; lhFa = LH_FA_V[s];  // vazir (default)
   }
 
   html.style.setProperty('--fz-fa', fzFa + 'px');
@@ -667,9 +682,14 @@ enFontOpts.addEventListener('click', e => {
   if (btn) setEnFont(btn.dataset.enFont);
 });
 
-colorOpts.addEventListener('click', e => {
-  const btn = e.target.closest('[data-color]');
-  if (btn) setColor(btn.dataset.color);
+faColorOpts.addEventListener('click', e => {
+  const btn = e.target.closest('[data-fa-color]');
+  if (btn) setFaColor(btn.dataset.faColor);
+});
+
+enColorOpts.addEventListener('click', e => {
+  const btn = e.target.closest('[data-en-color]');
+  if (btn) setEnColor(btn.dataset.enColor);
 });
 
 document.getElementById('btn-crt').addEventListener('click', () => {
