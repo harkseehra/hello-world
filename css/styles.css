@@ -39,6 +39,7 @@
   --font-fa-vazir:    'Vazirmatn', sans-serif;
   --font-fa-iransans: 'IRANSansWeb', sans-serif;
   --font-fa-harmattan:'Harmattan', sans-serif;
+  --font-fa-amiri:    'Amiri', serif;
   --font-fa:          var(--font-fa-vazir);
 
   --font-en-sans:  'Schibsted Grotesk', system-ui, sans-serif;
@@ -68,6 +69,7 @@
 [data-font="vazir"]     { --font-fa: var(--font-fa-vazir); }
 [data-font="iransans"]  { --font-fa: var(--font-fa-iransans); }
 [data-font="harmattan"] { --font-fa: var(--font-fa-harmattan); }
+[data-font="amiri"]     { --font-fa: var(--font-fa-amiri); }
 [data-en-font="serif"]  { --font-en: var(--font-en-serif); }
 
 /* ── Dark ────────────────────────────────────────────────────── */
@@ -815,7 +817,7 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
 }
 
 /* Theme pill sits above the vertical midpoint; size pill below */
-#theme-pill { bottom: calc(50% + 10px); }
+#theme-pill { bottom: calc(50% + 10px); padding: 4px; }
 #size-pill  { top:    calc(50% + 10px); }
 
 /* ── Theme toggle button ─────────────────────────────────────── */
