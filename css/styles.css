@@ -519,47 +519,14 @@ button:focus-visible, a:focus-visible {
   transition: color var(--dur-mid) var(--ease-out);
 }
 
-/* ── Farsi text effects ──────────────────────────────────────── */
-[data-fa-effect="shadow"] .verse-fa {
-  text-shadow: 2px 4px 10px rgba(0,0,0,0.30);
-}
-[data-fa-effect="outline"] .verse-fa {
-  text-shadow:
-    -1px -1px 0 rgba(0,0,0,0.45),
-     1px -1px 0 rgba(0,0,0,0.45),
-    -1px  1px 0 rgba(0,0,0,0.45),
-     1px  1px 0 rgba(0,0,0,0.45);
-}
-[data-fa-effect="deep"] .verse-fa {
-  text-shadow:
-     1px  1px 0  rgba(0,0,0,0.22),
-     2px  2px 0  rgba(0,0,0,0.16),
-     3px  3px 0  rgba(0,0,0,0.10),
-     4px  6px 12px rgba(0,0,0,0.28);
-}
-[data-fa-effect="glow"] .verse-fa {
-  text-shadow:
-    0 0  8px currentColor,
-    0 0 20px currentColor;
-  filter: brightness(1.08) saturate(1.2);
-}
-[data-theme="dark"][data-fa-effect="shadow"] .verse-fa {
-  text-shadow: 2px 4px 14px rgba(0,0,0,0.70);
-}
-[data-theme="dark"][data-fa-effect="deep"] .verse-fa {
-  text-shadow:
-     1px  1px 0  rgba(0,0,0,0.50),
-     2px  2px 0  rgba(0,0,0,0.36),
-     3px  3px 0  rgba(0,0,0,0.24),
-     4px  6px 14px rgba(0,0,0,0.60);
-}
-
 /* ── Farsi couplet — two hemistichs stacked ─────────────────── */
 .verse-fa {
   font-family: var(--font-fa);
   font-size: var(--fz-fa);
   line-height: var(--lh-fa);
   color: var(--c-text-fa);
+  text-shadow: var(--fa-text-shadow, none);
+  filter: var(--fa-filter, none);
   direction: rtl;
   text-align: right;
   display: flex;

@@ -158,10 +158,20 @@ function setFaColor(c, save = true) {
 
 // ── Farsi text effect ─────────────────────────────────────────────────────────
 
+const FA_EFFECTS = {
+  none:    { shadow: 'none',                                                          filter: 'none' },
+  shadow:  { shadow: '2px 4px 10px rgba(0,0,0,0.32)',                                filter: 'none' },
+  outline: { shadow: '-1px -1px 0 rgba(0,0,0,0.5), 1px -1px 0 rgba(0,0,0,0.5), -1px 1px 0 rgba(0,0,0,0.5), 1px 1px 0 rgba(0,0,0,0.5)', filter: 'none' },
+  deep:    { shadow: '1px 1px 0 rgba(0,0,0,0.22), 2px 2px 0 rgba(0,0,0,0.16), 3px 3px 0 rgba(0,0,0,0.10), 4px 6px 12px rgba(0,0,0,0.28)', filter: 'none' },
+  glow:    { shadow: '0 0 8px currentColor, 0 0 22px currentColor',                  filter: 'brightness(1.08) saturate(1.2)' },
+};
+
 function setFaEffect(e, save = true) {
-  html.dataset.faEffect = e;
+  const fx = FA_EFFECTS[e] || FA_EFFECTS.none;
+  html.style.setProperty('--fa-text-shadow', fx.shadow);
+  html.style.setProperty('--fa-filter',      fx.filter);
   if (save) localStorage.setItem('mv-fa-effect', e);
-  document.querySelectorAll('[data-fa-effect]').forEach(btn => {
+  document.querySelectorAll('#fa-effect-options [data-fa-effect]').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.faEffect === e);
   });
 }
