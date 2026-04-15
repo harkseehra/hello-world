@@ -609,6 +609,8 @@ button:focus-visible, a:focus-visible {
   font-size: var(--fz-fa);
   line-height: var(--lh-fa);
   color: var(--c-text-fa);
+  text-shadow: var(--fa-text-shadow, none);
+  filter: var(--fa-filter, none);
   direction: rtl;
   text-align: right;
   border-left: 1px solid var(--c-card-border);  /* internal divider between columns */

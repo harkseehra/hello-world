@@ -163,7 +163,7 @@ const FA_EFFECTS = {
   shadow:  { shadow: '2px 4px 10px rgba(0,0,0,0.32)',                                filter: 'none' },
   outline: { shadow: '-1px -1px 0 rgba(0,0,0,0.5), 1px -1px 0 rgba(0,0,0,0.5), -1px 1px 0 rgba(0,0,0,0.5), 1px 1px 0 rgba(0,0,0,0.5)', filter: 'none' },
   deep:    { shadow: '1px 1px 0 rgba(0,0,0,0.22), 2px 2px 0 rgba(0,0,0,0.16), 3px 3px 0 rgba(0,0,0,0.10), 4px 6px 12px rgba(0,0,0,0.28)', filter: 'none' },
-  glow:    { shadow: '0 0 8px currentColor, 0 0 22px currentColor',                  filter: 'brightness(1.08) saturate(1.2)' },
+  glow:    { shadow: '0 0 4px currentColor',                                          filter: 'brightness(1.04) saturate(1.1)' },
 };
 
 function setFaEffect(e, save = true) {
