@@ -41,6 +41,7 @@ const settingsPanel  = document.getElementById('settings-panel');
 const fontOpts       = document.getElementById('font-options');
 const enFontOpts     = document.getElementById('en-font-options');
 const faColorOpts    = document.getElementById('fa-color-options');
+const faEffectOpts   = document.getElementById('fa-effect-options');
 const enColorOpts    = document.getElementById('en-color-options');
 const sizeUpBtn      = document.getElementById('size-up');
 const sizeDownBtn    = document.getElementById('size-down');
@@ -86,6 +87,9 @@ function initFont() {
 
   const savedEnColor = localStorage.getItem('mv-en-color');
   if (savedEnColor) setEnColor(savedEnColor, false);
+
+  const savedFaEffect = localStorage.getItem('mv-fa-effect');
+  setFaEffect(savedFaEffect || 'none', false);
 
   const savedCRT = localStorage.getItem('mv-crt');
   if (savedCRT)    setCRT(savedCRT === 'on', false);
@@ -149,6 +153,16 @@ function setFaColor(c, save = true) {
   if (save) localStorage.setItem('mv-fa-color', c);
   document.querySelectorAll('[data-fa-color]').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.faColor === c);
+  });
+}
+
+// ── Farsi text effect ─────────────────────────────────────────────────────────
+
+function setFaEffect(e, save = true) {
+  html.dataset.faEffect = e;
+  if (save) localStorage.setItem('mv-fa-effect', e);
+  document.querySelectorAll('[data-fa-effect]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.faEffect === e);
   });
 }
 
@@ -694,6 +708,11 @@ enFontOpts.addEventListener('click', e => {
 faColorOpts.addEventListener('click', e => {
   const btn = e.target.closest('[data-fa-color]');
   if (btn) setFaColor(btn.dataset.faColor);
+});
+
+faEffectOpts.addEventListener('click', e => {
+  const btn = e.target.closest('[data-fa-effect]');
+  if (btn) setFaEffect(btn.dataset.faEffect);
 });
 
 enColorOpts.addEventListener('click', e => {
