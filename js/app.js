@@ -75,7 +75,7 @@ function initTheme() {
 function initFont() {
   const savedFont = localStorage.getItem('mv-font');
   // Migrate old font keys → 'vazir'
-  const resolvedFont = (savedFont === 'naskh' || savedFont === 'mirza' || savedFont === 'amiri') ? 'vazir' : savedFont;
+  const resolvedFont = (savedFont === 'naskh' || savedFont === 'mirza') ? 'vazir' : savedFont;
   setFont(resolvedFont || 'vazir', false);
 
   const savedEnFont = localStorage.getItem('mv-en-font');
