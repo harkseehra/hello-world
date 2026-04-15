@@ -39,7 +39,7 @@
   --font-fa-vazir:    'Vazirmatn', sans-serif;
   --font-fa-iransans: 'IRANSansWeb', sans-serif;
   --font-fa-harmattan:'Harmattan', sans-serif;
-  --font-fa-amiri:    'Amiri', serif;
+  --font-fa-lalezar:  'Lalezar', sans-serif;
   --font-fa:          var(--font-fa-vazir);
 
   --font-en-sans:  'Schibsted Grotesk', system-ui, sans-serif;
@@ -69,7 +69,7 @@
 [data-font="vazir"]     { --font-fa: var(--font-fa-vazir); }
 [data-font="iransans"]  { --font-fa: var(--font-fa-iransans); }
 [data-font="harmattan"] { --font-fa: var(--font-fa-harmattan); }
-[data-font="amiri"]     { --font-fa: var(--font-fa-amiri); }
+[data-font="lalezar"]   { --font-fa: var(--font-fa-lalezar); }
 [data-en-font="serif"]  { --font-en: var(--font-en-serif); }
 
 /* ── Dark ────────────────────────────────────────────────────── */
@@ -299,16 +299,16 @@ button:focus-visible, a:focus-visible {
   position: fixed;
   top: calc(var(--nav-h) + var(--progress-h) + 8px);
   right: 14px;
-  width: 222px;
+  width: 270px;
   background: var(--c-bg);
   border: 1px solid var(--c-divider);
   border-radius: 16px;
-  padding: 18px;
+  padding: 20px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.11), 0 2px 8px rgba(0,0,0,0.06);
   z-index: 910;
   display: none;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
   transition: background var(--dur-mid) var(--ease-out),
               border-color var(--dur-mid) var(--ease-out);
 }
@@ -324,12 +324,12 @@ button:focus-visible, a:focus-visible {
 
 .settings-label {
   font-family: var(--font-en-sans);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--c-text-fa);
-  opacity: 0.42;
+  opacity: 0.6;
   transition: color var(--dur-mid) var(--ease-out);
 }
 
