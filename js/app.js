@@ -8,8 +8,8 @@ const SIZE_FA_V   = [20, 22, 24, 26, 28, 30];     // Vazirmatn
 const LH_FA_V     = [2.05, 2.05, 2.10, 2.10, 2.15, 2.20];
 const SIZE_FA_N   = [20, 22, 24, 26, 28, 30];     // IranSans
 const LH_FA_N     = [2.10, 2.10, 2.10, 2.10, 2.15, 2.20];
-const SIZE_FA_H   = [20, 22, 24, 26, 28, 30];     // Harmattan
-const LH_FA_H     = [2.10, 2.10, 2.10, 2.15, 2.20, 2.25];
+const SIZE_FA_L   = [23, 25, 28, 30, 32, 35];     // Harmattan / Nazanin / Markazi (+15%)
+const LH_FA_L     = [2.00, 2.00, 2.05, 2.05, 2.10, 2.15];
 const LH_EN       = [1.80, 1.80, 1.80, 1.80, 1.85, 1.85];
 
 const VERSES_PER_PAGE = 10;
@@ -204,8 +204,8 @@ function applySizes() {
   let fzFa, lhFa;
   if (state.font === 'iransans') {
     fzFa = SIZE_FA_N[s]; lhFa = LH_FA_N[s];
-  } else if (state.font === 'harmattan') {
-    fzFa = SIZE_FA_H[s]; lhFa = LH_FA_H[s];
+  } else if (state.font === 'harmattan' || state.font === 'nazanin' || state.font === 'markazi') {
+    fzFa = SIZE_FA_L[s]; lhFa = LH_FA_L[s];
   } else {
     fzFa = SIZE_FA_V[s]; lhFa = LH_FA_V[s];  // vazir (default)
   }
