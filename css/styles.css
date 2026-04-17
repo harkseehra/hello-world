@@ -27,7 +27,7 @@
   --c-divider:      rgba(0, 0, 0, 0.08);
   --c-nav-bg:       #FFFFFF;
   --c-nav-border:   rgba(0, 0, 0, 0.09);
-  --fa-outline-color: color-mix(in srgb, var(--c-text-fa) 30%, white);
+  --fa-outline-color: rgba(0,0,0,0.28);      /* day: dark outline on light bg */
 
   --c-card-bg:             #FFFFFF;
   --c-card-border:         rgba(0, 0, 0, 0.07);
@@ -88,7 +88,7 @@
   --c-divider:      rgba(255, 255, 255, 0.09);
   --c-nav-bg:       #0D0D0D;
   --c-nav-border:   rgba(255, 255, 255, 0.09);
-  --fa-outline-color: color-mix(in srgb, var(--c-text-fa) 30%, black);
+  --fa-outline-color: rgba(255,255,255,0.55); /* dark: white outline on dark bg */
 
   --c-card-bg:             #1C1C1E;
   --c-card-border:         rgba(255, 255, 255, 0.08);
@@ -110,7 +110,7 @@
   --c-divider:      rgba(60, 40, 20, 0.09);
   --c-nav-bg:       #fff8ed;
   --c-nav-border:   rgba(60, 40, 20, 0.09);
-  --fa-outline-color: color-mix(in srgb, var(--c-text-fa) 30%, #fff8ed);
+  --fa-outline-color: rgba(60,40,20,0.25);    /* kaghaz: warm dark outline on parchment */
 
   --c-card-bg:             #fffaf2;
   --c-card-border:         rgba(60, 40, 20, 0.08);
