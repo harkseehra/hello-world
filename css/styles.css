@@ -11,6 +11,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'BNazanin';
+  src: url('../fonts/BNazanin.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ── 1. Tokens ───────────────────────────────────────────────── */
 
 :root {
@@ -40,7 +48,7 @@
   --font-fa-vazir:    'Vazirmatn', sans-serif;
   --font-fa-iransans: 'IRANSansWeb', sans-serif;
   --font-fa-harmattan:'Harmattan', sans-serif;
-  --font-fa-amiri:    'Amiri', serif;
+  --font-fa-nazanin:  'BNazanin', serif;
   --font-fa-markazi:  'Markazi Text', serif;
   --font-fa:          var(--font-fa-vazir);
 
@@ -71,7 +79,7 @@
 [data-font="vazir"]     { --font-fa: var(--font-fa-vazir); }
 [data-font="iransans"]  { --font-fa: var(--font-fa-iransans); }
 [data-font="harmattan"] { --font-fa: var(--font-fa-harmattan); }
-[data-font="amiri"]     { --font-fa: var(--font-fa-amiri); }
+[data-font="nazanin"]   { --font-fa: var(--font-fa-nazanin); }
 [data-font="markazi"]   { --font-fa: var(--font-fa-markazi); }
 [data-en-font="serif"]  { --font-en: var(--font-en-serif); }
 
