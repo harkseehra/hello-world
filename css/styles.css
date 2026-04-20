@@ -1101,47 +1101,8 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
 }
 
 
-/* ── 16. Cinema projector lens effects ───────────────────────── */
+/* ── 16. Phosphor glow (dark mode only) ──────────────────────── */
 
-/* Tungsten warmth — subtle warm tint via overlay, avoids full-page filter cost */
-
-/* Rounded viewport corners — like looking through a lens port */
-body {
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-/* Projector lens overlay — warm hot centre, edge roll-off, subtle amber tint */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9999;
-  border-radius: 10px;
-  background:
-    radial-gradient(ellipse 75% 60% at 50% 46%,
-      rgba(255, 210, 130, 0.09) 0%,
-      transparent 65%),
-    radial-gradient(ellipse at 50% 46%,
-      transparent 38%,
-      rgba(0, 0, 0, 0.22) 100%),
-    rgba(255, 200, 100, 0.025);
-}
-
-/* Film grain — static texture, no animation (animation was killing scroll performance) */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9998;
-  opacity: 0.045;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 220px 220px;
-}
-
-/* Halation — warm light bleeding into dark surroundings, like film emulsion */
 [data-theme="dark"] .verse-fa,
 [data-theme="dark"] .scholar-cell--fa {
   text-shadow:
@@ -1155,22 +1116,8 @@ body::before {
     0 0 60px rgba(215, 155, 65, 0.08);
 }
 
-/* Projector warm-up — plays every fresh session, like a lamp warming up */
-@keyframes projector-on {
-  0%   { opacity: 0;   filter: brightness(0)   blur(8px); }
-  8%   { opacity: 1;   filter: brightness(4)   blur(4px); }
-  15%  { opacity: 0.3; filter: brightness(0.2) blur(2px); }
-  25%  { opacity: 1;   filter: brightness(2)   blur(1px); }
-  40%  { opacity: 1;   filter: brightness(1.1) blur(0px); }
-  100% { opacity: 1;   filter: brightness(1)   blur(0px); }
-}
 
-body.crt-warmup {
-  animation: projector-on 0.80s var(--ease-out) both;
-}
-
-
-/* ── 16. Mobile burger menu ──────────────────────────────────── */
+/* ── 17. Mobile burger menu ──────────────────────────────────── */
 
 /* Burger button — hidden on desktop, visible on mobile */
 #btn-menu { display: none; }
@@ -1248,14 +1195,6 @@ body.crt-warmup {
   #site-logo   { padding: 0 16px; }
 
   /* No rounded corners on mobile — full bleed looks right on a phone screen */
-  body { border-radius: 0; }
-
-  /* Strip lens overlay, grain, and warm-up on mobile — too close to the screen */
-  body::after,
-  body::before { display: none; }
-
-  body.projector-warmup { animation: none; }
-
   /* Settings panel — full width on mobile */
   #settings-panel {
     left: 10px;

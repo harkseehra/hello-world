@@ -747,15 +747,5 @@ window.addEventListener('resize', () => {
 (async function boot() {
   initTheme();
   initFont();
-
-  // CRT warm-up: plays once per session (every time you open a fresh tab)
-  if (!sessionStorage.getItem('mv-visited')) {
-    sessionStorage.setItem('mv-visited', '1');
-    document.body.classList.add('crt-warmup');
-    document.body.addEventListener('animationend', () => {
-      document.body.classList.remove('crt-warmup');
-    }, { once: true });
-  }
-
   await switchBook(1);
 })();
