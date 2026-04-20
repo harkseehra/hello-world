@@ -239,6 +239,56 @@ button:focus-visible, a:focus-visible {
   transition: font-family var(--dur-fast) var(--ease-out);
 }
 
+/* Centre book pill */
+#nav-book-pill {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 50%;
+  margin-top: calc(-1 * var(--progress-h) / 2);
+  transform: translate(-50%, -50%);
+
+  font-family: var(--font-en-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--c-heading-text);
+
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.09);
+  border-radius: 100px;
+  padding: 5px 14px;
+
+  pointer-events: none;
+  user-select: none;
+  transition: color var(--dur-mid) var(--ease-out),
+              background var(--dur-mid) var(--ease-out);
+}
+
+[data-theme="dark"] #nav-book-pill {
+  background: rgba(30, 30, 32, 0.60);
+  border-color: rgba(255, 255, 255, 0.10);
+}
+
+[data-theme="kaghaz"] #nav-book-pill {
+  background: rgba(255, 248, 237, 0.65);
+  border-color: rgba(60, 40, 20, 0.10);
+}
+
+/* Mobile: pill becomes tappable TOC trigger */
+@media (max-width: 600px) {
+  #nav-book-pill {
+    pointer-events: auto;
+    cursor: pointer;
+  }
+  #nav-book-pill:active {
+    opacity: 0.65;
+  }
+}
+
 /* Book tabs */
 #book-tabs {
   display: flex;

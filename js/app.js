@@ -58,6 +58,7 @@ const tocPanel       = document.getElementById('toc-panel');
 const tocBackdrop    = document.getElementById('toc-backdrop');
 const tocList        = document.getElementById('toc-list');
 const tocBookLabel   = document.getElementById('toc-book-label');
+const navBookPill    = document.getElementById('nav-book-pill');
 const pager          = document.getElementById('pager');
 const pagerPrevBtn   = document.getElementById('pager-prev');
 const pagerNextBtn   = document.getElementById('pager-next');
@@ -285,6 +286,7 @@ async function switchBook(n) {
     t.setAttribute('aria-selected', String(on));
   });
   tocBookLabel.textContent = `Book ${n}`;
+  navBookPill.textContent  = `Book ${n}`;
 
   pager.hidden = true;
 
@@ -720,6 +722,12 @@ searchInput.addEventListener('input', e => runSearch(e.target.value));
 document.getElementById('site-logo').addEventListener('click', e => {
   e.preventDefault();
   tocPanel.classList.contains('open') ? closeTOC() : openTOC();
+});
+
+navBookPill.addEventListener('click', () => {
+  if (window.innerWidth <= 600) {
+    tocPanel.classList.contains('open') ? closeTOC() : openTOC();
+  }
 });
 tocBackdrop.addEventListener('click', closeTOC);
 
