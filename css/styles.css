@@ -45,12 +45,10 @@
   --c-heading-card-border: rgba(0, 0, 0, 0.06);
 
   /* Font stacks */
-  --font-fa-vazir:    'Vazirmatn', sans-serif;
-  --font-fa-harmattan:'Harmattan', sans-serif;
-  --font-fa-arial:    Arial, sans-serif;
-  --font-fa-nazanin:  'BNazanin', serif;
-  --font-fa-markazi:  'Markazi Text', serif;
-  --font-fa:          var(--font-fa-vazir);
+  --font-fa-vazir:   'Vazirmatn', sans-serif;
+  --font-fa-arial:   Arial, sans-serif;
+  --font-fa-nazanin: 'BNazanin', serif;
+  --font-fa:         var(--font-fa-vazir);
 
   --font-en-sans:  'Schibsted Grotesk', system-ui, sans-serif;
   --font-en-serif: 'Amiri', Georgia, serif;
@@ -76,12 +74,14 @@
 }
 
 /* ── Font toggles ────────────────────────────────────────────── */
-[data-font="vazir"]     { --font-fa: var(--font-fa-vazir); }
-[data-font="harmattan"] { --font-fa: var(--font-fa-harmattan); }
-[data-font="arial"]     { --font-fa: var(--font-fa-arial); }
-[data-font="nazanin"]   { --font-fa: var(--font-fa-nazanin); }
-[data-font="markazi"]   { --font-fa: var(--font-fa-markazi); }
-[data-en-font="serif"]  { --font-en: var(--font-en-serif); }
+[data-font="vazir"]    { --font-fa: var(--font-fa-vazir); }
+[data-font="arial"]    { --font-fa: var(--font-fa-arial); }
+[data-font="nazanin"]  { --font-fa: var(--font-fa-nazanin); }
+[data-en-font="serif"] { --font-en: var(--font-en-serif); }
+
+/* Arial: heavier weight to compensate for its thinner stroke design */
+[data-font="arial"] .verse-fa,
+[data-font="arial"] .scholar-cell--fa { font-weight: 600; }
 
 /* ── Dark ────────────────────────────────────────────────────── */
 [data-theme="dark"] {
@@ -1065,6 +1065,57 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
   text-align: center;
   transition: color var(--dur-mid) var(--ease-out);
   white-space: nowrap;
+}
+
+
+/* ── 16. Old-school ambient effects ──────────────────────────── */
+
+/* Warm colour temperature — barely perceptible sepia tint */
+html {
+  filter: sepia(0.04) saturate(0.96);
+}
+
+/* Rounded viewport corners — subtle CRT/monitor bezel hint */
+body {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Vignette overlay — darkens edges 10%, adds depth */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 10px;
+  background: radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(0,0,0,0.10) 100%);
+}
+
+/* Paper noise — fine grain over the whole viewport */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.030;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* CRT warm-up — one-time flicker animation on first visit */
+@keyframes crt-on {
+  0%   { opacity: 0;    filter: brightness(0);   }
+  10%  { opacity: 1;    filter: brightness(3);   }
+  14%  { opacity: 0.3;  filter: brightness(0.4); }
+  20%  { opacity: 1;    filter: brightness(1.5); }
+  30%  { opacity: 1;    filter: brightness(1);   }
+  100% { opacity: 1;    filter: brightness(1);   }
+}
+
+body.crt-warmup {
+  animation: crt-on 0.55s var(--ease-out) both;
 }
 
 

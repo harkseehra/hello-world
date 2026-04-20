@@ -6,8 +6,10 @@ const SIZE_STEPS  = 6;
 const SIZE_EN     = [16, 18, 20, 22, 24, 26];
 const SIZE_FA_V   = [20, 22, 24, 26, 28, 30];     // Vazirmatn
 const LH_FA_V     = [2.05, 2.05, 2.10, 2.10, 2.15, 2.20];
-const SIZE_FA_L   = [23, 25, 28, 30, 32, 35];     // Harmattan / Nazanin / Markazi (+15%)
+const SIZE_FA_L   = [23, 25, 28, 30, 32, 35];     // Nazanin (+15%)
 const LH_FA_L     = [2.00, 2.00, 2.05, 2.05, 2.10, 2.15];
+const SIZE_FA_A   = [24, 26, 29, 31, 34, 37];     // Arial (+20%, heavier optical weight)
+const LH_FA_A     = [2.00, 2.00, 2.05, 2.05, 2.10, 2.15];
 const LH_EN       = [1.80, 1.80, 1.80, 1.80, 1.85, 1.85];
 
 const VERSES_PER_PAGE = 10;
@@ -74,7 +76,7 @@ function initTheme() {
 function initFont() {
   const savedFont = localStorage.getItem('mv-font');
   // Migrate old font keys → 'vazir'
-  const resolvedFont = (savedFont === 'naskh' || savedFont === 'mirza' || savedFont === 'lalezar' || savedFont === 'amiri' || savedFont === 'iransans') ? 'vazir' : savedFont;
+  const resolvedFont = (savedFont === 'naskh' || savedFont === 'mirza' || savedFont === 'lalezar' || savedFont === 'amiri' || savedFont === 'iransans' || savedFont === 'harmattan' || savedFont === 'markazi') ? 'vazir' : savedFont;
   setFont(resolvedFont || 'vazir', false);
 
   const savedEnFont = localStorage.getItem('mv-en-font');
@@ -180,7 +182,9 @@ function applySizes() {
   const serif = html.dataset.enFont === 'serif';
 
   let fzFa, lhFa;
-  if (state.font === 'harmattan' || state.font === 'nazanin' || state.font === 'markazi') {
+  if (state.font === 'arial') {
+    fzFa = SIZE_FA_A[s]; lhFa = LH_FA_A[s];
+  } else if (state.font === 'nazanin') {
     fzFa = SIZE_FA_L[s]; lhFa = LH_FA_L[s];
   } else {
     fzFa = SIZE_FA_V[s]; lhFa = LH_FA_V[s];  // vazir (default)
@@ -750,5 +754,15 @@ window.addEventListener('resize', () => {
 (async function boot() {
   initTheme();
   initFont();
+
+  // CRT warm-up: play once on first visit
+  if (!localStorage.getItem('mv-visited')) {
+    localStorage.setItem('mv-visited', '1');
+    document.body.classList.add('crt-warmup');
+    document.body.addEventListener('animationend', () => {
+      document.body.classList.remove('crt-warmup');
+    }, { once: true });
+  }
+
   await switchBook(1);
 })();
