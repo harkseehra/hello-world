@@ -725,9 +725,7 @@ document.getElementById('site-logo').addEventListener('click', e => {
 });
 
 navBookPill.addEventListener('click', () => {
-  if (window.innerWidth <= 600) {
-    mobileMenu.classList.contains('open') ? closeMenu() : openMenu();
-  }
+  mobileMenu.classList.contains('open') ? closeMenu() : openMenu();
 });
 tocBackdrop.addEventListener('click', closeTOC);
 

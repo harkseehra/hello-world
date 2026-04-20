@@ -81,7 +81,7 @@
 
 /* Arial: heavier weight to compensate for its thinner stroke design */
 [data-font="arial"] .verse-fa,
-[data-font="arial"] .scholar-cell--fa { font-weight: 550; }
+[data-font="arial"] .scholar-cell--fa { font-weight: 500; }
 
 /* ── Dark ────────────────────────────────────────────────────── */
 [data-theme="dark"] {
@@ -1263,7 +1263,7 @@ body.crt-warmup {
 [data-theme="kaghaz"] #btn-menu[aria-expanded="true"] { background: rgba(60,40,20,0.06); }
 
 @media (max-width: 600px) {
-  #btn-menu  { display: flex; }
+  #btn-menu  { display: none; }   /* pill replaces hamburger for book selection */
   #book-tabs { display: none;  }
   #btn-mode  { display: none;  }
   #nav-actions { margin-left: auto; padding: 0 16px; }
