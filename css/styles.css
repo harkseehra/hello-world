@@ -487,25 +487,26 @@ button:focus-visible, a:focus-visible {
   background: var(--c-heading-card-bg);
   border-color: var(--c-heading-card-border);
   box-shadow: none;
-  padding: 22px 32px;
-  margin-top: 8px;
+  padding: 28px 36px;
+  margin-top: 12px;
 }
 
 .heading-en {
   font-family: var(--font-en-serif);
-  font-size: 15px;
-  font-weight: 400;
+  font-size: 20px;
+  font-weight: 500;
   font-style: italic;
-  line-height: 1.60;
+  line-height: 1.55;
   color: var(--c-heading-text);
-  margin-bottom: 14px;
+  margin-bottom: 18px;
   transition: color var(--dur-mid) var(--ease-out);
 }
 
 .heading-fa {
   font-family: var(--font-fa);
-  font-size: 19px;
-  line-height: 2.0;
+  font-size: 27px;
+  font-weight: 600;
+  line-height: 1.85;
   color: var(--c-heading-text);
   direction: rtl;
   text-align: right;
@@ -623,21 +624,22 @@ button:focus-visible, a:focus-visible {
   box-shadow: none;
 }
 .scholar-heading .scholar-cell {
-  padding: 20px 28px;
+  padding: 24px 28px;
 }
 .scholar-heading .scholar-cell--fa {
   font-family: var(--font-fa);
-  font-size: 18px;
-  line-height: 2.0;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.85;
   color: var(--c-heading-text);
   border-left-color: var(--c-heading-card-border);
 }
 .scholar-heading .scholar-cell--en {
   font-family: var(--font-en-serif);
-  font-size: 14px;
-  font-weight: 400;
+  font-size: 18px;
+  font-weight: 500;
   font-style: italic;
-  line-height: 1.60;
+  line-height: 1.55;
   color: var(--c-heading-text);
 }
 
