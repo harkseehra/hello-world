@@ -6,8 +6,6 @@ const SIZE_STEPS  = 6;
 const SIZE_EN     = [16, 18, 20, 22, 24, 26];
 const SIZE_FA_V   = [20, 22, 24, 26, 28, 30];     // Vazirmatn
 const LH_FA_V     = [2.05, 2.05, 2.10, 2.10, 2.15, 2.20];
-const SIZE_FA_N   = [20, 22, 24, 26, 28, 30];     // IranSans
-const LH_FA_N     = [2.10, 2.10, 2.10, 2.10, 2.15, 2.20];
 const SIZE_FA_L   = [23, 25, 28, 30, 32, 35];     // Harmattan / Nazanin / Markazi (+15%)
 const LH_FA_L     = [2.00, 2.00, 2.05, 2.05, 2.10, 2.15];
 const LH_EN       = [1.80, 1.80, 1.80, 1.80, 1.85, 1.85];
@@ -58,6 +56,7 @@ const searchResults  = document.getElementById('search-results');
 const tocPanel       = document.getElementById('toc-panel');
 const tocBackdrop    = document.getElementById('toc-backdrop');
 const tocList        = document.getElementById('toc-list');
+const tocBookLabel   = document.getElementById('toc-book-label');
 const pager          = document.getElementById('pager');
 const pagerPrevBtn   = document.getElementById('pager-prev');
 const pagerNextBtn   = document.getElementById('pager-next');
@@ -76,7 +75,7 @@ function initTheme() {
 function initFont() {
   const savedFont = localStorage.getItem('mv-font');
   // Migrate old font keys → 'vazir'
-  const resolvedFont = (savedFont === 'naskh' || savedFont === 'mirza' || savedFont === 'lalezar' || savedFont === 'amiri') ? 'vazir' : savedFont;
+  const resolvedFont = (savedFont === 'naskh' || savedFont === 'mirza' || savedFont === 'lalezar' || savedFont === 'amiri' || savedFont === 'iransans') ? 'vazir' : savedFont;
   setFont(resolvedFont || 'vazir', false);
 
   const savedEnFont = localStorage.getItem('mv-en-font');
@@ -202,9 +201,7 @@ function applySizes() {
   const serif = html.dataset.enFont === 'serif';
 
   let fzFa, lhFa;
-  if (state.font === 'iransans') {
-    fzFa = SIZE_FA_N[s]; lhFa = LH_FA_N[s];
-  } else if (state.font === 'harmattan' || state.font === 'nazanin' || state.font === 'markazi') {
+  if (state.font === 'harmattan' || state.font === 'nazanin' || state.font === 'markazi') {
     fzFa = SIZE_FA_L[s]; lhFa = LH_FA_L[s];
   } else {
     fzFa = SIZE_FA_V[s]; lhFa = LH_FA_V[s];  // vazir (default)
@@ -314,6 +311,7 @@ async function switchBook(n) {
     t.classList.toggle('active', on);
     t.setAttribute('aria-selected', String(on));
   });
+  tocBookLabel.textContent = `Book ${n}`;
 
   pager.hidden = true;
 

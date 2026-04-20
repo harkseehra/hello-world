@@ -87,7 +87,6 @@
       <p class="settings-label">Farsi Script</p>
       <div class="settings-row" id="font-options">
         <button class="settings-opt active" data-font="vazir">Vazirmatn</button>
-        <button class="settings-opt"        data-font="iransans">IranSans</button>
         <button class="settings-opt"        data-font="harmattan">Harmattan</button>
         <button class="settings-opt"        data-font="nazanin">Nazanin</button>
         <button class="settings-opt"        data-font="markazi">Markazi</button>
@@ -148,6 +147,9 @@
         </button>
         <button class="settings-opt color-swatch" data-en-color="konpeki" aria-label="Kon-Peki">
           <span class="swatch-dot" style="--sw: #0077CC; --sw-dark: #56C0FF;"></span>
+        </button>
+        <button class="settings-opt color-swatch" data-en-color="noir" aria-label="Noir">
+          <span class="swatch-dot" style="--sw: #1C1C1E; --sw-dark: #E8E8F2;"></span>
         </button>
       </div>
     </div>
@@ -217,6 +219,10 @@
   <!-- ── TOC ── -->
   <div id="toc-backdrop" aria-hidden="true"></div>
   <aside id="toc-panel" aria-hidden="true" aria-label="Table of contents">
+    <div id="toc-header">
+      <p id="toc-book-label">Book 1</p>
+      <p id="toc-title">Table of Contents</p>
+    </div>
     <div id="toc-list" role="list"></div>
   </aside>
 

@@ -46,7 +46,6 @@
 
   /* Font stacks */
   --font-fa-vazir:    'Vazirmatn', sans-serif;
-  --font-fa-iransans: 'IRANSansWeb', sans-serif;
   --font-fa-harmattan:'Harmattan', sans-serif;
   --font-fa-nazanin:  'BNazanin', serif;
   --font-fa-markazi:  'Markazi Text', serif;
@@ -77,7 +76,6 @@
 
 /* ── Font toggles ────────────────────────────────────────────── */
 [data-font="vazir"]     { --font-fa: var(--font-fa-vazir); }
-[data-font="iransans"]  { --font-fa: var(--font-fa-iransans); }
 [data-font="harmattan"] { --font-fa: var(--font-fa-harmattan); }
 [data-font="nazanin"]   { --font-fa: var(--font-fa-nazanin); }
 [data-font="markazi"]   { --font-fa: var(--font-fa-markazi); }
@@ -149,8 +147,11 @@
 [data-theme="kaghaz"][data-en-color="asagao"]  { --c-text-en: #1747B0; }
 [data-theme="light"][data-en-color="konpeki"]  { --c-text-en: #0077CC; }
 [data-theme="kaghaz"][data-en-color="konpeki"] { --c-text-en: #0066AA; }
+[data-theme="light"][data-en-color="noir"],
+[data-theme="kaghaz"][data-en-color="noir"]    { --c-text-en: #1C1C1E; }
 [data-theme="dark"][data-en-color="asagao"]    { --c-text-en: #7EB0E8; }
 [data-theme="dark"][data-en-color="konpeki"]   { --c-text-en: #56C0FF; }
+[data-theme="dark"][data-en-color="noir"]      { --c-text-en: #E8E8F2; }
 
 
 /* ── 2. Reset ────────────────────────────────────────────────── */
@@ -678,7 +679,7 @@ button:focus-visible, a:focus-visible {
   position: fixed;
   top: calc(var(--nav-h) + var(--progress-h));
   left: 0; bottom: 0;
-  width: 270px;
+  width: 320px;
   background: var(--c-bg);
   border-right: 1px solid var(--c-divider);
   transform: translateX(-100%);
@@ -687,7 +688,7 @@ button:focus-visible, a:focus-visible {
               border-color var(--dur-mid) var(--ease-out);
   z-index: 800;
   overflow-y: auto;
-  padding: 24px 0;
+  padding: 0;
   scrollbar-width: thin;
   scrollbar-color: var(--c-divider) transparent;
 }
@@ -696,19 +697,44 @@ button:focus-visible, a:focus-visible {
   box-shadow: 6px 0 28px rgba(0,0,0,0.07);
 }
 
+#toc-header {
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid var(--c-divider);
+  margin-bottom: 8px;
+}
+#toc-book-label {
+  font-family: var(--font-en-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+  margin: 0 0 4px;
+}
+#toc-title {
+  font-family: var(--font-en-sans);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--c-heading-text);
+  margin: 0;
+  transition: color var(--dur-mid) var(--ease-out);
+}
+
 .toc-item {
-  padding: 9px 22px;
+  padding: 11px 24px;
   font-family: var(--font-en-sans);
   font-size: 13px;
   color: var(--c-text-fa);
-  opacity: 0.58;
+  opacity: 0.62;
   cursor: pointer;
   border-left: 2px solid transparent;
-  line-height: 1.4;
+  border-bottom: 1px solid var(--c-divider);
+  line-height: 1.45;
   transition: opacity var(--dur-fast) var(--ease-out),
               background var(--dur-fast) var(--ease-out),
               border-color var(--dur-fast) var(--ease-out);
 }
+.toc-item:last-child { border-bottom: none; }
 .toc-item:hover {
   opacity: 1;
   background: rgba(var(--c-accent-rgb), 0.05);
