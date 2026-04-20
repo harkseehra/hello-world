@@ -243,10 +243,9 @@ button:focus-visible, a:focus-visible {
 #nav-book-pill {
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
   top: 50%;
-  margin-top: calc(-1 * var(--progress-h) / 2);
   transform: translate(-50%, -50%);
+  z-index: 10;
 
   font-family: var(--font-en-sans);
   font-size: 11px;
@@ -265,7 +264,8 @@ button:focus-visible, a:focus-visible {
   pointer-events: none;
   user-select: none;
   transition: color var(--dur-mid) var(--ease-out),
-              background var(--dur-mid) var(--ease-out);
+              background var(--dur-mid) var(--ease-out),
+              opacity 120ms ease;
 }
 
 [data-theme="dark"] #nav-book-pill {
@@ -278,15 +278,14 @@ button:focus-visible, a:focus-visible {
   border-color: rgba(60, 40, 20, 0.10);
 }
 
-/* Mobile: pill becomes tappable TOC trigger */
+/* Mobile: pill is a real button, fully tappable */
 @media (max-width: 600px) {
   #nav-book-pill {
     pointer-events: auto;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
   }
-  #nav-book-pill:active {
-    opacity: 0.65;
-  }
+  #nav-book-pill:active { opacity: 0.55; }
 }
 
 /* Book tabs */
