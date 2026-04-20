@@ -1220,8 +1220,13 @@ body.crt-warmup {
   #site-logo   { padding: 0 16px; }
 
   /* No rounded corners on mobile — full bleed looks right on a phone screen */
-  body,
-  body::after { border-radius: 0; }
+  body { border-radius: 0; }
+
+  /* Strip lens overlay, grain, and warm-up on mobile — too close to the screen */
+  body::after,
+  body::before { display: none; }
+
+  body.projector-warmup { animation: none; }
 
   /* Settings panel — full width on mobile */
   #settings-panel {
