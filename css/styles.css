@@ -1219,6 +1219,10 @@ body.crt-warmup {
   #nav-actions { margin-left: auto; padding: 0 16px; }
   #site-logo   { padding: 0 16px; }
 
+  /* No rounded corners on mobile — full bleed looks right on a phone screen */
+  body,
+  body::after { border-radius: 0; }
+
   /* Settings panel — full width on mobile */
   #settings-panel {
     left: 10px;
