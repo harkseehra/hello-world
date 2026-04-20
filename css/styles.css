@@ -81,7 +81,7 @@
 
 /* Arial: heavier weight to compensate for its thinner stroke design */
 [data-font="arial"] .verse-fa,
-[data-font="arial"] .scholar-cell--fa { font-weight: 600; }
+[data-font="arial"] .scholar-cell--fa { font-weight: 550; }
 
 /* ── Dark ────────────────────────────────────────────────────── */
 [data-theme="dark"] {
@@ -414,24 +414,6 @@ button:focus-visible, a:focus-visible {
   box-shadow: 0 0 0 2px var(--c-bg), 0 0 0 4px var(--sw-dark);
 }
 
-/* ── CRT pixel-dot effect (retro LCD / Game Boy feel) ───────── */
-[data-crt="on"] body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9999;
-  background-image: radial-gradient(circle, rgba(0,0,0,0.025) 1px, transparent 1px);
-  background-size: 4px 4px;
-}
-[data-theme="dark"][data-crt="on"] body::after {
-  background-image: radial-gradient(circle, rgba(0,0,0,0.052) 1px, transparent 1px);
-  background-size: 4px 4px;
-}
-[data-theme="kaghaz"][data-crt="on"] body::after {
-  background-image: radial-gradient(circle, rgba(60,40,20,0.023) 1px, transparent 1px);
-  background-size: 4px 4px;
-}
 
 
 /* ── 6. Layout ───────────────────────────────────────────────── */
@@ -1070,18 +1052,18 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
 
 /* ── 16. Old-school ambient effects ──────────────────────────── */
 
-/* Warm colour temperature — barely perceptible sepia tint */
+/* Warm colour temperature — gentle sepia tint like aged monitor phosphor */
 html {
-  filter: sepia(0.04) saturate(0.96);
+  filter: sepia(0.07) saturate(0.93);
 }
 
-/* Rounded viewport corners — subtle CRT/monitor bezel hint */
+/* Rounded viewport corners — CRT/monitor bezel hint */
 body {
   border-radius: 10px;
   overflow: hidden;
 }
 
-/* Vignette overlay — darkens edges 10%, adds depth */
+/* Vignette overlay — 12% edge darkening */
 body::after {
   content: '';
   position: fixed;
@@ -1089,33 +1071,39 @@ body::after {
   pointer-events: none;
   z-index: 9999;
   border-radius: 10px;
-  background: radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(0,0,0,0.10) 100%);
+  background: radial-gradient(ellipse at 50% 40%, transparent 50%, rgba(0,0,0,0.12) 100%);
 }
 
-/* Paper noise — fine grain over the whole viewport */
+/* Paper noise — fine grain at 5% opacity */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 9998;
-  opacity: 0.030;
+  opacity: 0.050;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 200px 200px;
 }
 
-/* CRT warm-up — one-time flicker animation on first visit */
+/* Phosphor glow — warm amber text shimmer in dark mode only */
+[data-theme="dark"] .verse-fa,
+[data-theme="dark"] .scholar-cell--fa {
+  text-shadow: 0 0 14px rgba(200, 175, 110, 0.22);
+}
+
+/* CRT warm-up — plays on every fresh session load */
 @keyframes crt-on {
   0%   { opacity: 0;    filter: brightness(0);   }
-  10%  { opacity: 1;    filter: brightness(3);   }
-  14%  { opacity: 0.3;  filter: brightness(0.4); }
-  20%  { opacity: 1;    filter: brightness(1.5); }
-  30%  { opacity: 1;    filter: brightness(1);   }
+  10%  { opacity: 1;    filter: brightness(3.5); }
+  16%  { opacity: 0.2;  filter: brightness(0.3); }
+  24%  { opacity: 1;    filter: brightness(1.8); }
+  34%  { opacity: 1;    filter: brightness(1);   }
   100% { opacity: 1;    filter: brightness(1);   }
 }
 
 body.crt-warmup {
-  animation: crt-on 0.55s var(--ease-out) both;
+  animation: crt-on 0.65s var(--ease-out) both;
 }
 
 

@@ -90,8 +90,6 @@ function initFont() {
   const savedEnColor = localStorage.getItem('mv-en-color');
   if (savedEnColor) setEnColor(savedEnColor, false);
 
-  const savedCRT = localStorage.getItem('mv-crt');
-  if (savedCRT)    setCRT(savedCRT === 'on', false);
 
   const savedStep = localStorage.getItem('mv-size-step');
   if (savedStep !== null) {
@@ -166,14 +164,6 @@ function setEnColor(c, save = true) {
   });
 }
 
-// ── CRT scanline effect ───────────────────────────────────────────────────────
-
-function setCRT(on, save = true) {
-  html.dataset.crt = on ? 'on' : 'off';
-  const btn = document.getElementById('btn-crt');
-  if (btn) btn.classList.toggle('active', on);
-  if (save) localStorage.setItem('mv-crt', on ? 'on' : 'off');
-}
 
 // ── Size ──────────────────────────────────────────────────────────────────────
 
@@ -707,9 +697,6 @@ enColorOpts.addEventListener('click', e => {
   if (btn) setEnColor(btn.dataset.enColor);
 });
 
-document.getElementById('btn-crt').addEventListener('click', () => {
-  setCRT(html.dataset.crt !== 'on');
-});
 
 sizeUpBtn.addEventListener('click',   sizeUp);
 sizeDownBtn.addEventListener('click', sizeDown);
@@ -755,9 +742,9 @@ window.addEventListener('resize', () => {
   initTheme();
   initFont();
 
-  // CRT warm-up: play once on first visit
-  if (!localStorage.getItem('mv-visited')) {
-    localStorage.setItem('mv-visited', '1');
+  // CRT warm-up: plays once per session (every time you open a fresh tab)
+  if (!sessionStorage.getItem('mv-visited')) {
+    sessionStorage.setItem('mv-visited', '1');
     document.body.classList.add('crt-warmup');
     document.body.addEventListener('animationend', () => {
       document.body.classList.remove('crt-warmup');
