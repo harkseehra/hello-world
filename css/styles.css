@@ -27,11 +27,11 @@
 
   /* Light mode */
   --c-bg:           #F2F2F7;
-  --c-text-fa:      #007868;   /* Peacock — default Farsi colour */
+  --c-text-fa:      #3C3D3E;   /* Irozumi — default Farsi colour */
   --c-text-en:      #1747B0;   /* Asa-Gao — default English colour */
   --c-heading:      #007F7A;
   --c-heading-text: #1C1C1E;
-  --c-verse-num:    rgba(91, 95, 206, 0.50);
+  --c-verse-num:    rgba(91, 95, 206, 0.28);
   --c-divider:      rgba(0, 0, 0, 0.08);
   --c-nav-bg:       #FFFFFF;
   --c-nav-border:   rgba(0, 0, 0, 0.09);
@@ -47,6 +47,7 @@
   /* Font stacks */
   --font-fa-vazir:    'Vazirmatn', sans-serif;
   --font-fa-harmattan:'Harmattan', sans-serif;
+  --font-fa-arial:    Arial, sans-serif;
   --font-fa-nazanin:  'BNazanin', serif;
   --font-fa-markazi:  'Markazi Text', serif;
   --font-fa:          var(--font-fa-vazir);
@@ -77,6 +78,7 @@
 /* ── Font toggles ────────────────────────────────────────────── */
 [data-font="vazir"]     { --font-fa: var(--font-fa-vazir); }
 [data-font="harmattan"] { --font-fa: var(--font-fa-harmattan); }
+[data-font="arial"]     { --font-fa: var(--font-fa-arial); }
 [data-font="nazanin"]   { --font-fa: var(--font-fa-nazanin); }
 [data-font="markazi"]   { --font-fa: var(--font-fa-markazi); }
 [data-en-font="serif"]  { --font-en: var(--font-en-serif); }
@@ -90,7 +92,7 @@
   --c-heading-text: #E0E1E0;
   --c-accent:       #8284F2;
   --c-accent-rgb:   130, 132, 242;
-  --c-verse-num:    rgba(224, 225, 224, 0.50);
+  --c-verse-num:    rgba(224, 225, 224, 0.28);
   --c-divider:      rgba(255, 255, 255, 0.09);
   --c-nav-bg:       #0D0D0D;
   --c-nav-border:   rgba(255, 255, 255, 0.09);
@@ -112,7 +114,7 @@
   --c-heading-text: #1A1208;
   --c-accent:       #5B5FCE;
   --c-accent-rgb:   91, 95, 206;
-  --c-verse-num:    rgba(91, 95, 206, 0.50);
+  --c-verse-num:    rgba(91, 95, 206, 0.28);
   --c-divider:      rgba(60, 40, 20, 0.09);
   --c-nav-bg:       #fff8ed;
   --c-nav-border:   rgba(60, 40, 20, 0.09);
@@ -126,21 +128,18 @@
 }
 
 /* ── Farsi colour tokens ─────────────────────────────────────── */
-[data-theme="light"][data-fa-color="peacock"],
-[data-theme="kaghaz"][data-fa-color="peacock"] { --c-text-fa: #007868; }
 [data-theme="light"][data-fa-color="irozumi"],
 [data-theme="kaghaz"][data-fa-color="irozumi"] { --c-text-fa: #3C3D3E; }
-[data-theme="light"][data-fa-color="khun"],
-[data-theme="kaghaz"][data-fa-color="khun"]    { --c-text-fa: #991515; }
-[data-theme="light"][data-fa-color="zafarani"],
-[data-theme="kaghaz"][data-fa-color="zafarani"]{ --c-text-fa: #8B6800; }
 [data-theme="light"][data-fa-color="nila"],
 [data-theme="kaghaz"][data-fa-color="nila"]    { --c-text-fa: #2C3A8C; }
-[data-theme="dark"][data-fa-color="peacock"]   { --c-text-fa: #4ECDC4; }
+[data-theme="light"][data-fa-color="qahwa"],
+[data-theme="kaghaz"][data-fa-color="qahwa"]   { --c-text-fa: #6F4E37; }
+[data-theme="light"][data-fa-color="sorkh"],
+[data-theme="kaghaz"][data-fa-color="sorkh"]   { --c-text-fa: #CC3333; }
 [data-theme="dark"][data-fa-color="irozumi"]   { --c-text-fa: #E0E1E0; }
-[data-theme="dark"][data-fa-color="khun"]      { --c-text-fa: #FF7070; }
-[data-theme="dark"][data-fa-color="zafarani"]  { --c-text-fa: #E5B84A; }
 [data-theme="dark"][data-fa-color="nila"]      { --c-text-fa: #7EA8E8; }
+[data-theme="dark"][data-fa-color="qahwa"]     { --c-text-fa: #C4956A; }
+[data-theme="dark"][data-fa-color="sorkh"]     { --c-text-fa: #E07878; }
 
 /* ── English colour tokens ───────────────────────────────────── */
 [data-theme="light"][data-en-color="asagao"],
@@ -535,10 +534,9 @@ button:focus-visible, a:focus-visible {
 .verse-fa {
   font-family: var(--font-fa);
   font-size: var(--fz-fa);
+  font-weight: 500;
   line-height: var(--lh-fa);
   color: var(--c-text-fa);
-  text-shadow: var(--fa-text-shadow, none);
-  filter: var(--fa-filter, none);
   direction: rtl;
   text-align: right;
   display: flex;
@@ -619,10 +617,9 @@ button:focus-visible, a:focus-visible {
 .scholar-cell--fa {
   font-family: var(--font-fa);
   font-size: var(--fz-fa);
+  font-weight: 500;
   line-height: var(--lh-fa);
   color: var(--c-text-fa);
-  text-shadow: var(--fa-text-shadow, none);
-  filter: var(--fa-filter, none);
   direction: rtl;
   text-align: right;
   border-left: 1px solid var(--c-card-border);  /* internal divider between columns */
@@ -1013,11 +1010,13 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
   padding: 6px 8px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.10), 0 0 0 0.5px rgba(0,0,0,0.04);
   z-index: 400;
+  opacity: 0.72;
   transition: background var(--dur-mid) var(--ease-out),
               border-color var(--dur-mid) var(--ease-out),
               box-shadow var(--dur-mid) var(--ease-out),
               opacity 200ms ease;
 }
+#pager:hover { opacity: 1; }
 
 [data-theme="dark"] #pager {
   box-shadow: 0 4px 20px rgba(0,0,0,0.40), 0 0 0 0.5px rgba(255,255,255,0.06);

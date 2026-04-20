@@ -39,7 +39,6 @@ const settingsPanel  = document.getElementById('settings-panel');
 const fontOpts       = document.getElementById('font-options');
 const enFontOpts     = document.getElementById('en-font-options');
 const faColorOpts    = document.getElementById('fa-color-options');
-const faEffectOpts   = document.getElementById('fa-effect-options');
 const enColorOpts    = document.getElementById('en-color-options');
 const sizeUpBtn      = document.getElementById('size-up');
 const sizeDownBtn    = document.getElementById('size-down');
@@ -82,13 +81,12 @@ function initFont() {
   if (savedEnFont) setEnFont(savedEnFont, false);
 
   const savedFaColor = localStorage.getItem('mv-fa-color');
-  if (savedFaColor) setFaColor(savedFaColor, false);
+  const removedFaColors = ['peacock', 'khun', 'zafarani'];
+  const resolvedFaColor = removedFaColors.includes(savedFaColor) ? 'irozumi' : savedFaColor;
+  if (resolvedFaColor) setFaColor(resolvedFaColor, false);
 
   const savedEnColor = localStorage.getItem('mv-en-color');
   if (savedEnColor) setEnColor(savedEnColor, false);
-
-  const savedFaEffect = localStorage.getItem('mv-fa-effect');
-  setFaEffect(savedFaEffect || 'none', false);
 
   const savedCRT = localStorage.getItem('mv-crt');
   if (savedCRT)    setCRT(savedCRT === 'on', false);
@@ -155,25 +153,6 @@ function setFaColor(c, save = true) {
   });
 }
 
-// ── Farsi text effect ─────────────────────────────────────────────────────────
-
-const FA_EFFECTS = {
-  none:    { shadow: 'none',                                                          filter: 'none' },
-  shadow:  { shadow: '2px 4px 10px rgba(0,0,0,0.32)',                                filter: 'none' },
-  outline: { shadow: '-1px -1px 0 var(--fa-outline-color), 1px -1px 0 var(--fa-outline-color), -1px 1px 0 var(--fa-outline-color), 1px 1px 0 var(--fa-outline-color)', filter: 'none' },
-  deep:    { shadow: '1px 1px 0 rgba(0,0,0,0.22), 2px 2px 0 rgba(0,0,0,0.16), 3px 3px 0 rgba(0,0,0,0.10), 4px 6px 12px rgba(0,0,0,0.28)', filter: 'none' },
-  glow:    { shadow: '0 0 4px currentColor',                                          filter: 'brightness(1.04) saturate(1.1)' },
-};
-
-function setFaEffect(e, save = true) {
-  const fx = FA_EFFECTS[e] || FA_EFFECTS.none;
-  html.style.setProperty('--fa-text-shadow', fx.shadow);
-  html.style.setProperty('--fa-filter',      fx.filter);
-  if (save) localStorage.setItem('mv-fa-effect', e);
-  document.querySelectorAll('#fa-effect-options [data-fa-effect]').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.faEffect === e);
-  });
-}
 
 // ── English colour ────────────────────────────────────────────────────────────
 
@@ -718,10 +697,6 @@ faColorOpts.addEventListener('click', e => {
   if (btn) setFaColor(btn.dataset.faColor);
 });
 
-faEffectOpts.addEventListener('click', e => {
-  const btn = e.target.closest('[data-fa-effect]');
-  if (btn) setFaEffect(btn.dataset.faEffect);
-});
 
 enColorOpts.addEventListener('click', e => {
   const btn = e.target.closest('[data-en-color]');
