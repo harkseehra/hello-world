@@ -1052,20 +1052,20 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
 }
 
 
-/* ── 16. Old-school ambient effects ──────────────────────────── */
+/* ── 16. Cinema projector lens effects ───────────────────────── */
 
-/* Warm colour temperature — gentle sepia tint like aged monitor phosphor */
+/* Tungsten warmth — amber-golden colour temperature of a projector bulb */
 html {
-  filter: sepia(0.07) saturate(0.93);
+  filter: sepia(0.10) saturate(1.05) hue-rotate(-5deg);
 }
 
-/* Rounded viewport corners — CRT/monitor bezel hint */
+/* Rounded viewport corners — like looking through a lens port */
 body {
   border-radius: 10px;
   overflow: hidden;
 }
 
-/* Vignette overlay — 12% edge darkening */
+/* Projector lens overlay — warm hot centre, natural light roll-off at edges */
 body::after {
   content: '';
   position: fixed;
@@ -1073,39 +1073,72 @@ body::after {
   pointer-events: none;
   z-index: 9999;
   border-radius: 10px;
-  background: radial-gradient(ellipse at 50% 40%, transparent 50%, rgba(0,0,0,0.12) 100%);
+  background:
+    radial-gradient(ellipse 75% 60% at 50% 46%,
+      rgba(255, 210, 130, 0.07) 0%,
+      transparent 65%),
+    radial-gradient(ellipse at 50% 46%,
+      transparent 38%,
+      rgba(0, 0, 0, 0.22) 100%);
 }
 
-/* Paper noise — fine grain at 5% opacity */
+/* Film grain — organic, animated like real celluloid */
+@keyframes grain-shift {
+  0%   { transform: translate(0%,    0%);   }
+  10%  { transform: translate(-3%,   2%);   }
+  20%  { transform: translate(2%,   -4%);   }
+  30%  { transform: translate(-4%,   1%);   }
+  40%  { transform: translate(3%,    4%);   }
+  50%  { transform: translate(-2%,  -3%);   }
+  60%  { transform: translate(4%,   -2%);   }
+  70%  { transform: translate(-1%,   4%);   }
+  80%  { transform: translate(3%,   -3%);   }
+  90%  { transform: translate(-4%,   2%);   }
+  100% { transform: translate(0%,    0%);   }
+}
+
 body::before {
   content: '';
   position: fixed;
-  inset: 0;
+  top: -30%;
+  left: -30%;
+  width: 160%;
+  height: 160%;
   pointer-events: none;
   z-index: 9998;
-  opacity: 0.050;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 200px 200px;
+  opacity: 0.055;
+  will-change: transform;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+  animation: grain-shift 1s steps(10) infinite;
 }
 
-/* Phosphor glow — warm amber text shimmer in dark mode only */
+/* Halation — warm light bleeding into dark surroundings, like film emulsion */
 [data-theme="dark"] .verse-fa,
 [data-theme="dark"] .scholar-cell--fa {
-  text-shadow: 0 0 14px rgba(200, 175, 110, 0.22);
+  text-shadow:
+    0 0 18px rgba(235, 190, 95, 0.20),
+    0 0 48px rgba(215, 155, 65, 0.09);
+}
+[data-theme="dark"] .heading-fa,
+[data-theme="dark"] .scholar-heading .scholar-cell--fa {
+  text-shadow:
+    0 0 24px rgba(235, 190, 95, 0.18),
+    0 0 60px rgba(215, 155, 65, 0.08);
 }
 
-/* CRT warm-up — plays on every fresh session load */
-@keyframes crt-on {
-  0%   { opacity: 0;    filter: brightness(0);   }
-  10%  { opacity: 1;    filter: brightness(3.5); }
-  16%  { opacity: 0.2;  filter: brightness(0.3); }
-  24%  { opacity: 1;    filter: brightness(1.8); }
-  34%  { opacity: 1;    filter: brightness(1);   }
-  100% { opacity: 1;    filter: brightness(1);   }
+/* Projector warm-up — plays every fresh session, like a lamp warming up */
+@keyframes projector-on {
+  0%   { opacity: 0;   filter: brightness(0)   blur(8px); }
+  8%   { opacity: 1;   filter: brightness(4)   blur(4px); }
+  15%  { opacity: 0.3; filter: brightness(0.2) blur(2px); }
+  25%  { opacity: 1;   filter: brightness(2)   blur(1px); }
+  40%  { opacity: 1;   filter: brightness(1.1) blur(0px); }
+  100% { opacity: 1;   filter: brightness(1)   blur(0px); }
 }
 
 body.crt-warmup {
-  animation: crt-on 0.65s var(--ease-out) both;
+  animation: projector-on 0.80s var(--ease-out) both;
 }
 
 
