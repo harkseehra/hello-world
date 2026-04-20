@@ -731,7 +731,7 @@ tocBackdrop.addEventListener('click', closeTOC);
 
 document.addEventListener('click', e => {
   if (!settingsPanel.contains(e.target) && e.target !== btnSettings) closeSettings();
-  if (!mobileMenu.contains(e.target) && e.target !== btnMenu) closeMenu();
+  if (!mobileMenu.contains(e.target) && e.target !== btnMenu && e.target !== navBookPill) closeMenu();
 });
 
 focusScroll.addEventListener('scroll',  updateProgress, { passive: true });
