@@ -359,6 +359,8 @@ function goToPage(targetPage, dir = 1) {
   if (targetPage === state.page && (focusScroll.children.length || scholarGrid.children.length)) return;
 
   state.page = targetPage;
+  localStorage.setItem('mv-last-book', state.book);
+  localStorage.setItem('mv-last-page', targetPage);
 
   if (state.mode === 'focus') {
     renderFocusPage(state.pages[state.page]);
@@ -747,5 +749,13 @@ window.addEventListener('resize', () => {
 (async function boot() {
   initTheme();
   initFont();
-  await switchBook(1);
+
+  const lastBook = parseInt(localStorage.getItem('mv-last-book')) || 1;
+  const lastPage = parseInt(localStorage.getItem('mv-last-page')) || 0;
+
+  await switchBook(lastBook);
+
+  if (lastPage > 0 && lastPage < state.pages.length) {
+    goToPage(lastPage, 0);
+  }
 })();
