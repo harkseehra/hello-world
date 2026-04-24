@@ -50,7 +50,7 @@
   --font-fa-nazanin: 'BNazanin', serif;
   --font-fa:         var(--font-fa-vazir);
 
-  --font-en-sans:  'Schibsted Grotesk', system-ui, sans-serif;
+  --font-en-sans:  'Schibsted Grotesk', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --font-en-serif: 'Amiri', Georgia, serif;
   --font-en:       var(--font-en-sans);
 
@@ -65,6 +65,8 @@
   --nav-h:      52px;
   --progress-h:  2px;
   --col-w:      min(760px, 100vw - 48px);
+  --safe-top:    env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
 
   /* Motion — deliberately slower for a calm, elegant feel */
   --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
@@ -85,7 +87,7 @@
 
 /* ── Dark ────────────────────────────────────────────────────── */
 [data-theme="dark"] {
-  --c-bg:           #0D0D0D;
+  --c-bg:           #0F0E0E;
   --c-text-fa:      #4ECDC4;   /* dark Peacock default */
   --c-text-en:      #7EB0E8;   /* dark Asa-Gao default */
   --c-heading:      #B4B8B4;
@@ -94,7 +96,7 @@
   --c-accent-rgb:   130, 132, 242;
   --c-verse-num:    rgba(224, 225, 224, 0.28);
   --c-divider:      rgba(255, 255, 255, 0.09);
-  --c-nav-bg:       #0D0D0D;
+  --c-nav-bg:       #0F0E0E;
   --c-nav-border:   rgba(255, 255, 255, 0.09);
   --fa-outline-color: rgba(255,255,255,0.55); /* dark: white outline on dark bg */
 
@@ -189,7 +191,7 @@ button:focus-visible, a:focus-visible {
 /* ── 3. Progress bar ─────────────────────────────────────────── */
 
 #progress-bar {
-  position: fixed; top: 0; left: 0;
+  position: fixed; top: var(--safe-top); left: 0;
   width: 0%; height: var(--progress-h);
   background: var(--c-accent);
   z-index: 1000;
@@ -201,8 +203,9 @@ button:focus-visible, a:focus-visible {
 
 #top-nav {
   position: fixed;
-  top: var(--progress-h); left: 0; right: 0;
-  height: var(--nav-h);
+  top: 0; left: 0; right: 0;
+  height: calc(var(--nav-h) + var(--safe-top));
+  padding-top: var(--safe-top);
   background: var(--c-nav-bg);
   border-bottom: 1px solid var(--c-nav-border);
   display: flex;
@@ -342,8 +345,8 @@ button:focus-visible, a:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 34px; height: 34px;
-  border-radius: 8px;
+  width: 44px; height: 44px;
+  border-radius: 10px;
   color: var(--c-text-fa);
   opacity: 0.38;
   font-size: 13px;
@@ -505,14 +508,14 @@ button:focus-visible, a:focus-visible {
 /* ── 7. Reading view ─────────────────────────────────────────── */
 
 #focus-scroll {
-  height: calc(100vh - var(--nav-h) - var(--progress-h));
+  height: calc(100vh - var(--nav-h) - var(--progress-h) - var(--safe-top));
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px 16px 120px;
+  padding: 20px 16px calc(120px + var(--safe-bottom));
   scrollbar-width: none;
   gap: 10px;
 }
@@ -1275,8 +1278,8 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   color: var(--c-text-fa);
   opacity: 0.40;

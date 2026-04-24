@@ -1,0 +1,14 @@
+{
+  "name": "Masnavi · مثنوی",
+  "short_name": "Masnavi",
+  "description": "Rumi's Masnavi — Persian poetry with English translation",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#F2F2F7",
+  "theme_color": "#FFFFFF",
+  "orientation": "portrait-primary",
+  "lang": "fa",
+  "dir": "rtl",
+  "icons": []
+}
