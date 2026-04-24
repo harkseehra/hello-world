@@ -916,7 +916,79 @@ button:focus-visible, a:focus-visible {
   #bookmark-panel { width: 100%; border-left: none; }
 }
 
-/* ── 11. Search ──────────────────────────────────────────────── */
+/* ── 11. Highlights ──────────────────────────────────────────── */
+
+/* Highlight colours on text spans / paragraphs */
+[data-hl="yellow"] { background: rgba(255, 214, 0,  0.32); border-radius: 3px; }
+[data-hl="green"]  { background: rgba(52,  199, 89, 0.28); border-radius: 3px; }
+[data-hl="blue"]   { background: rgba(10,  132, 255,0.22); border-radius: 3px; }
+[data-hl="pink"]   { background: rgba(255, 55,  95, 0.22); border-radius: 3px; }
+[data-hl="purple"] { background: rgba(175, 82,  222,0.22); border-radius: 3px; }
+
+[data-theme="dark"] [data-hl="yellow"] { background: rgba(255, 214, 0,  0.28); }
+[data-theme="dark"] [data-hl="green"]  { background: rgba(52,  199, 89, 0.25); }
+[data-theme="dark"] [data-hl="blue"]   { background: rgba(10,  132, 255,0.28); }
+[data-theme="dark"] [data-hl="pink"]   { background: rgba(255, 55,  95, 0.28); }
+[data-theme="dark"] [data-hl="purple"] { background: rgba(175, 82,  222,0.28); }
+
+/* Farsi spans: add subtle left padding so highlight doesn't clip RTL text */
+.verse-fa span[data-hl] { padding: 1px 4px; }
+.verse-en[data-hl]      { padding: 2px 4px; border-radius: 4px; }
+
+/* Floating colour picker */
+#hl-picker {
+  position: fixed;
+  display: none;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: var(--c-nav-bg);
+  border: 1px solid var(--c-nav-border);
+  border-radius: 100px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.14), 0 0 0 0.5px rgba(0,0,0,0.06);
+  z-index: 9000;
+  transition: background var(--dur-mid) var(--ease-out),
+              border-color var(--dur-mid) var(--ease-out);
+}
+#hl-picker.open { display: flex; }
+
+.hl-swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  transition: transform 100ms var(--ease-spring), border-color 100ms ease;
+  flex-shrink: 0;
+}
+.hl-swatch[data-hl-color="yellow"] { background: #FFD600; }
+.hl-swatch[data-hl-color="green"]  { background: #34C759; }
+.hl-swatch[data-hl-color="blue"]   { background: #0A84FF; }
+.hl-swatch[data-hl-color="pink"]   { background: #FF375F; }
+.hl-swatch[data-hl-color="purple"] { background: #AF52DE; }
+.hl-swatch:hover           { transform: scale(1.20); }
+.hl-swatch--active         { border-color: var(--c-heading-text); transform: scale(1.10); }
+
+.hl-divider {
+  width: 1px;
+  height: 16px;
+  background: var(--c-divider);
+  flex-shrink: 0;
+}
+
+.hl-clear {
+  font-size: 13px;
+  color: var(--c-text-fa);
+  opacity: 0.45;
+  padding: 0 2px;
+  transition: opacity var(--dur-fast) ease;
+}
+.hl-clear:hover { opacity: 1; }
+
+/* Clickable lines — subtle cursor cue */
+.verse-fa span[data-part],
+.verse-en { cursor: pointer; }
+
+/* ── 12. Search ──────────────────────────────────────────────── */
 
 #search-overlay {
   position: fixed; inset: 0;

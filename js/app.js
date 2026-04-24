@@ -59,6 +59,7 @@ const tocBackdrop       = document.getElementById('toc-backdrop');
 const tocList           = document.getElementById('toc-list');
 const tocBookLabel      = document.getElementById('toc-book-label');
 const bookmarkPanel     = document.getElementById('bookmark-panel');
+const hlPicker          = document.getElementById('hl-picker');
 const bookmarkBackdrop  = document.getElementById('bookmark-backdrop');
 const bookmarkList      = document.getElementById('bookmark-list');
 const btnBookmarks      = document.getElementById('btn-bookmarks');
@@ -417,15 +418,24 @@ function makeCard(entry) {
     faWrap.lang      = 'fa';
     faWrap.dir       = 'rtl';
 
-    (entry.farsi || '').split(' / ').forEach(h => {
+    (entry.farsi || '').split(' / ').forEach((h, i) => {
       const span = document.createElement('span');
-      span.textContent = h.trim();
+      span.textContent  = h.trim();
+      span.dataset.part = `fa${i}`;
+      span.addEventListener('click', e => {
+        e.stopPropagation();
+        showPicker(span, state.book, entry.index, `fa${i}`);
+      });
       faWrap.appendChild(span);
     });
 
     const enEl = document.createElement('p');
     enEl.className   = 'verse-en';
     enEl.textContent = entry.english || '';
+    enEl.addEventListener('click', e => {
+      e.stopPropagation();
+      showPicker(enEl, state.book, entry.index, 'en');
+    });
 
     const numEl = document.createElement('span');
     numEl.className   = 'verse-num';
@@ -445,6 +455,7 @@ function makeCard(entry) {
     el.appendChild(enEl);
     el.appendChild(numEl);
     el.appendChild(bmBtn);
+    applyHighlights(el, entry);
   }
 
   return el;
@@ -723,6 +734,99 @@ function closeBookmarkPanel() {
   bookmarkBackdrop.classList.remove('visible');
   btnBookmarks.setAttribute('aria-expanded', 'false');
 }
+
+// ── Highlights ────────────────────────────────────────────────────────────────
+
+let _hlTarget = null;  // { book, index, part }
+
+function loadHighlights() {
+  try { return JSON.parse(localStorage.getItem('mv-highlights') || '[]'); }
+  catch { return []; }
+}
+
+function saveHighlights(hls) {
+  localStorage.setItem('mv-highlights', JSON.stringify(hls));
+}
+
+function getHighlight(book, index, part) {
+  return loadHighlights().find(h => h.book === book && h.index === index && h.part === part);
+}
+
+function setHighlight(book, index, part, color) {
+  const hls = loadHighlights();
+  const i   = hls.findIndex(h => h.book === book && h.index === index && h.part === part);
+  if (!color) {
+    if (i >= 0) hls.splice(i, 1);
+  } else {
+    if (i >= 0) hls[i].color = color;
+    else hls.push({ book, index, part, color });
+  }
+  saveHighlights(hls);
+}
+
+function applyHighlights(cardEl, entry) {
+  const spans = cardEl.querySelectorAll('.verse-fa span');
+  spans.forEach((span, i) => {
+    const part = `fa${i}`;
+    const hl   = getHighlight(state.book, entry.index, part);
+    span.dataset.hl = hl ? hl.color : '';
+  });
+  const enEl = cardEl.querySelector('.verse-en');
+  if (enEl) {
+    const hl = getHighlight(state.book, entry.index, 'en');
+    enEl.dataset.hl = hl ? hl.color : '';
+  }
+}
+
+function showPicker(anchorEl, book, index, part) {
+  _hlTarget = { book, index, part };
+
+  // Mark current highlight in picker
+  const current = getHighlight(book, index, part);
+  hlPicker.querySelectorAll('.hl-swatch').forEach(btn => {
+    btn.classList.toggle('hl-swatch--active', btn.dataset.hlColor === (current?.color || ''));
+  });
+
+  // Position above the anchor element
+  const rect = anchorEl.getBoundingClientRect();
+  const pickerW = 196;
+  let left = rect.left + rect.width / 2 - pickerW / 2;
+  left = Math.max(8, Math.min(left, window.innerWidth - pickerW - 8));
+  const top  = rect.top - 52;
+
+  hlPicker.style.left = left + 'px';
+  hlPicker.style.top  = (top < 8 ? rect.bottom + 8 : top) + 'px';
+  hlPicker.classList.add('open');
+  hlPicker.removeAttribute('aria-hidden');
+}
+
+function hidePicker() {
+  hlPicker.classList.remove('open');
+  hlPicker.setAttribute('aria-hidden', 'true');
+  _hlTarget = null;
+}
+
+// Picker swatch clicks
+hlPicker.addEventListener('click', e => {
+  const btn = e.target.closest('[data-hl-color]');
+  if (!btn || !_hlTarget) return;
+  const { book, index, part } = _hlTarget;
+  const color = btn.dataset.hlColor;
+  setHighlight(book, index, part, color);
+  // Re-apply to visible card
+  const card = document.querySelector(`.verse-unit[data-index="${index}"]`);
+  if (card) {
+    const spans = card.querySelectorAll('.verse-fa span');
+    spans.forEach((span, i) => { span.dataset.hl = getHighlight(book, index, `fa${i}`)?.color || ''; });
+    const enEl = card.querySelector('.verse-en');
+    if (enEl) enEl.dataset.hl = getHighlight(book, index, 'en')?.color || '';
+  }
+  hidePicker();
+});
+
+document.addEventListener('click', e => {
+  if (!hlPicker.contains(e.target)) hidePicker();
+}, true);  // capture so it fires before the span click handler
 
 function openSearch() {
   searchPanel.classList.add('open');
