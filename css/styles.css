@@ -775,7 +775,148 @@ button:focus-visible, a:focus-visible {
 }
 
 
-/* ── 10. Search ──────────────────────────────────────────────── */
+/* ── 10. Bookmarks ───────────────────────────────────────────── */
+
+#bookmark-panel {
+  position: fixed;
+  top: calc(var(--nav-h) + var(--progress-h));
+  right: 0; bottom: 0;
+  width: 320px;
+  background: var(--c-bg);
+  border-left: 1px solid var(--c-divider);
+  transform: translateX(100%);
+  transition: transform var(--dur-mid) var(--ease-out),
+              background var(--dur-mid) var(--ease-out),
+              border-color var(--dur-mid) var(--ease-out);
+  z-index: 800;
+  overflow-y: auto;
+  padding: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-divider) transparent;
+}
+#bookmark-panel.open {
+  transform: translateX(0);
+  box-shadow: -6px 0 28px rgba(0,0,0,0.07);
+}
+
+#bookmark-header {
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid var(--c-divider);
+}
+#bookmark-title {
+  font-family: var(--font-en-sans);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--c-heading-text);
+  margin: 0;
+  transition: color var(--dur-mid) var(--ease-out);
+}
+
+#bookmark-backdrop {
+  display: none;
+  position: fixed; inset: 0;
+  z-index: 799;
+}
+#bookmark-backdrop.visible { display: block; }
+
+.bm-empty {
+  padding: 32px 24px;
+  font-family: var(--font-en-sans);
+  font-size: 13px;
+  color: var(--c-text-fa);
+  opacity: 0.45;
+  text-align: center;
+}
+
+.bm-item {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--c-divider);
+}
+.bm-item:last-child { border-bottom: none; }
+
+.bm-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 14px 20px;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out);
+}
+.bm-body:hover { background: rgba(var(--c-accent-rgb), 0.05); }
+
+.bm-book-label {
+  font-family: var(--font-en-sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+.bm-fa {
+  font-family: var(--font-fa);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--c-text-fa);
+  direction: rtl;
+  width: 100%;
+  text-align: right;
+  line-height: 1.7;
+  transition: color var(--dur-mid) var(--ease-out);
+}
+.bm-en {
+  font-family: var(--font-en);
+  font-size: 11px;
+  color: var(--c-text-en);
+  opacity: 0.75;
+  line-height: 1.5;
+  transition: color var(--dur-mid) var(--ease-out);
+}
+
+.bm-delete {
+  padding: 0 16px;
+  font-size: 18px;
+  color: var(--c-text-fa);
+  opacity: 0.25;
+  cursor: pointer;
+  transition: opacity var(--dur-fast) var(--ease-out);
+  flex-shrink: 0;
+}
+.bm-delete:hover { opacity: 0.7; }
+
+/* Bookmark button on verse cards */
+.bm-btn {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  color: var(--c-text-fa);
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-out),
+              background var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out);
+}
+.verse-unit { position: relative; }
+.verse-unit:hover .bm-btn { opacity: 0.30; }
+.bm-btn:hover             { opacity: 1 !important; background: rgba(var(--c-accent-rgb), 0.08); }
+.bm-btn.bm-active         { opacity: 1; color: var(--c-accent); }
+.bm-btn.bm-active svg path { fill: currentColor; }
+
+/* Always show on mobile */
+@media (max-width: 600px) {
+  .bm-btn { opacity: 0.22; }
+  #bookmark-panel { width: 100%; border-left: none; }
+}
+
+/* ── 11. Search ──────────────────────────────────────────────── */
 
 #search-overlay {
   position: fixed; inset: 0;

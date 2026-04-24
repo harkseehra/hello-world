@@ -55,6 +55,11 @@
           <line x1="2" y1="11.5" x2="14" y2="11.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
         </svg>
       </button>
+      <button id="btn-bookmarks" class="nav-btn" aria-label="Bookmarks" aria-expanded="false">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 2h10a1 1 0 0 1 1 1v11l-6-3.5L2 14V3a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+        </svg>
+      </button>
       <button id="btn-search" class="nav-btn" aria-label="Search">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
           <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.4"/>
@@ -192,6 +197,15 @@
     </div>
     <div id="search-results" role="list"></div>
   </div>
+
+  <!-- ── Bookmarks ── -->
+  <div id="bookmark-backdrop" aria-hidden="true"></div>
+  <aside id="bookmark-panel" aria-hidden="true" aria-label="Bookmarks">
+    <div id="bookmark-header">
+      <p id="bookmark-title">Bookmarks</p>
+    </div>
+    <div id="bookmark-list" role="list"></div>
+  </aside>
 
   <!-- ── TOC ── -->
   <div id="toc-backdrop" aria-hidden="true"></div>

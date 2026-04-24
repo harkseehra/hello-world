@@ -54,10 +54,14 @@ const searchOverlay  = document.getElementById('search-overlay');
 const searchPanel    = document.getElementById('search-panel');
 const searchInput    = document.getElementById('search-input');
 const searchResults  = document.getElementById('search-results');
-const tocPanel       = document.getElementById('toc-panel');
-const tocBackdrop    = document.getElementById('toc-backdrop');
-const tocList        = document.getElementById('toc-list');
-const tocBookLabel   = document.getElementById('toc-book-label');
+const tocPanel          = document.getElementById('toc-panel');
+const tocBackdrop       = document.getElementById('toc-backdrop');
+const tocList           = document.getElementById('toc-list');
+const tocBookLabel      = document.getElementById('toc-book-label');
+const bookmarkPanel     = document.getElementById('bookmark-panel');
+const bookmarkBackdrop  = document.getElementById('bookmark-backdrop');
+const bookmarkList      = document.getElementById('bookmark-list');
+const btnBookmarks      = document.getElementById('btn-bookmarks');
 const navBookPill    = document.getElementById('nav-book-pill');
 const pager          = document.getElementById('pager');
 const pagerPrevBtn   = document.getElementById('pager-prev');
@@ -328,6 +332,7 @@ async function switchBook(n) {
       window.scrollTo(0, 0);
     }
     updatePager();
+    refreshBookmarkButtons();
 
     // Slide new content in from the opposite side
     activeEl.animate(
@@ -370,6 +375,7 @@ function goToPage(targetPage, dir = 1) {
     window.scrollTo(0, 0);
   }
   updatePager();
+  refreshBookmarkButtons();
 
   if (dir === 0) return;  // TOC / search jump — instant, no animation
 
@@ -425,9 +431,20 @@ function makeCard(entry) {
     numEl.className   = 'verse-num';
     numEl.textContent = entry.number || '';
 
+    const bmBtn = document.createElement('button');
+    bmBtn.className        = 'bm-btn';
+    bmBtn.setAttribute('aria-label', 'Bookmark this verse');
+    bmBtn.innerHTML        = `<svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 2h10a1 1 0 0 1 1 1v11l-6-3.5L2 14V3a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
+    bmBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      const faText = (entry.farsi || '').split(' / ')[0].trim();
+      toggleBookmark(state.book, entry.index, faText, entry.english || '');
+    });
+
     el.appendChild(faWrap);
     el.appendChild(enEl);
     el.appendChild(numEl);
+    el.appendChild(bmBtn);
   }
 
   return el;
@@ -589,6 +606,124 @@ function closeTOC() {
   tocPanel.setAttribute('aria-hidden', 'true');
   tocBackdrop.classList.remove('visible');
 }
+// ── Bookmarks ─────────────────────────────────────────────────────────────────
+
+function loadBookmarks() {
+  try { return JSON.parse(localStorage.getItem('mv-bookmarks') || '[]'); }
+  catch { return []; }
+}
+
+function saveBookmarks(bms) {
+  localStorage.setItem('mv-bookmarks', JSON.stringify(bms));
+}
+
+function isBookmarked(book, index) {
+  return loadBookmarks().some(b => b.book === book && b.index === index);
+}
+
+function toggleBookmark(book, index, faText, enText) {
+  const bms = loadBookmarks();
+  const i   = bms.findIndex(b => b.book === book && b.index === index);
+  if (i >= 0) {
+    bms.splice(i, 1);
+  } else {
+    bms.unshift({ book, index, fa: faText, en: enText, savedAt: Date.now() });
+  }
+  saveBookmarks(bms);
+  refreshBookmarkButtons();
+  if (bookmarkPanel.classList.contains('open')) renderBookmarkPanel();
+}
+
+function refreshBookmarkButtons() {
+  const bms = loadBookmarks();
+  document.querySelectorAll('.bm-btn').forEach(btn => {
+    const card  = btn.closest('[data-index]');
+    const index = parseInt(card?.dataset.index);
+    const on    = bms.some(b => b.book === state.book && b.index === index);
+    btn.classList.toggle('bm-active', on);
+    btn.setAttribute('aria-label', on ? 'Remove bookmark' : 'Bookmark this verse');
+  });
+}
+
+function renderBookmarkPanel() {
+  const bms = loadBookmarks();
+  bookmarkList.innerHTML = '';
+  if (!bms.length) {
+    const empty = document.createElement('p');
+    empty.className   = 'bm-empty';
+    empty.textContent = 'No bookmarks yet.';
+    bookmarkList.appendChild(empty);
+    return;
+  }
+  const frag = document.createDocumentFragment();
+  bms.forEach(b => {
+    const item = document.createElement('div');
+    item.className = 'bm-item';
+    item.role      = 'listitem';
+
+    const body = document.createElement('button');
+    body.className = 'bm-body';
+    body.addEventListener('click', async () => {
+      closeBookmarkPanel();
+      if (b.book !== state.book) await switchBook(b.book);
+      const pg = state.pages.findIndex(page => page.some(e => e.index === b.index));
+      if (pg >= 0) goToPage(pg, 0);
+    });
+
+    const label = document.createElement('span');
+    label.className   = 'bm-book-label';
+    label.textContent = `Book ${b.book}`;
+
+    const fa = document.createElement('span');
+    fa.className = 'bm-fa';
+    fa.lang      = 'fa';
+    fa.dir       = 'rtl';
+    fa.textContent = b.fa || '';
+
+    const en = document.createElement('span');
+    en.className   = 'bm-en';
+    en.textContent = b.en ? b.en.slice(0, 80) + (b.en.length > 80 ? '…' : '') : '';
+
+    body.appendChild(label);
+    body.appendChild(fa);
+    body.appendChild(en);
+
+    const del = document.createElement('button');
+    del.className      = 'bm-delete';
+    del.setAttribute('aria-label', 'Remove bookmark');
+    del.innerHTML      = '&times;';
+    del.addEventListener('click', e => {
+      e.stopPropagation();
+      const all = loadBookmarks();
+      const idx = all.findIndex(x => x.book === b.book && x.index === b.index);
+      if (idx >= 0) all.splice(idx, 1);
+      saveBookmarks(all);
+      refreshBookmarkButtons();
+      renderBookmarkPanel();
+    });
+
+    item.appendChild(body);
+    item.appendChild(del);
+    frag.appendChild(item);
+  });
+  bookmarkList.appendChild(frag);
+}
+
+function openBookmarkPanel() {
+  renderBookmarkPanel();
+  bookmarkPanel.classList.add('open');
+  bookmarkPanel.removeAttribute('aria-hidden');
+  bookmarkBackdrop.classList.add('visible');
+  btnBookmarks.setAttribute('aria-expanded', 'true');
+}
+
+function closeBookmarkPanel() {
+  bookmarkPanel.classList.remove('open');
+  bookmarkPanel.setAttribute('aria-hidden', 'true');
+  bookmarkBackdrop.classList.remove('visible');
+  btnBookmarks.setAttribute('aria-expanded', 'false');
+}
+
 function openSearch() {
   searchPanel.classList.add('open');
   searchOverlay.classList.add('open');
@@ -713,7 +848,7 @@ document.addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
   if (e.key === 'ArrowRight' && state.mode === 'focus') goToPage(state.page + 1,  1);
   if (e.key === 'ArrowLeft'  && state.mode === 'focus') goToPage(state.page - 1, -1);
-  if (e.key === 'Escape') { closeSearch(); closeTOC(); closeSettings(); closeMenu(); }
+  if (e.key === 'Escape') { closeSearch(); closeTOC(); closeSettings(); closeMenu(); closeBookmarkPanel(); }
   if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
 });
 
@@ -731,9 +866,15 @@ navBookPill.addEventListener('click', () => {
 });
 tocBackdrop.addEventListener('click', closeTOC);
 
+btnBookmarks.addEventListener('click', () => {
+  bookmarkPanel.classList.contains('open') ? closeBookmarkPanel() : openBookmarkPanel();
+});
+bookmarkBackdrop.addEventListener('click', closeBookmarkPanel);
+
 document.addEventListener('click', e => {
   if (!settingsPanel.contains(e.target) && e.target !== btnSettings) closeSettings();
   if (!mobileMenu.contains(e.target) && e.target !== btnMenu && e.target !== navBookPill) closeMenu();
+  if (!bookmarkPanel.contains(e.target) && e.target !== btnBookmarks) closeBookmarkPanel();
 });
 
 focusScroll.addEventListener('scroll',  updateProgress, { passive: true });
