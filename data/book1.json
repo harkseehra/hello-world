@@ -13,61 +13,91 @@
           "type": "verse",
           "number": 1,
           "farsi": "بشنو از نى چون حكايت مى‏كند / از جدايى‏ها شكايت مى‏كند",
-          "english": "Listen to the reed how it tells a tale, complaining of separations—"
+          "english": "Listen to the reed how it tells a tale, complaining of separations—",
+          "punjabi": "ਸੁਣ ਇਸ ਬੰਸਰੀ ਤੋਂ, ਕਿਵੇਂ ਕਹਾਣੀ ਸੁਣਾਉਂਦੀ ਹੈ / ਵਿਛੋੜੇ ਦੀਆਂ ਸ਼ਿਕਾਇਤਾਂ ਗਾਉਂਦੀ ਹੈ",
+          "punjabi_status": "pending",
+          "punjabi_confidence": "green"
         },
         {
           "type": "verse",
           "number": 2,
           "farsi": "كز نيستان تا مرا ببريده‏اند / در نفيرم مرد و زن ناليده‏اند",
-          "english": "Saying, “Ever since I was parted from the reed-bed, my lament, has caused man and woman to moan."
+          "english": "Saying, “Ever since I was parted from the reed-bed, my lament, has caused man and woman to moan.",
+          "punjabi": "ਕਹਿੰਦੀ ਹੈ: ਜਦੋਂ ਤੋਂ ਨਲਕਾਂ ਦੇ ਬਨ ਤੋਂ ਵੱਖ ਹੋਈ / ਮੇਰੇ ਵੈਣਾਂ ਨੇ ਮਰਦ ਤੇ ਔਰਤ ਨੂੰ ਰੁਆਇਆ",
+          "punjabi_status": "pending",
+          "punjabi_confidence": "green"
         },
         {
           "type": "verse",
           "number": 3,
           "farsi": "سينه خواهم شرحه شرحه از فراق / تا بگويم شرح درد اشتياق‏",
-          "english": "I want a bosom torn by severance, that I may unfold the pain of love-desire."
+          "english": "I want a bosom torn by severance, that I may unfold the pain of love-desire.",
+          "punjabi": "ਮੈਨੂੰ ਚਾਹੀਦਾ ਹੈ ਵਿਛੋੜੇ ਨਾਲ ਚੀਰਿਆ ਸੀਨਾ / ਤਾਂ ਜੋ ਲਾਲਸਾ ਦੇ ਦਰਦ ਦੀ ਕਹਾਣੀ ਕਹਾਂ",
+          "punjabi_status": "pending",
+          "punjabi_confidence": "green"
         },
         {
           "type": "verse",
           "number": 4,
           "farsi": "هر كسى كاو دور ماند از اصل خويش / باز جويد روزگار وصل خويش‏",
-          "english": "Every one who is left far from his source wishes back the time when he was united with it."
+          "english": "Every one who is left far from his source wishes back the time when he was united with it.",
+          "punjabi": "ਜੋ ਕੋਈ ਆਪਣੇ ਮੂਲ ਤੋਂ ਦੂਰ ਰਿਹਾ / ਉਹ ਮਿਲਾਪ ਦੇ ਵੇਲੇ ਨੂੰ ਭਾਲਦਾ ਹੈ",
+          "punjabi_status": "pending",
+          "punjabi_confidence": "green"
         },
         {
           "type": "verse",
           "number": 5,
           "farsi": "من به هر جمعيتى نالان شدم / جفت بد حالان و خوش حالان شدم‏",
-          "english": "In every company I uttered my grieving cry; I consorted with the unhappy and with them that rejoice."
+          "english": "In every company I uttered my grieving cry; I consorted with the unhappy and with them that rejoice.",
+          "punjabi": "ਮੈਂ ਹਰ ਮਹਿਫ਼ਿਲ ਵਿੱਚ ਵਿਰਲਾਪ ਕੀਤਾ / ਦੁਖੀਆਂ ਅਤੇ ਸੁਖੀਆਂ ਦੋਵਾਂ ਦਾ ਸੰਗੀ ਬਣਿਆ",
+          "punjabi_status": "pending",
+          "punjabi_confidence": "green"
         },
         {
           "type": "verse",
           "number": 6,
           "farsi": "هر كسى از ظن خود شد يار من / از درون من نجست اسرار من‏",
-          "english": "Every one became my friend from his own opinion; none sought out my secrets from within me."
+          "english": "Every one became my friend from his own opinion; none sought out my secrets from within me.",
+          "punjabi": "ਹਰ ਕੋਈ ਆਪਣੀ ਸੋਚ ਨਾਲ ਮੇਰਾ ਯਾਰ ਬਣਿਆ / ਕਿਸੇ ਨੇ ਮੇਰੇ ਅੰਦਰੋਂ ਮੇਰੇ ਭੇਦ ਨਾ ਢੂੰਡੇ",
+          "punjabi_status": "pending",
+          "punjabi_confidence": "green"
         },
         {
           "type": "verse",
           "number": 7,
           "farsi": "سر من از ناله‏ى من دور نيست / ليك چشم و گوش را آن نور نيست‏",
-          "english": "My secret is not far from my complaint, but ear and eye lack the light."
+          "english": "My secret is not far from my complaint, but ear and eye lack the light.",
+          "punjabi": "ਮੇਰਾ ਭੇਦ ਮੇਰੇ ਵੈਣਾਂ ਤੋਂ ਦੂਰ ਨਹੀਂ / ਪਰ ਅੱਖਾਂ ਤੇ ਕੰਨਾਂ ਵਿੱਚ ਉਹ ਰੋਸ਼ਨੀ ਨਹੀਂ",
+          "punjabi_status": "pending",
+          "punjabi_confidence": "yellow"
         },
         {
           "type": "verse",
           "number": 8,
           "farsi": "تن ز جان و جان ز تن مستور نيست / ليك كس را ديد جان دستور نيست‏",
-          "english": "Body is not veiled from soul, or soul from body, yet none is permitted to see the soul."
+          "english": "Body is not veiled from soul, or soul from body, yet none is permitted to see the soul.",
+          "punjabi": "ਤਨ ਆਤਮਾ ਤੋਂ ਲੁਕਿਆ ਨਹੀਂ, ਆਤਮਾ ਤਨ ਤੋਂ / ਪਰ ਕਿਸੇ ਨੂੰ ਆਤਮਾ ਵੇਖਣ ਦੀ ਇਜਾਜ਼ਤ ਨਹੀਂ",
+          "punjabi_status": "pending",
+          "punjabi_confidence": "yellow"
         },
         {
           "type": "verse",
           "number": 9,
           "farsi": "آتش است اين بانگ ناى و نيست باد / هر كه اين آتش ندارد نيست باد",
-          "english": "This noise of the reed is fire, it is not wind: whoever has not this fire, may he be nothing!"
+          "english": "This noise of the reed is fire, it is not wind: whoever has not this fire, may he be nothing!",
+          "punjabi": "ਬੰਸਰੀ ਦੀ ਇਹ ਅਵਾਜ਼ ਅੱਗ ਹੈ, ਹਵਾ ਨਹੀਂ / ਜਿਸ ਕੋਲ ਇਹ ਅੱਗ ਨਹੀਂ, ਉਹ ਮਿਟ ਜਾਵੇ",
+          "punjabi_status": "pending",
+          "punjabi_confidence": "green"
         },
         {
           "type": "verse",
           "number": 10,
           "farsi": "آتش عشق است كاندر نى فتاد / جوشش عشق است كاندر مى‏فتاد",
-          "english": "It is the fire of Love that is in the reed, it is the fervour of Love that is in the wine."
+          "english": "It is the fire of Love that is in the reed, it is the fervour of Love that is in the wine.",
+          "punjabi": "ਬੰਸਰੀ ਵਿੱਚ ਡਿੱਗੀ ਪ੍ਰੇਮ ਦੀ ਅੱਗ ਹੈ / ਸ਼ਰਾਬ ਵਿੱਚ ਡਿੱਗਿਆ ਪ੍ਰੇਮ ਦਾ ਜੋਸ਼ ਹੈ",
+          "punjabi_status": "pending",
+          "punjabi_confidence": "green"
         },
         {
           "type": "verse",

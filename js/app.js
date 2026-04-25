@@ -453,6 +453,14 @@ function makeCard(entry) {
 
     el.appendChild(faWrap);
     el.appendChild(enEl);
+
+    if (entry.punjabi && entry.punjabi_status === 'approved' && html.dataset.showPunjabi !== 'off') {
+      const paEl = document.createElement('p');
+      paEl.className   = 'verse-pa';
+      paEl.textContent = entry.punjabi;
+      el.appendChild(paEl);
+    }
+
     el.appendChild(numEl);
     el.appendChild(bmBtn);
     applyHighlights(el, entry);
@@ -913,6 +921,25 @@ btnSettings.addEventListener('click', e => {
   e.stopPropagation();
   settingsPanel.classList.contains('open') ? closeSettings() : openSettings();
 });
+
+// ── Punjabi toggle ────────────────────────────────────────────────────────────
+const btnPunjabiOn  = document.getElementById('btn-punjabi-on');
+const btnPunjabiOff = document.getElementById('btn-punjabi-off');
+
+function setPunjabi(show, save = true) {
+  html.dataset.showPunjabi = show ? 'on' : 'off';
+  btnPunjabiOn.classList.toggle('active',  show);
+  btnPunjabiOff.classList.toggle('active', !show);
+  if (save) localStorage.setItem('mv-punjabi', show ? 'on' : 'off');
+  // Re-render current page so Punjabi lines appear/disappear
+  renderPage(state.page);
+}
+
+const savedPunjabi = localStorage.getItem('mv-punjabi');
+if (savedPunjabi) setPunjabi(savedPunjabi === 'on', false);
+
+btnPunjabiOn.addEventListener('click',  () => setPunjabi(true));
+btnPunjabiOff.addEventListener('click', () => setPunjabi(false));
 
 btnThemeToggle.addEventListener('click', () => {
   const cycle = { light: 'dark', dark: 'kaghaz', kaghaz: 'light' };

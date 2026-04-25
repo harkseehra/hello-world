@@ -330,3 +330,235 @@ document.getElementById('copy-en-font').addEventListener('click', function () {
   ].join('\n\n/* ── */\n\n');
   copyText(text, this);
 });
+
+/* ─────────────────────────────────────────────
+   Translations section
+   ───────────────────────────────────────────── */
+
+const BATCH_SIZE = 10;
+
+let trState = {
+  book:     1,
+  verses:   [],   // all verses for current book
+  batch:    0,    // current batch index (0-based)
+  changes:  {},   // { verseNumber: { punjabi, status } }
+};
+
+const trBookTabs    = document.querySelectorAll('.tr-book-tab');
+const trVerseList   = document.getElementById('tr-verse-list');
+const trBatchInfo   = document.getElementById('tr-batch-info');
+const trPrev        = document.getElementById('tr-prev');
+const trNext        = document.getElementById('tr-next');
+const trProgressFill= document.getElementById('tr-progress-bar-fill');
+const trProgressText= document.getElementById('tr-progress-text');
+const trApproveAll  = document.getElementById('tr-approve-all');
+const trCopyPatch   = document.getElementById('tr-copy-patch');
+const trPatchOutput = document.getElementById('tr-patch-output');
+const trPatchPre    = document.getElementById('tr-patch-pre');
+
+async function trLoadBook(bookNum) {
+  trState.book    = bookNum;
+  trState.batch   = 0;
+  trState.changes = {};
+  trVerseList.innerHTML = '<div class="tr-no-data">Loading…</div>';
+  try {
+    const res  = await fetch(`../data/book${bookNum}.json`);
+    const data = await res.json();
+    trState.verses = [];
+    for (const section of data.sections) {
+      for (const entry of section.entries) {
+        if (entry.type === 'verse') trState.verses.push(entry);
+      }
+    }
+    trRenderBatch();
+  } catch (e) {
+    trVerseList.innerHTML = `<div class="tr-no-data">Could not load Book ${bookNum}.</div>`;
+  }
+}
+
+function trCurrentBatch() {
+  const start = trState.batch * BATCH_SIZE;
+  return trState.verses.slice(start, start + BATCH_SIZE);
+}
+
+function trUpdateProgress() {
+  const total    = trState.verses.length;
+  const approved = trState.verses.filter(v => {
+    const ch = trState.changes[v.number];
+    if (ch) return ch.status === 'approved';
+    return v.punjabi_status === 'approved';
+  }).length;
+  const pct = total ? (approved / total * 100).toFixed(1) : 0;
+  trProgressFill.style.width = pct + '%';
+  trProgressText.textContent = `${approved} / ${total} approved`;
+}
+
+function trGetStatus(verse) {
+  const ch = trState.changes[verse.number];
+  if (ch) return ch.status;
+  return verse.punjabi_status || 'none';
+}
+
+function trGetPunjabi(verse) {
+  const ch = trState.changes[verse.number];
+  if (ch) return ch.punjabi;
+  return verse.punjabi || '';
+}
+
+function trRenderBatch() {
+  const batch     = trCurrentBatch();
+  const totalBatches = Math.ceil(trState.verses.length / BATCH_SIZE);
+  const start     = trState.batch * BATCH_SIZE + 1;
+  const end       = Math.min(start + BATCH_SIZE - 1, trState.verses.length);
+
+  trBatchInfo.textContent = `Verses ${start}–${end} of ${trState.verses.length}`;
+  trPrev.disabled = trState.batch === 0;
+  trNext.disabled = trState.batch >= totalBatches - 1;
+
+  if (!batch.length) {
+    trVerseList.innerHTML = '<div class="tr-no-data">No verses in this batch.</div>';
+    trUpdateProgress();
+    return;
+  }
+
+  const hasPending = batch.some(v => v.punjabi);
+
+  if (!hasPending) {
+    trVerseList.innerHTML = `
+      <div class="tr-no-data">
+        No translations generated yet for this batch.<br>
+        Ask Claude Code: <strong>"Generate Punjabi batch ${trState.batch + 1} for Book ${trState.book}"</strong>
+      </div>`;
+    trUpdateProgress();
+    return;
+  }
+
+  trVerseList.innerHTML = batch.map(verse => {
+    const status   = trGetStatus(verse);
+    const pa       = trGetPunjabi(verse);
+    const conf     = verse.punjabi_confidence || 'green';
+    const confLabel = conf === 'green' ? '🟢 confident' : conf === 'yellow' ? '🟡 uncertain' : '🔴 difficult';
+    const cardClass = status === 'approved' ? 'approved' : status === 'flagged' ? 'flagged' : '';
+
+    if (!pa) return `
+      <div class="tr-verse" data-num="${verse.number}">
+        <div class="tr-verse-num">#${verse.number}</div>
+        <div class="tr-verse-body">
+          <div class="tr-farsi">${verse.farsi || ''}</div>
+          <div class="tr-english">${verse.english || ''}</div>
+          <div class="tr-no-data" style="padding:8px 0;font-size:12px">No translation yet.</div>
+        </div>
+      </div>`;
+
+    return `
+      <div class="tr-verse ${cardClass}" data-num="${verse.number}">
+        <div class="tr-verse-num">#${verse.number}</div>
+        <div class="tr-verse-body">
+          <div class="tr-farsi">${verse.farsi || ''}</div>
+          <div class="tr-english">${verse.english || ''}</div>
+          <div class="tr-punjabi-row">
+            <textarea class="tr-punjabi-input" data-num="${verse.number}">${pa}</textarea>
+          </div>
+          <div class="tr-verse-actions">
+            <button class="tr-btn-approve" data-num="${verse.number}">✓ Approve</button>
+            <button class="tr-btn-flag"    data-num="${verse.number}">⚑ Flag</button>
+            <span class="tr-confidence ${conf}">${confLabel}</span>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Wire up events
+  trVerseList.querySelectorAll('.tr-punjabi-input').forEach(ta => {
+    ta.addEventListener('input', () => {
+      const num = parseInt(ta.dataset.num);
+      if (!trState.changes[num]) trState.changes[num] = { punjabi: trGetPunjabi({number: num, punjabi: ta.value}), status: trGetStatus({number: num, punjabi_status: 'pending'}) };
+      trState.changes[num].punjabi = ta.value;
+    });
+  });
+
+  trVerseList.querySelectorAll('.tr-btn-approve').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const num  = parseInt(btn.dataset.num);
+      const card = trVerseList.querySelector(`.tr-verse[data-num="${num}"]`);
+      const ta   = trVerseList.querySelector(`.tr-punjabi-input[data-num="${num}"]`);
+      if (!trState.changes[num]) trState.changes[num] = {};
+      trState.changes[num].punjabi = ta ? ta.value : trGetPunjabi({number: num});
+      trState.changes[num].status  = 'approved';
+      card.className = 'tr-verse approved';
+      trUpdateProgress();
+    });
+  });
+
+  trVerseList.querySelectorAll('.tr-btn-flag').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const num  = parseInt(btn.dataset.num);
+      const card = trVerseList.querySelector(`.tr-verse[data-num="${num}"]`);
+      const ta   = trVerseList.querySelector(`.tr-punjabi-input[data-num="${num}"]`);
+      if (!trState.changes[num]) trState.changes[num] = {};
+      trState.changes[num].punjabi = ta ? ta.value : trGetPunjabi({number: num});
+      trState.changes[num].status  = 'flagged';
+      card.className = 'tr-verse flagged';
+      trUpdateProgress();
+    });
+  });
+
+  trUpdateProgress();
+}
+
+trPrev.addEventListener('click', () => {
+  if (trState.batch > 0) { trState.batch--; trRenderBatch(); }
+});
+trNext.addEventListener('click', () => {
+  const totalBatches = Math.ceil(trState.verses.length / BATCH_SIZE);
+  if (trState.batch < totalBatches - 1) { trState.batch++; trRenderBatch(); }
+});
+
+trApproveAll.addEventListener('click', () => {
+  trCurrentBatch().forEach(verse => {
+    if (!verse.punjabi) return;
+    const ta = trVerseList.querySelector(`.tr-punjabi-input[data-num="${verse.number}"]`);
+    if (!trState.changes[verse.number]) trState.changes[verse.number] = {};
+    trState.changes[verse.number].punjabi = ta ? ta.value : trGetPunjabi(verse);
+    trState.changes[verse.number].status  = 'approved';
+    const card = trVerseList.querySelector(`.tr-verse[data-num="${verse.number}"]`);
+    if (card) card.className = 'tr-verse approved';
+  });
+  trUpdateProgress();
+});
+
+trCopyPatch.addEventListener('click', function () {
+  if (!Object.keys(trState.changes).length) {
+    alert('No changes to export yet. Approve or edit some verses first.');
+    return;
+  }
+  const patch = {
+    book: trState.book,
+    changes: Object.entries(trState.changes).map(([num, ch]) => ({
+      number: parseInt(num),
+      punjabi: ch.punjabi,
+      punjabi_status: ch.status,
+    }))
+  };
+  const json = JSON.stringify(patch, null, 2);
+  trPatchPre.textContent = json;
+  trPatchOutput.hidden = false;
+  navigator.clipboard.writeText(json).then(() => {
+    this.textContent = 'Copied!';
+    this.classList.add('copied');
+    setTimeout(() => { this.textContent = 'Copy Patch JSON'; this.classList.remove('copied'); }, 2000);
+  });
+});
+
+trBookTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    trBookTabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    trLoadBook(parseInt(tab.dataset.book));
+  });
+});
+
+// Load Book 1 when Translations section is first opened
+document.querySelector('[data-section="translations"]').addEventListener('click', () => {
+  if (!trState.verses.length) trLoadBook(1);
+});

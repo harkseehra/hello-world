@@ -277,19 +277,45 @@
       <!-- ── Translations ── -->
       <section id="section-translations" class="section">
         <div class="section-header">
-          <h2>Translations</h2>
-          <p class="section-desc">Translation audit and management — coming in Component 5 (Punjabi pipeline).</p>
+          <h2>Punjabi Translations</h2>
+          <p class="section-desc">Review AI-generated Punjabi drafts. Approve, edit inline, or flag for redo. Copy the patch JSON and send it to Claude Code to apply.</p>
         </div>
-        <div class="placeholder-card">
-          <div class="placeholder-icon">🌐</div>
-          <h3>Coming soon</h3>
-          <p>This section will let you review AI-generated Punjabi translations, make corrections, and approve verses for publication.</p>
-          <ul>
-            <li>View Persian original · English · AI Punjabi draft</li>
-            <li>Edit corrections inline</li>
-            <li>Mark verses as approved</li>
-            <li>Export corrected JSON</li>
-          </ul>
+
+        <!-- Book tabs -->
+        <div id="tr-book-tabs">
+          <button class="tr-book-tab active" data-book="1">Book 1</button>
+          <button class="tr-book-tab" data-book="2">Book 2</button>
+          <button class="tr-book-tab" data-book="3">Book 3</button>
+          <button class="tr-book-tab" data-book="4">Book 4</button>
+          <button class="tr-book-tab" data-book="5">Book 5</button>
+          <button class="tr-book-tab" data-book="6">Book 6</button>
+        </div>
+
+        <!-- Progress -->
+        <div id="tr-progress-wrap">
+          <div id="tr-progress-bar-fill"></div>
+          <span id="tr-progress-text">Loading…</span>
+        </div>
+
+        <!-- Batch navigation -->
+        <div id="tr-batch-nav">
+          <button id="tr-prev" class="tr-nav-btn">← Prev</button>
+          <span id="tr-batch-info">—</span>
+          <button id="tr-next" class="tr-nav-btn">Next →</button>
+        </div>
+
+        <!-- Verse list -->
+        <div id="tr-verse-list"></div>
+
+        <!-- Bottom actions -->
+        <div id="tr-actions">
+          <button id="tr-approve-all" class="btn-generate">✓ Approve All Visible</button>
+          <button id="tr-copy-patch" class="btn-copy-all">Copy Patch JSON</button>
+        </div>
+
+        <div id="tr-patch-output" hidden>
+          <div class="output-file">Paste this to Claude Code → "apply translations patch"</div>
+          <pre id="tr-patch-pre"></pre>
         </div>
       </section>
 

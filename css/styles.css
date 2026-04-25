@@ -595,6 +595,20 @@ button:focus-visible, a:focus-visible {
               font-family var(--dur-fast) var(--ease-out);
 }
 
+/* ── Punjabi translation ─────────────────────────────────────── */
+.verse-pa {
+  font-family: 'Noto Sans Gurmukhi', var(--font-en-sans);
+  font-size: calc(var(--fz-en) * 0.93);
+  line-height: var(--lh-en);
+  color: var(--c-text-en);
+  opacity: 0.72;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--c-divider);
+  transition: color var(--dur-mid) var(--ease-out),
+              opacity var(--dur-mid) var(--ease-out);
+}
+
 /* ── Verse number ────────────────────────────────────────────── */
 .verse-num {
   display: block;
