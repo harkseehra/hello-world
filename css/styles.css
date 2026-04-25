@@ -1404,11 +1404,21 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
 [data-theme="kaghaz"] #btn-menu[aria-expanded="true"] { background: rgba(60,40,20,0.06); }
 
 @media (max-width: 600px) {
-  #btn-menu  { display: none; }   /* pill replaces hamburger for book selection */
-  #book-tabs { display: none;  }
-  #btn-mode  { display: none;  }
-  #nav-actions { margin-left: auto; padding: 0 16px; }
-  #site-logo   { padding: 0 16px; }
+  #btn-menu       { display: none; }
+  #book-tabs      { display: none; }
+  #btn-mode       { display: none; }
+  #btn-search     { display: none; }   /* moved to tab bar */
+  #btn-bookmarks  { display: none; }   /* moved to tab bar */
+  #btn-settings   { display: none; }   /* moved to tab bar */
+  #nav-actions    { margin-left: auto; padding: 0 16px; }
+  #site-logo      { padding: 0 16px; }
+
+  #bottom-tab-bar { display: flex; }
+
+  /* Extra bottom clearance for tab bar */
+  #focus-scroll {
+    padding-bottom: calc(56px + var(--safe-bottom) + 24px);
+  }
 
   /* No rounded corners on mobile — full bleed looks right on a phone screen */
   /* Settings panel — full width on mobile */
@@ -1450,7 +1460,65 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
 }
 #toc-backdrop.visible { display: block; }
 
-/* ── 18. Reduced motion ──────────────────────────────────────── */
+/* ── 18. Bottom tab bar ──────────────────────────────────────── */
+
+#bottom-tab-bar {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: calc(56px + var(--safe-bottom));
+  padding-bottom: var(--safe-bottom);
+  background: rgba(248, 248, 248, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 0.5px solid var(--c-nav-border);
+  z-index: 890;
+  transition: background var(--dur-mid) var(--ease-out),
+              border-color var(--dur-mid) var(--ease-out);
+}
+
+[data-theme="dark"] #bottom-tab-bar {
+  background: rgba(15, 14, 14, 0.88);
+}
+[data-theme="kaghaz"] #bottom-tab-bar {
+  background: rgba(255, 248, 237, 0.88);
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 6px 0 4px;
+  border: none;
+  background: transparent;
+  color: var(--c-text-fa);
+  opacity: 0.36;
+  font-family: var(--font-en-sans);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: opacity var(--dur-fast) var(--ease-out),
+              color var(--dur-mid) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tab-item.active {
+  opacity: 1;
+  color: var(--c-accent);
+}
+
+.tab-item svg {
+  transition: transform 120ms var(--ease-spring);
+}
+.tab-item.active svg {
+  transform: scale(1.08);
+}
+
+/* ── 19. Reduced motion ──────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

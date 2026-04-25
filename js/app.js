@@ -68,6 +68,10 @@ const pager          = document.getElementById('pager');
 const pagerPrevBtn   = document.getElementById('pager-prev');
 const pagerNextBtn   = document.getElementById('pager-next');
 const pagerInfo      = document.getElementById('pager-info');
+const tabBooks       = document.getElementById('tab-books');
+const tabSearch      = document.getElementById('tab-search');
+const tabBookmarks   = document.getElementById('tab-bookmarks');
+const tabSettings    = document.getElementById('tab-settings');
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 
@@ -983,6 +987,48 @@ document.addEventListener('click', e => {
 
 focusScroll.addEventListener('scroll',  updateProgress, { passive: true });
 scholarGrid.addEventListener('scroll',  updateProgress, { passive: true });
+
+// ── Bottom tab bar ────────────────────────────────────────────────────────────
+
+function updateTabBar() {
+  const booksActive     = mobileMenu.classList.contains('open');
+  const searchActive    = searchPanel.classList.contains('open');
+  const bookmarksActive = bookmarkPanel.classList.contains('open');
+  const settingsActive  = settingsPanel.classList.contains('open');
+  const anyOpen = booksActive || searchActive || bookmarksActive || settingsActive;
+  tabBooks.classList.toggle('active',     booksActive || !anyOpen);
+  tabSearch.classList.toggle('active',    searchActive);
+  tabBookmarks.classList.toggle('active', bookmarksActive);
+  tabSettings.classList.toggle('active',  settingsActive);
+}
+
+tabBooks.addEventListener('click', () => {
+  const isOpen = mobileMenu.classList.contains('open');
+  closeSearch(); closeSettings(); closeBookmarkPanel();
+  isOpen ? closeMenu() : openMenu();
+  updateTabBar();
+});
+
+tabSearch.addEventListener('click', () => {
+  const isOpen = searchPanel.classList.contains('open');
+  closeMenu(); closeSettings(); closeBookmarkPanel();
+  isOpen ? closeSearch() : openSearch();
+  updateTabBar();
+});
+
+tabBookmarks.addEventListener('click', () => {
+  const isOpen = bookmarkPanel.classList.contains('open');
+  closeMenu(); closeSettings(); closeSearch();
+  isOpen ? closeBookmarkPanel() : openBookmarkPanel();
+  updateTabBar();
+});
+
+tabSettings.addEventListener('click', () => {
+  const isOpen = settingsPanel.classList.contains('open');
+  closeMenu(); closeSearch(); closeBookmarkPanel();
+  isOpen ? closeSettings() : openSettings();
+  updateTabBar();
+});
 
 // Force focus mode if window shrinks to mobile while in scholar view
 window.addEventListener('resize', () => {
