@@ -103,61 +103,91 @@
           "type": "verse",
           "number": 11,
           "farsi": "نى حريف هر كه از يارى بريد / پرده‏هايش پرده‏هاى ما دريد",
-          "english": "The reed is the comrade of every one who has been parted from a friend: its strains pierced our hearts."
+          "english": "The reed is the comrade of every one who has been parted from a friend: its strains pierced our hearts.",
+          "punjabi": "ਬੰਸਰੀ ਉਸ ਦੀ ਹਮਜ਼ੋਲੀ ਜੋ ਯਾਰ ਤੋਂ ਵਿੱਛੜਿਆ / ਇਸ ਦੇ ਸੁਰਾਂ ਨੇ ਸਾਡੇ ਪਰਦੇ ਚਾਕ ਕੀਤੇ",
+          "punjabi_status": "pending",
+          "punjabi_confidence": "green"
         },
         {
           "type": "verse",
           "number": 12,
           "farsi": "همچو نى زهرى و ترياقى كه ديد / همچو نى دمساز و مشتاقى كه ديد",
-          "english": "Who ever saw a poison and antidote like the reed? Who ever saw a sympathiser and a longing lover like the reed?"
+          "english": "Who ever saw a poison and antidote like the reed? Who ever saw a sympathiser and a longing lover like the reed?",
+          "punjabi": "ਕਿਸ ਨੇ ਬੰਸਰੀ ਵਰਗਾ ਜ਼ਹਿਰ ਤੇ ਤ੍ਰਿਯਾਕ ਵੇਖਿਆ / ਕਿਸ ਨੇ ਬੰਸਰੀ ਵਰਗਾ ਹਮਦਰਦ ਤੇ ਮੁਸ਼ਤਾਕ ਵੇਖਿਆ",
+          "punjabi_status": "pending",
+          "punjabi_confidence": "green"
         },
         {
           "type": "verse",
           "number": 13,
           "farsi": "نى حديث راه پر خون مى‏كند / قصه‏هاى عشق مجنون مى‏كند",
-          "english": "The reed tells of the Way full of blood and recounts stories of the passion of Majnun."
+          "english": "The reed tells of the Way full of blood and recounts stories of the passion of Majnun.",
+          "punjabi": "ਬੰਸਰੀ ਖੂਨ ਭਰੇ ਰਾਹ ਦੀ ਕਹਾਣੀ ਕਹਿੰਦੀ ਹੈ / ਮਜਨੂੰ ਦੇ ਇਸ਼ਕ ਦੀਆਂ ਗੱਲਾਂ ਸੁਣਾਉਂਦੀ ਹੈ",
+          "punjabi_status": "pending",
+          "punjabi_confidence": "green"
         },
         {
           "type": "verse",
           "number": 14,
           "farsi": "محرم اين هوش جز بى‏هوش نيست / مر زبان را مشترى جز گوش نيست‏",
-          "english": "Only to the senseless is this sense confided: the tongue has no customer save the ear."
+          "english": "Only to the senseless is this sense confided: the tongue has no customer save the ear.",
+          "punjabi": "ਇਸ ਹੋਸ਼ ਦਾ ਮਹਿਰਮ ਬੇਹੋਸ਼ੀ ਤੋਂ ਬਿਨਾਂ ਕੋਈ ਨਹੀਂ / ਜ਼ਬਾਨ ਦਾ ਖਰੀਦਦਾਰ ਕੰਨ ਤੋਂ ਬਿਨਾਂ ਕੋਈ ਨਹੀਂ",
+          "punjabi_status": "pending",
+          "punjabi_confidence": "yellow"
         },
         {
           "type": "verse",
           "number": 15,
           "farsi": "در غم ما روزها بى‏گاه شد / روزها با سوزها همراه شد",
-          "english": "In our woe the days have become untimely: our days travel hand in hand with burning griefs."
+          "english": "In our woe the days have become untimely: our days travel hand in hand with burning griefs.",
+          "punjabi": "ਸਾਡੇ ਗ਼ਮ ਵਿੱਚ ਦਿਨ ਬੇਵੇਲੇ ਹੋ ਗਏ / ਦਿਨ ਸੋਜ਼ਾਂ ਦੇ ਨਾਲ ਹਮਰਾਹ ਹੋ ਗਏ",
+          "punjabi_status": "pending",
+          "punjabi_confidence": "green"
         },
         {
           "type": "verse",
           "number": 16,
           "farsi": "روزها گر رفت گو رو باك نيست / تو بمان اى آن كه چون تو پاك نيست‏",
-          "english": "If our days are gone, let them go!—It is no matter. Do You remain, for none is holy as You are!"
+          "english": "If our days are gone, let them go!—It is no matter. Do You remain, for none is holy as You are!",
+          "punjabi": "ਜੇ ਦਿਨ ਚਲੇ ਗਏ ਤਾਂ ਜਾਣ ਦੇ, ਕੋਈ ਗੱਲ ਨਹੀਂ / ਤੂੰ ਰਹਿ, ਓ ਉਹ ਜਿਸ ਵਰਗਾ ਕੋਈ ਪਾਕ ਨਹੀਂ",
+          "punjabi_status": "pending",
+          "punjabi_confidence": "green"
         },
         {
           "type": "verse",
           "number": 17,
           "farsi": "هر كه جز ماهى ز آبش سير شد / هر كه بى‏روزى است روزش دير شد",
-          "english": "Whoever is not a fish becomes sated with His water; whoever is without daily bread finds the day long."
+          "english": "Whoever is not a fish becomes sated with His water; whoever is without daily bread finds the day long.",
+          "punjabi": "ਮੱਛੀ ਤੋਂ ਬਿਨਾਂ ਹਰ ਕੋਈ ਪਾਣੀ ਤੋਂ ਰੱਜ ਗਿਆ / ਜਿਸ ਦਾ ਰਿਜ਼ਕ ਨਹੀਂ, ਉਸ ਦਾ ਦਿਨ ਲੰਮਾ ਹੋ ਗਿਆ",
+          "punjabi_status": "pending",
+          "punjabi_confidence": "yellow"
         },
         {
           "type": "verse",
           "number": 18,
           "farsi": "درنيابد حال پخته هيچ خام / پس سخن كوتاه بايد و السلام‏",
-          "english": "None that is raw understands the state of the ripe: therefore my words must be brief. Farewell!"
+          "english": "None that is raw understands the state of the ripe: therefore my words must be brief. Farewell!",
+          "punjabi": "ਕੱਚਾ ਕਦੇ ਪੱਕੇ ਦਾ ਹਾਲ ਨਹੀਂ ਸਮਝਦਾ / ਇਸ ਲਈ ਗੱਲ ਸੰਖੇਪ ਹੋਣੀ ਚਾਹੀਦੀ ਹੈ, ਅਤੇ ਸਲਾਮ",
+          "punjabi_status": "pending",
+          "punjabi_confidence": "yellow"
         },
         {
           "type": "verse",
           "number": 19,
           "farsi": "بند بگسل، باش آزاد اى پسر / چند باشى بند سيم و بند زر",
-          "english": "O son, burst your chains and be free! How long will you be a bondsman toe silver and gold?"
+          "english": "O son, burst your chains and be free! How long will you be a bondsman toe silver and gold?",
+          "punjabi": "ਜ਼ੰਜੀਰ ਤੋੜ, ਆਜ਼ਾਦ ਹੋ ਜਾ, ਓ ਪੁੱਤਰਾ / ਕਿੰਨਾ ਚਿਰ ਚਾਂਦੀ ਤੇ ਸੋਨੇ ਦੀਆਂ ਬੇੜੀਆਂ ਵਿੱਚ ਰਹੇਂਗਾ",
+          "punjabi_status": "pending",
+          "punjabi_confidence": "green"
         },
         {
           "type": "verse",
           "number": 20,
           "farsi": "گر بريزى بحر را در كوزه‏اى / چند گنجد قسمت يك روزه‏اى‏",
-          "english": "If you pour the sea into a pitcher, how much will it hold? One day’s store."
+          "english": "If you pour the sea into a pitcher, how much will it hold? One day’s store.",
+          "punjabi": "ਜੇ ਸਮੁੰਦਰ ਨੂੰ ਇੱਕ ਘੜੇ ਵਿੱਚ ਪਾਵੇ / ਕਿੰਨਾ ਕੁ ਸਮਾਵੇਗਾ — ਬੱਸ ਇੱਕ ਦਿਨ ਦੀ ਵੰਡ",
+          "punjabi_status": "pending",
+          "punjabi_confidence": "green"
         },
         {
           "type": "verse",
