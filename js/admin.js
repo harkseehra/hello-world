@@ -362,7 +362,7 @@ async function trLoadBook(bookNum) {
   trState.changes = {};
   trVerseList.innerHTML = '<div class="tr-no-data">Loading…</div>';
   try {
-    const res  = await fetch(`../data/book${bookNum}.json`);
+    const res  = await fetch(`data/book${bookNum}.json`);
     const data = await res.json();
     trState.verses = [];
     for (const section of data.sections) {
