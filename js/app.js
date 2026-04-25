@@ -931,8 +931,7 @@ function setPunjabi(show, save = true) {
   btnPunjabiOn.classList.toggle('active',  show);
   btnPunjabiOff.classList.toggle('active', !show);
   if (save) localStorage.setItem('mv-punjabi', show ? 'on' : 'off');
-  // Re-render current page so Punjabi lines appear/disappear
-  renderPage(state.page);
+  if (state.pages.length) goToPage(state.page, 0);
 }
 
 const savedPunjabi = localStorage.getItem('mv-punjabi');
