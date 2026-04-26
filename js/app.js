@@ -180,7 +180,7 @@ function applySizes() {
   let fzFa, lhFa;
   if (state.font === 'arial') {
     fzFa = SIZE_FA_A[s]; lhFa = LH_FA_A[s];
-  } else if (state.font === 'nazanin') {
+  } else if (state.font === 'nazanin' || state.font === 'nastaliq') {
     fzFa = SIZE_FA_L[s]; lhFa = LH_FA_L[s];
   } else {
     fzFa = SIZE_FA_V[s]; lhFa = LH_FA_V[s];  // vazir (default)

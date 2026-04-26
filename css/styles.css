@@ -45,9 +45,10 @@
   --c-heading-card-border: rgba(0, 0, 0, 0.06);
 
   /* Font stacks */
-  --font-fa-vazir:   'Vazirmatn', sans-serif;
-  --font-fa-arial:   Arial, sans-serif;
-  --font-fa-nazanin: 'BNazanin', serif;
+  --font-fa-vazir:    'Vazirmatn', sans-serif;
+  --font-fa-arial:    Arial, sans-serif;
+  --font-fa-nazanin:  'BNazanin', serif;
+  --font-fa-nastaliq: 'Noto Nastaliq Urdu', serif;
   --font-fa:         var(--font-fa-vazir);
 
   --font-en-sans:  'Schibsted Grotesk', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
@@ -79,6 +80,7 @@
 [data-font="vazir"]    { --font-fa: var(--font-fa-vazir); }
 [data-font="arial"]    { --font-fa: var(--font-fa-arial); }
 [data-font="nazanin"]  { --font-fa: var(--font-fa-nazanin); }
+[data-font="nastaliq"] { --font-fa: var(--font-fa-nastaliq); }
 [data-en-font="serif"] { --font-en: var(--font-en-serif); }
 
 /* Arial: heavier weight to compensate for its thinner stroke design */
