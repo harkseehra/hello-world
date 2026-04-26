@@ -34,7 +34,7 @@ const EXISTING_EN_FONTS = [
    Auth
    ───────────────────────────────────────────── */
 
-const PASSWORD = 'masnavi-admin';
+const PASSWORD = 'Qwerty@1';
 
 const authGate  = document.getElementById('auth-gate');
 const dashboard = document.getElementById('dashboard');
