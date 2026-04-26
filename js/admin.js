@@ -381,20 +381,23 @@ const trKeyStatus   = document.getElementById('tr-key-status');
 /* ── API key ── */
 
 function trLoadApiKey() {
-  const k = sessionStorage.getItem('mv-admin-api-key') || '';
+  const k = localStorage.getItem('mv-admin-api-key') || '';
   if (k) {
     trApiKeyInput.value = '•'.repeat(20);
-    trKeyStatus.textContent = 'Key saved for this session';
+    trKeyStatus.textContent = 'Key loaded — ready to generate';
     trKeyStatus.className = 'ok';
+  } else {
+    trKeyStatus.textContent = 'Paste your key and tap Save — stored locally, never leaves your device';
+    trKeyStatus.className = '';
   }
 }
 
 trSaveKey.addEventListener('click', () => {
   const k = trApiKeyInput.value.trim();
-  if (!k || k.startsWith('•')) { trKeyStatus.textContent = 'Enter a key first'; trKeyStatus.className = 'err'; return; }
-  sessionStorage.setItem('mv-admin-api-key', k);
+  if (!k || k.startsWith('•')) { trKeyStatus.textContent = 'Key already saved'; trKeyStatus.className = 'ok'; return; }
+  localStorage.setItem('mv-admin-api-key', k);
   trApiKeyInput.value = '•'.repeat(20);
-  trKeyStatus.textContent = 'Key saved for this session';
+  trKeyStatus.textContent = 'Key saved permanently on this device';
   trKeyStatus.className = 'ok';
 });
 
@@ -622,7 +625,7 @@ trCopyPatch.addEventListener('click', function () {
 /* ── Generate via Anthropic API ── */
 
 trGenerate.addEventListener('click', async () => {
-  const apiKey = sessionStorage.getItem('mv-admin-api-key');
+  const apiKey = localStorage.getItem('mv-admin-api-key');
   if (!apiKey) {
     trKeyStatus.textContent = 'Save your API key first (above).';
     trKeyStatus.className = 'err';
