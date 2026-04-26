@@ -80,8 +80,30 @@ document.querySelectorAll('.nav-item').forEach(btn => {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('section-' + btn.dataset.section).classList.add('active');
+    closeSidebar();
   });
 });
+
+/* ── Mobile sidebar ── */
+const sidebar        = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebar-overlay');
+const btnHamburger   = document.getElementById('btn-hamburger');
+
+function openSidebar() {
+  sidebar.classList.add('open');
+  sidebarOverlay.classList.add('open');
+  btnHamburger.setAttribute('aria-expanded', 'true');
+}
+function closeSidebar() {
+  sidebar.classList.remove('open');
+  sidebarOverlay.classList.remove('open');
+  btnHamburger.setAttribute('aria-expanded', 'false');
+}
+
+btnHamburger.addEventListener('click', () =>
+  sidebar.classList.contains('open') ? closeSidebar() : openSidebar()
+);
+sidebarOverlay.addEventListener('click', closeSidebar);
 
 /* ─────────────────────────────────────────────
    Helpers
@@ -335,30 +357,53 @@ document.getElementById('copy-en-font').addEventListener('click', function () {
    Translations section
    ───────────────────────────────────────────── */
 
-const BATCH_SIZE = 10;
-
 let trState = {
-  book:     1,
-  verses:   [],   // all verses for current book
-  batch:    0,    // current batch index (0-based)
-  changes:  {},   // { verseNumber: { punjabi, status } }
+  book:    1,
+  verses:  [],
+  filter:  'pending',
+  changes: {},
 };
 
 const trBookTabs    = document.querySelectorAll('.tr-book-tab');
 const trVerseList   = document.getElementById('tr-verse-list');
-const trBatchInfo   = document.getElementById('tr-batch-info');
-const trPrev        = document.getElementById('tr-prev');
-const trNext        = document.getElementById('tr-next');
+const trVerseCount  = document.getElementById('tr-verse-count');
 const trProgressFill= document.getElementById('tr-progress-bar-fill');
 const trProgressText= document.getElementById('tr-progress-text');
 const trApproveAll  = document.getElementById('tr-approve-all');
 const trCopyPatch   = document.getElementById('tr-copy-patch');
 const trPatchOutput = document.getElementById('tr-patch-output');
 const trPatchPre    = document.getElementById('tr-patch-pre');
+const trGenerate    = document.getElementById('tr-generate');
+const trApiKeyInput = document.getElementById('tr-api-key');
+const trSaveKey     = document.getElementById('tr-save-key');
+const trKeyStatus   = document.getElementById('tr-key-status');
+
+/* ── API key ── */
+
+function trLoadApiKey() {
+  const k = sessionStorage.getItem('mv-admin-api-key') || '';
+  if (k) {
+    trApiKeyInput.value = '•'.repeat(20);
+    trKeyStatus.textContent = 'Key saved for this session';
+    trKeyStatus.className = 'ok';
+  }
+}
+
+trSaveKey.addEventListener('click', () => {
+  const k = trApiKeyInput.value.trim();
+  if (!k || k.startsWith('•')) { trKeyStatus.textContent = 'Enter a key first'; trKeyStatus.className = 'err'; return; }
+  sessionStorage.setItem('mv-admin-api-key', k);
+  trApiKeyInput.value = '•'.repeat(20);
+  trKeyStatus.textContent = 'Key saved for this session';
+  trKeyStatus.className = 'ok';
+});
+
+trLoadApiKey();
+
+/* ── Load book ── */
 
 async function trLoadBook(bookNum) {
   trState.book    = bookNum;
-  trState.batch   = 0;
   trState.changes = {};
   trVerseList.innerHTML = '<div class="tr-no-data">Loading…</div>';
   try {
@@ -370,95 +415,96 @@ async function trLoadBook(bookNum) {
         if (entry.type === 'verse') trState.verses.push(entry);
       }
     }
-    trRenderBatch();
+    trRenderFiltered();
   } catch (e) {
-    trVerseList.innerHTML = `<div class="tr-no-data">Could not load Book ${bookNum}.</div>`;
+    trVerseList.innerHTML = `<div class="tr-no-data">Could not load Book ${bookNum}. Try refreshing.</div>`;
   }
 }
 
-function trCurrentBatch() {
-  const start = trState.batch * BATCH_SIZE;
-  return trState.verses.slice(start, start + BATCH_SIZE);
-}
+/* ── Progress ── */
 
 function trUpdateProgress() {
   const total    = trState.verses.length;
   const approved = trState.verses.filter(v => {
     const ch = trState.changes[v.number];
-    if (ch) return ch.status === 'approved';
-    return v.punjabi_status === 'approved';
+    return ch ? ch.status === 'approved' : v.punjabi_status === 'approved';
   }).length;
   const pct = total ? (approved / total * 100).toFixed(1) : 0;
   trProgressFill.style.width = pct + '%';
-  trProgressText.textContent = `${approved} / ${total} approved`;
+  trProgressText.textContent = `${approved} / ${total} approved (${pct}%)`;
 }
+
+/* ── Helpers ── */
 
 function trGetStatus(verse) {
   const ch = trState.changes[verse.number];
-  if (ch) return ch.status;
-  return verse.punjabi_status || 'none';
+  return ch ? ch.status : (verse.punjabi_status || 'none');
 }
 
 function trGetPunjabi(verse) {
   const ch = trState.changes[verse.number];
-  if (ch) return ch.punjabi;
-  return verse.punjabi || '';
+  return ch ? ch.punjabi : (verse.punjabi || '');
 }
 
-function trRenderBatch() {
-  const batch     = trCurrentBatch();
-  const totalBatches = Math.ceil(trState.verses.length / BATCH_SIZE);
-  const start     = trState.batch * BATCH_SIZE + 1;
-  const end       = Math.min(start + BATCH_SIZE - 1, trState.verses.length);
+/* ── Sync approval to localStorage (reader picks this up instantly) ── */
 
-  trBatchInfo.textContent = `Verses ${start}–${end} of ${trState.verses.length}`;
-  trPrev.disabled = trState.batch === 0;
-  trNext.disabled = trState.batch >= totalBatches - 1;
+function trSyncToLocalStorage(num, punjabi, status) {
+  const lsKey = `mv-pa-b${trState.book}`;
+  let stored = {};
+  try { stored = JSON.parse(localStorage.getItem(lsKey) || '{}'); } catch(e) {}
+  if (status === 'approved') {
+    stored[num] = { punjabi, status };
+  } else {
+    delete stored[num];
+  }
+  localStorage.setItem(lsKey, JSON.stringify(stored));
+}
 
-  if (!batch.length) {
-    trVerseList.innerHTML = '<div class="tr-no-data">No verses in this batch.</div>';
+/* ── Render filtered verse list ── */
+
+function trRenderFiltered() {
+  const filter = trState.filter;
+
+  const visible = trState.verses.filter(v => {
+    const pa     = trGetPunjabi(v);
+    const status = trGetStatus(v);
+    if (!pa) return filter === 'all' ? false : false;
+    if (filter === 'all')      return true;
+    if (filter === 'pending')  return status === 'pending' || status === 'none';
+    if (filter === 'approved') return status === 'approved';
+    if (filter === 'flagged')  return status === 'flagged';
+    return true;
+  });
+
+  trVerseCount.textContent = visible.length
+    ? `Showing ${visible.length} verse${visible.length !== 1 ? 's' : ''}`
+    : '';
+
+  if (!visible.length) {
+    const msgs = {
+      pending:  'No pending translations. Use ⚡ Generate to create drafts, or switch filter.',
+      approved: 'No approved translations yet.',
+      flagged:  'No flagged translations.',
+      all:      'No translations yet. Use ⚡ Generate to create the first batch.',
+    };
+    trVerseList.innerHTML = `<div class="tr-no-data">${msgs[filter] || 'Nothing to show.'}</div>`;
     trUpdateProgress();
     return;
   }
 
-  const hasPending = batch.some(v => v.punjabi);
-
-  if (!hasPending) {
-    trVerseList.innerHTML = `
-      <div class="tr-no-data">
-        No translations generated yet for this batch.<br>
-        Ask Claude Code: <strong>"Generate Punjabi batch ${trState.batch + 1} for Book ${trState.book}"</strong>
-      </div>`;
-    trUpdateProgress();
-    return;
-  }
-
-  trVerseList.innerHTML = batch.map(verse => {
-    const status   = trGetStatus(verse);
-    const pa       = trGetPunjabi(verse);
-    const conf     = verse.punjabi_confidence || 'green';
+  trVerseList.innerHTML = visible.map(verse => {
+    const status    = trGetStatus(verse);
+    const pa        = trGetPunjabi(verse);
+    const conf      = verse.punjabi_confidence || 'green';
     const confLabel = conf === 'green' ? '🟢 confident' : conf === 'yellow' ? '🟡 uncertain' : '🔴 difficult';
     const cardClass = status === 'approved' ? 'approved' : status === 'flagged' ? 'flagged' : '';
-
-    if (!pa) return `
-      <div class="tr-verse" data-num="${verse.number}">
-        <div class="tr-verse-num">#${verse.number}</div>
-        <div class="tr-verse-body">
-          <div class="tr-farsi">${verse.farsi || ''}</div>
-          <div class="tr-english">${verse.english || ''}</div>
-          <div class="tr-no-data" style="padding:8px 0;font-size:12px">No translation yet.</div>
-        </div>
-      </div>`;
 
     return `
       <div class="tr-verse ${cardClass}" data-num="${verse.number}">
         <div class="tr-verse-num">#${verse.number}</div>
         <div class="tr-verse-body">
-          <div class="tr-farsi">${verse.farsi || ''}</div>
-          <div class="tr-english">${verse.english || ''}</div>
-          <div class="tr-punjabi-row">
-            <textarea class="tr-punjabi-input" data-num="${verse.number}">${pa}</textarea>
-          </div>
+          <div class="tr-farsi">${esc(verse.farsi || '')}</div>
+          <textarea class="tr-punjabi-input" data-num="${verse.number}">${esc(pa)}</textarea>
           <div class="tr-verse-actions">
             <button class="tr-btn-approve" data-num="${verse.number}">✓ Approve</button>
             <button class="tr-btn-flag"    data-num="${verse.number}">⚑ Flag</button>
@@ -468,11 +514,11 @@ function trRenderBatch() {
       </div>`;
   }).join('');
 
-  // Wire up events
+  /* Wire events */
   trVerseList.querySelectorAll('.tr-punjabi-input').forEach(ta => {
     ta.addEventListener('input', () => {
       const num = parseInt(ta.dataset.num);
-      if (!trState.changes[num]) trState.changes[num] = { punjabi: trGetPunjabi({number: num, punjabi: ta.value}), status: trGetStatus({number: num, punjabi_status: 'pending'}) };
+      if (!trState.changes[num]) trState.changes[num] = { punjabi: ta.value, status: 'pending' };
       trState.changes[num].punjabi = ta.value;
     });
   });
@@ -480,12 +526,14 @@ function trRenderBatch() {
   trVerseList.querySelectorAll('.tr-btn-approve').forEach(btn => {
     btn.addEventListener('click', () => {
       const num  = parseInt(btn.dataset.num);
-      const card = trVerseList.querySelector(`.tr-verse[data-num="${num}"]`);
-      const ta   = trVerseList.querySelector(`.tr-punjabi-input[data-num="${num}"]`);
+      const card = btn.closest('.tr-verse');
+      const ta   = card.querySelector('.tr-punjabi-input');
+      const pa   = ta ? ta.value : trGetPunjabi({ number: num });
       if (!trState.changes[num]) trState.changes[num] = {};
-      trState.changes[num].punjabi = ta ? ta.value : trGetPunjabi({number: num});
+      trState.changes[num].punjabi = pa;
       trState.changes[num].status  = 'approved';
       card.className = 'tr-verse approved';
+      trSyncToLocalStorage(num, pa, 'approved');
       trUpdateProgress();
     });
   });
@@ -493,12 +541,14 @@ function trRenderBatch() {
   trVerseList.querySelectorAll('.tr-btn-flag').forEach(btn => {
     btn.addEventListener('click', () => {
       const num  = parseInt(btn.dataset.num);
-      const card = trVerseList.querySelector(`.tr-verse[data-num="${num}"]`);
-      const ta   = trVerseList.querySelector(`.tr-punjabi-input[data-num="${num}"]`);
+      const card = btn.closest('.tr-verse');
+      const ta   = card.querySelector('.tr-punjabi-input');
+      const pa   = ta ? ta.value : trGetPunjabi({ number: num });
       if (!trState.changes[num]) trState.changes[num] = {};
-      trState.changes[num].punjabi = ta ? ta.value : trGetPunjabi({number: num});
+      trState.changes[num].punjabi = pa;
       trState.changes[num].status  = 'flagged';
       card.className = 'tr-verse flagged';
+      trSyncToLocalStorage(num, pa, 'flagged');
       trUpdateProgress();
     });
   });
@@ -506,49 +556,18 @@ function trRenderBatch() {
   trUpdateProgress();
 }
 
-trPrev.addEventListener('click', () => {
-  if (trState.batch > 0) { trState.batch--; trRenderBatch(); }
-});
-trNext.addEventListener('click', () => {
-  const totalBatches = Math.ceil(trState.verses.length / BATCH_SIZE);
-  if (trState.batch < totalBatches - 1) { trState.batch++; trRenderBatch(); }
-});
+/* ── Filter tabs ── */
 
-trApproveAll.addEventListener('click', () => {
-  trCurrentBatch().forEach(verse => {
-    if (!verse.punjabi) return;
-    const ta = trVerseList.querySelector(`.tr-punjabi-input[data-num="${verse.number}"]`);
-    if (!trState.changes[verse.number]) trState.changes[verse.number] = {};
-    trState.changes[verse.number].punjabi = ta ? ta.value : trGetPunjabi(verse);
-    trState.changes[verse.number].status  = 'approved';
-    const card = trVerseList.querySelector(`.tr-verse[data-num="${verse.number}"]`);
-    if (card) card.className = 'tr-verse approved';
-  });
-  trUpdateProgress();
-});
-
-trCopyPatch.addEventListener('click', function () {
-  if (!Object.keys(trState.changes).length) {
-    alert('No changes to export yet. Approve or edit some verses first.');
-    return;
-  }
-  const patch = {
-    book: trState.book,
-    changes: Object.entries(trState.changes).map(([num, ch]) => ({
-      number: parseInt(num),
-      punjabi: ch.punjabi,
-      punjabi_status: ch.status,
-    }))
-  };
-  const json = JSON.stringify(patch, null, 2);
-  trPatchPre.textContent = json;
-  trPatchOutput.hidden = false;
-  navigator.clipboard.writeText(json).then(() => {
-    this.textContent = 'Copied!';
-    this.classList.add('copied');
-    setTimeout(() => { this.textContent = 'Copy Patch JSON'; this.classList.remove('copied'); }, 2000);
+document.querySelectorAll('.tr-filter-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tr-filter-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    trState.filter = tab.dataset.filter;
+    trRenderFiltered();
   });
 });
+
+/* ── Book tabs ── */
 
 trBookTabs.forEach(tab => {
   tab.addEventListener('click', () => {
@@ -558,7 +577,145 @@ trBookTabs.forEach(tab => {
   });
 });
 
-// Load Book 1 when Translations section is first opened
+/* ── Approve all visible ── */
+
+trApproveAll.addEventListener('click', () => {
+  trVerseList.querySelectorAll('.tr-verse').forEach(card => {
+    const num = parseInt(card.dataset.num);
+    const ta  = card.querySelector('.tr-punjabi-input');
+    if (!ta) return;
+    const pa = ta.value;
+    if (!trState.changes[num]) trState.changes[num] = {};
+    trState.changes[num].punjabi = pa;
+    trState.changes[num].status  = 'approved';
+    card.className = 'tr-verse approved';
+    trSyncToLocalStorage(num, pa, 'approved');
+  });
+  trUpdateProgress();
+});
+
+/* ── Copy patch ── */
+
+trCopyPatch.addEventListener('click', function () {
+  if (!Object.keys(trState.changes).length) {
+    alert('No changes yet. Approve or edit some verses first.');
+    return;
+  }
+  const patch = {
+    book: trState.book,
+    changes: Object.entries(trState.changes).map(([num, ch]) => ({
+      number:         parseInt(num),
+      punjabi:        ch.punjabi,
+      punjabi_status: ch.status,
+    })),
+  };
+  const json = JSON.stringify(patch, null, 2);
+  trPatchPre.textContent = json;
+  trPatchOutput.hidden = false;
+  navigator.clipboard.writeText(json).then(() => {
+    this.textContent = 'Copied!';
+    this.classList.add('copied');
+    setTimeout(() => { this.textContent = 'Copy Patch'; this.classList.remove('copied'); }, 2000);
+  });
+});
+
+/* ── Generate via Anthropic API ── */
+
+trGenerate.addEventListener('click', async () => {
+  const apiKey = sessionStorage.getItem('mv-admin-api-key');
+  if (!apiKey) {
+    trKeyStatus.textContent = 'Save your API key first (above).';
+    trKeyStatus.className = 'err';
+    document.getElementById('tr-api-card').scrollIntoView({ behavior: 'smooth' });
+    return;
+  }
+
+  const toGenerate = trState.verses.filter(v => !v.punjabi).slice(0, 20);
+  if (!toGenerate.length) {
+    alert('All verses in this book already have translations.');
+    return;
+  }
+
+  trGenerate.textContent = '⏳ Generating…';
+  trGenerate.classList.add('generating');
+
+  const prompt = `You are translating verses from Rumi's Masnavi (Persian poetry) into Punjabi Gurmukhi script.
+
+Guidelines:
+- Write natural flowing Punjabi, not word-for-word
+- Keep shared Perso-Arabic-Punjabi loanwords in Gurmukhi script: ਇਸ਼ਕ (ishq), ਰੂਹ (ruh), ਜੁਦਾਈ (judai), ਦਰਦ (dard), ਮਾਸ਼ੂਕ (mashuq), ਆਸ਼ਿਕ (ashiq), ਅਦਬ (adab), ਫ਼ਨਾ (fana), ਹੱਕ (haq), ਤੌਫ਼ੀਕ (taufiq) etc.
+- Use / to separate the two hemistichs of each couplet
+- confidence: "green" if translation is clear, "yellow" if uncertain, "red" if very difficult
+- Respond ONLY with a valid JSON array, no other text, no markdown
+
+Verses to translate:
+${JSON.stringify(toGenerate.map(v => ({ number: v.number, farsi: v.farsi })))}
+
+Required JSON format:
+[{"number": 21, "punjabi": "ਪਹਿਲੀ ਸਤਰ / ਦੂਜੀ ਸਤਰ", "confidence": "green"}]`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key':         apiKey,
+        'anthropic-version': '2023-06-01',
+        'content-type':      'application/json',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model:      'claude-haiku-4-5-20251001',
+        max_tokens: 4096,
+        messages:   [{ role: 'user', content: prompt }],
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error?.message || `API error ${res.status}`);
+    }
+
+    const data = await res.json();
+    const text = data.content?.[0]?.text || '';
+
+    let translations;
+    try {
+      const jsonMatch = text.match(/\[[\s\S]*\]/);
+      translations = JSON.parse(jsonMatch ? jsonMatch[0] : text);
+    } catch(e) {
+      throw new Error('Could not parse API response as JSON. Raw: ' + text.slice(0, 200));
+    }
+
+    let count = 0;
+    translations.forEach(t => {
+      const verse = trState.verses.find(v => v.number === t.number);
+      if (verse && t.punjabi) {
+        verse.punjabi            = t.punjabi;
+        verse.punjabi_status     = 'pending';
+        verse.punjabi_confidence = t.confidence || 'green';
+        count++;
+      }
+    });
+
+    trKeyStatus.textContent = `Generated ${count} translations. Review below.`;
+    trKeyStatus.className = 'ok';
+
+    // Switch to pending filter to show new drafts
+    document.querySelectorAll('.tr-filter-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector('.tr-filter-tab[data-filter="pending"]').classList.add('active');
+    trState.filter = 'pending';
+    trRenderFiltered();
+
+  } catch(err) {
+    trKeyStatus.textContent = 'Error: ' + err.message;
+    trKeyStatus.className = 'err';
+  } finally {
+    trGenerate.textContent = '⚡ Generate Next 20';
+    trGenerate.classList.remove('generating');
+  }
+});
+
+/* ── Auto-load when section opened ── */
 document.querySelector('[data-section="translations"]').addEventListener('click', () => {
   if (!trState.verses.length) trLoadBook(1);
 });

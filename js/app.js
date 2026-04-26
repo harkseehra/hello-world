@@ -221,6 +221,10 @@ async function loadBook(n) {
 }
 
 function flattenBook(data) {
+  // Admin approvals are synced to localStorage immediately — apply them here
+  let overrides = {};
+  try { overrides = JSON.parse(localStorage.getItem(`mv-pa-b${state.book}`) || '{}'); } catch(e) {}
+
   const out = [];
   let idx = 0;
   for (const section of data.sections) {
@@ -228,7 +232,16 @@ function flattenBook(data) {
       out.push({ type: 'heading', title_en: section.title_en, title_fa: section.title_fa, index: idx++ });
     }
     for (const e of section.entries) {
-      out.push({ type: 'verse', number: e.number, farsi: e.farsi, english: e.english, index: idx++ });
+      const ov = overrides[e.number];
+      out.push({
+        type:           'verse',
+        number:         e.number,
+        farsi:          e.farsi,
+        english:        e.english,
+        punjabi:        ov ? ov.punjabi        : e.punjabi,
+        punjabi_status: ov ? ov.status         : e.punjabi_status,
+        index:          idx++,
+      });
     }
   }
   return out;
