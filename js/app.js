@@ -467,7 +467,7 @@ function makeCard(entry) {
     el.appendChild(faWrap);
     el.appendChild(enEl);
 
-    if (entry.punjabi && entry.punjabi_status === 'approved' && html.dataset.showPunjabi !== 'off') {
+    if (entry.punjabi && entry.punjabi_status === 'approved') {
       const paEl = document.createElement('p');
       paEl.className   = 'verse-pa';
       paEl.textContent = entry.punjabi;

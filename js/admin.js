@@ -125,6 +125,19 @@ function syncColorPair(pickerId, hexId) {
   });
 }
 
+function showToast(msg = '✓ Synced to reader') {
+  let t = document.getElementById('admin-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'admin-toast';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.classList.add('visible');
+  clearTimeout(t._hide);
+  t._hide = setTimeout(() => t.classList.remove('visible'), 2000);
+}
+
 function copyText(text, btn) {
   navigator.clipboard.writeText(text).then(() => {
     btn.textContent = 'Copied!';
@@ -538,6 +551,7 @@ function trRenderFiltered() {
       card.className = 'tr-verse approved';
       trSyncToLocalStorage(num, pa, 'approved');
       trUpdateProgress();
+      showToast('✓ Synced to reader');
     });
   });
 

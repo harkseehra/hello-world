@@ -598,6 +598,8 @@ button:focus-visible, a:focus-visible {
 }
 
 /* ── Punjabi translation ─────────────────────────────────────── */
+[data-show-punjabi="off"] .verse-pa { display: none; }
+
 .verse-pa {
   font-family: 'Noto Sans Gurmukhi', var(--font-en-sans);
   font-size: calc(var(--fz-en) * 0.93);

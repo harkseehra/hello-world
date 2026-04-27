@@ -889,3 +889,26 @@ html, body {
 
   #tr-api-key { font-size: 14px; }
 }
+
+/* ── Toast ── */
+#admin-toast {
+  position: fixed;
+  bottom: calc(28px + var(--safe-bottom));
+  left: 50%;
+  transform: translateX(-50%) translateY(12px);
+  background: #1c1c1e;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 9px 18px;
+  border-radius: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 9999;
+  white-space: nowrap;
+}
+#admin-toast.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
