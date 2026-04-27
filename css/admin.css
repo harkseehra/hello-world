@@ -732,7 +732,9 @@ html, body {
 }
 
 .tr-btn-approve,
-.tr-btn-flag {
+.tr-btn-flag,
+.tr-btn-regen,
+.tr-btn-fix {
   min-height: 36px;
   padding: 7px 14px;
   border-radius: var(--radius-sm);
@@ -743,6 +745,74 @@ html, body {
   transition: all 0.12s;
   -webkit-tap-highlight-color: transparent;
 }
+
+.tr-btn-regen {
+  border: 1.5px solid var(--c-border);
+  background: transparent;
+  color: var(--c-text-secondary);
+}
+.tr-btn-regen:hover { border-color: var(--c-accent); color: var(--c-accent); }
+.tr-btn-regen:disabled { opacity: 0.45; cursor: default; }
+
+.tr-btn-fix {
+  border: 1.5px solid #A78BFA;
+  background: transparent;
+  color: #7C3AED;
+}
+.tr-btn-fix:hover  { background: #A78BFA; color: #fff; }
+.tr-btn-fix:disabled { opacity: 0.45; cursor: default; }
+
+/* Uncertain-word dropdowns */
+.tr-uncertain-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: rgba(167,139,250,0.08);
+  border: 1px solid #A78BFA;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+}
+.tr-uncertain-label {
+  font-weight: 600;
+  color: #7C3AED;
+  margin-right: 4px;
+}
+.tr-uncertain-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.tr-uncertain-roman {
+  font-style: italic;
+  color: var(--c-text-secondary);
+}
+.tr-uncertain-select {
+  border: 1px solid #A78BFA;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 13px;
+  background: var(--bg-card);
+  color: var(--c-text);
+  font-family: 'Noto Sans Gurmukhi', sans-serif;
+  cursor: pointer;
+}
+.tr-uncertain-apply {
+  margin-left: auto;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1.5px solid #A78BFA;
+  border-radius: var(--radius-sm);
+  background: #7C3AED;
+  color: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.12s;
+}
+.tr-uncertain-apply:hover { opacity: 0.85; }
 
 .tr-btn-approve {
   border: 1.5px solid #34D399;

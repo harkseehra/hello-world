@@ -462,6 +462,157 @@ function trGetPunjabi(verse) {
   return ch ? ch.punjabi : (verse.punjabi || '');
 }
 
+/* ── Shared API call ── */
+
+async function trCallAPI(messages, maxTokens = 1024) {
+  const apiKey = localStorage.getItem('mv-admin-api-key');
+  if (!apiKey) throw new Error('No API key saved.');
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'x-api-key':         apiKey,
+      'anthropic-version': '2023-06-01',
+      'content-type':      'application/json',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
+    body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: maxTokens, messages }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error?.message || `API error ${res.status}`);
+  }
+  return (await res.json()).content?.[0]?.text || '';
+}
+
+/* ── Regenerate a single verse ── */
+
+async function trRegenerateVerse(num, card) {
+  const verse = trState.verses.find(v => v.number === num);
+  if (!verse) return;
+
+  const btn = card.querySelector('.tr-btn-regen');
+  btn.textContent = '↻…';
+  btn.disabled    = true;
+
+  const prompt = `Translate this single Persian couplet from Rumi's Masnavi into Punjabi Gurmukhi script.
+- Natural flowing Punjabi, not word-for-word
+- Keep Perso-Arabic loanwords in Gurmukhi: ਇਸ਼ਕ, ਰੂਹ, ਦਰਦ, ਫ਼ਨਾ, ਹੱਕ etc.
+- Separate the two hemistichs with  /
+- Respond ONLY with valid JSON, no other text
+
+Verse: ${JSON.stringify({ number: verse.number, farsi: verse.farsi })}
+
+Format: {"number": ${verse.number}, "punjabi": "ਪਹਿਲੀ ਸਤਰ / ਦੂਜੀ ਸਤਰ", "confidence": "green"}`;
+
+  try {
+    const text = await trCallAPI([{ role: 'user', content: prompt }]);
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    const t = JSON.parse(jsonMatch ? jsonMatch[0] : text);
+
+    verse.punjabi            = t.punjabi;
+    verse.punjabi_confidence = t.confidence || 'green';
+    verse.punjabi_status     = 'pending';
+
+    if (!trState.changes[num]) trState.changes[num] = {};
+    trState.changes[num].punjabi = t.punjabi;
+    trState.changes[num].status  = 'pending';
+
+    const ta = card.querySelector('.tr-punjabi-input');
+    if (ta) ta.value = t.punjabi;
+
+    const conf      = t.confidence || 'green';
+    const confLabel = conf === 'green' ? '🟢 confident' : conf === 'yellow' ? '🟡 uncertain' : '🔴 difficult';
+    const badge     = card.querySelector('.tr-confidence');
+    if (badge) { badge.className = `tr-confidence ${conf}`; badge.textContent = confLabel; }
+
+    card.className = 'tr-verse';
+    showToast('↻ New draft ready');
+  } catch(err) {
+    showToast('Error: ' + err.message);
+  } finally {
+    btn.textContent = '↻ Regen';
+    btn.disabled    = false;
+  }
+}
+
+/* ── Fix romanized loanwords in edited text ── */
+
+async function trFixScript(num, card) {
+  const ta  = card.querySelector('.tr-punjabi-input');
+  const btn = card.querySelector('.tr-btn-fix');
+  if (!ta || !btn) return;
+
+  const original = ta.value;
+  btn.textContent = '✦ Fixing…';
+  btn.disabled    = true;
+
+  const prompt = `A user edited a Punjabi (Gurmukhi) translation of a Persian verse,
+but some words are still in romanized Latin form (e.g. "ishq", "ruh", "Waheguru").
+Convert ONLY the romanized Punjabi/Persian words to proper Gurmukhi script.
+Leave everything else exactly as-is, including the / hemistich separator.
+If you are unsure about a specific word, include it in "uncertain" with 2-3 Gurmukhi options.
+Respond ONLY with valid JSON, no other text.
+
+Text: "${original}"
+
+Format: {"corrected": "...", "uncertain": [{"roman": "word", "options": ["ਓਪਸ਼ਨ1", "ਓਪਸ਼ਨ2", "ਓਪਸ਼ਨ3"]}]}`;
+
+  try {
+    const text      = await trCallAPI([{ role: 'user', content: prompt }]);
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    const result    = JSON.parse(jsonMatch ? jsonMatch[0] : text);
+
+    ta.value = result.corrected || original;
+    if (!trState.changes[num]) trState.changes[num] = {};
+    trState.changes[num].punjabi = ta.value;
+
+    // Remove any existing uncertain row
+    const oldRow = card.querySelector('.tr-uncertain-row');
+    if (oldRow) oldRow.remove();
+
+    if (result.uncertain && result.uncertain.length) {
+      const row = document.createElement('div');
+      row.className = 'tr-uncertain-row';
+      row.innerHTML = '<span class="tr-uncertain-label">Unsure about:</span>' +
+        result.uncertain.map(u => `
+          <label class="tr-uncertain-chip">
+            <span class="tr-uncertain-roman">${esc(u.roman)}</span>
+            <select class="tr-uncertain-select" data-roman="${esc(u.roman)}">
+              ${u.options.map(o => `<option value="${esc(o)}">${esc(o)}</option>`).join('')}
+            </select>
+          </label>`).join('') +
+        '<button class="tr-uncertain-apply btn-secondary">Apply choices</button>';
+
+      row.querySelectorAll('.tr-uncertain-apply').forEach(applyBtn => {
+        applyBtn.addEventListener('click', () => {
+          let corrected = ta.value;
+          row.querySelectorAll('.tr-uncertain-select').forEach(sel => {
+            const roman   = sel.dataset.roman;
+            const chosen  = sel.value;
+            corrected = corrected.replace(new RegExp(roman, 'gi'), chosen);
+          });
+          ta.value = corrected;
+          trState.changes[num].punjabi = corrected;
+          row.remove();
+          btn.hidden = !/[a-zA-Z]/.test(corrected);
+          showToast('✓ Script fixed');
+        });
+      });
+
+      card.querySelector('.tr-verse-body').appendChild(row);
+      showToast('Review uncertain words below');
+    } else {
+      btn.hidden = !/[a-zA-Z]/.test(ta.value);
+      showToast('✓ Script fixed');
+    }
+  } catch(err) {
+    showToast('Error: ' + err.message);
+  } finally {
+    btn.textContent = '✦ Fix Script';
+    btn.disabled    = false;
+  }
+}
+
 /* ── Sync approval to localStorage (reader picks this up instantly) ── */
 
 function trSyncToLocalStorage(num, punjabi, status) {
@@ -515,6 +666,7 @@ function trRenderFiltered() {
     const confLabel = conf === 'green' ? '🟢 confident' : conf === 'yellow' ? '🟡 uncertain' : '🔴 difficult';
     const cardClass = status === 'approved' ? 'approved' : status === 'flagged' ? 'flagged' : '';
 
+    const hasLatin = /[a-zA-Z]/.test(pa);
     return `
       <div class="tr-verse ${cardClass}" data-num="${verse.number}">
         <div class="tr-verse-num">#${verse.number}</div>
@@ -524,6 +676,8 @@ function trRenderFiltered() {
           <div class="tr-verse-actions">
             <button class="tr-btn-approve" data-num="${verse.number}">✓ Approve</button>
             <button class="tr-btn-flag"    data-num="${verse.number}">⚑ Flag</button>
+            <button class="tr-btn-regen"   data-num="${verse.number}" title="Regenerate this verse">↻ Regen</button>
+            <button class="tr-btn-fix"     data-num="${verse.number}" ${hasLatin ? '' : 'hidden'}>✦ Fix Script</button>
             <span class="tr-confidence ${conf}">${confLabel}</span>
           </div>
         </div>
@@ -567,6 +721,28 @@ function trRenderFiltered() {
       card.className = 'tr-verse flagged';
       trSyncToLocalStorage(num, pa, 'flagged');
       trUpdateProgress();
+    });
+  });
+
+  /* Regenerate */
+  trVerseList.querySelectorAll('.tr-btn-regen').forEach(btn => {
+    btn.addEventListener('click', () => {
+      trRegenerateVerse(parseInt(btn.dataset.num), btn.closest('.tr-verse'));
+    });
+  });
+
+  /* Fix Script — show button when textarea has Latin chars */
+  trVerseList.querySelectorAll('.tr-punjabi-input').forEach(ta => {
+    ta.addEventListener('input', () => {
+      const card   = ta.closest('.tr-verse');
+      const fixBtn = card.querySelector('.tr-btn-fix');
+      if (fixBtn) fixBtn.hidden = !/[a-zA-Z]/.test(ta.value);
+    });
+  });
+
+  trVerseList.querySelectorAll('.tr-btn-fix').forEach(btn => {
+    btn.addEventListener('click', () => {
+      trFixScript(parseInt(btn.dataset.num), btn.closest('.tr-verse'));
     });
   });
 
@@ -672,28 +848,7 @@ Required JSON format:
 [{"number": 21, "punjabi": "ਪਹਿਲੀ ਸਤਰ / ਦੂਜੀ ਸਤਰ", "confidence": "green"}]`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key':         apiKey,
-        'anthropic-version': '2023-06-01',
-        'content-type':      'application/json',
-        'anthropic-dangerous-direct-browser-access': 'true',
-      },
-      body: JSON.stringify({
-        model:      'claude-haiku-4-5-20251001',
-        max_tokens: 4096,
-        messages:   [{ role: 'user', content: prompt }],
-      }),
-    });
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error?.message || `API error ${res.status}`);
-    }
-
-    const data = await res.json();
-    const text = data.content?.[0]?.text || '';
+    const text = await trCallAPI([{ role: 'user', content: prompt }], 4096);
 
     let translations;
     try {
