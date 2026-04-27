@@ -54,6 +54,7 @@
         <button class="nav-item"        data-section="farsi-fonts">Farsi Fonts</button>
         <button class="nav-item"        data-section="english-fonts">English Fonts</button>
         <button class="nav-item"        data-section="translations">Translations</button>
+        <button class="nav-item"        data-section="data-fixes">Data Fixes</button>
       </nav>
       <button id="btn-logout">Log out</button>
     </aside>
@@ -351,6 +352,59 @@
           <div class="output-file">Patch JSON — paste to Claude Code: "apply this translations patch"</div>
           <pre id="tr-patch-pre"></pre>
         </div>
+      </section>
+
+      <!-- ── Data Fixes ── -->
+      <section id="section-data-fixes" class="section">
+        <div class="section-header">
+          <h2>Data Fixes</h2>
+          <p class="section-desc">Fix Farsi–English mismatches. Load a verse, inspect the context, and swap the Farsi couplet with the verse above or below. Queued swaps are exported as a patch for Claude Code to apply permanently.</p>
+        </div>
+
+        <!-- Book tabs -->
+        <div id="df-book-tabs">
+          <button class="df-book-tab active" data-book="1">Book 1</button>
+          <button class="df-book-tab" data-book="2">Book 2</button>
+          <button class="df-book-tab" data-book="3">Book 3</button>
+          <button class="df-book-tab" data-book="4">Book 4</button>
+          <button class="df-book-tab" data-book="5">Book 5</button>
+          <button class="df-book-tab" data-book="6">Book 6</button>
+        </div>
+
+        <!-- Verse lookup -->
+        <div class="card" id="df-lookup-card">
+          <h3>Jump to verse</h3>
+          <div class="df-lookup-row">
+            <input type="number" id="df-verse-input" placeholder="Verse #" min="1">
+            <button id="df-load-verse" class="btn-primary">Load</button>
+          </div>
+          <p id="df-status"></p>
+        </div>
+
+        <!-- 3-verse context panel -->
+        <div id="df-context" hidden>
+          <div class="df-verse-card" id="df-prev"></div>
+          <div class="df-verse-card df-verse-focus" id="df-curr"></div>
+          <div class="df-verse-card" id="df-next"></div>
+
+          <div class="df-swap-row">
+            <button class="btn-secondary" id="df-swap-prev">↑ Swap Farsi with verse above</button>
+            <button class="btn-secondary" id="df-swap-next">↓ Swap Farsi with verse below</button>
+          </div>
+        </div>
+
+        <!-- Patch queue -->
+        <div id="df-patch-section">
+          <div class="df-patch-header">
+            <span id="df-patch-count">No fixes queued</span>
+            <div class="df-patch-actions">
+              <button id="df-copy-patch" class="btn-copy-all" hidden>Copy Patch</button>
+              <button id="df-clear-patch" class="btn-secondary" hidden>Clear</button>
+            </div>
+          </div>
+          <div id="df-patch-list"></div>
+        </div>
+
       </section>
 
     </main>

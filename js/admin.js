@@ -907,3 +907,211 @@ Required JSON format:
 document.querySelector('[data-section="translations"]').addEventListener('click', () => {
   if (!trState.verses.length) trLoadBook(1);
 });
+
+/* ═══════════════════════════════════════════════════════════════
+   DATA FIXES — Farsi–English mismatch correction tool
+   ═══════════════════════════════════════════════════════════════ */
+
+let dfState = {
+  book:   1,
+  verses: [],   // flat array of verse entries from current book
+  focus:  null, // currently focused verse number
+  patch:  [],   // queued swaps: [{ book, verse_a, verse_b }]
+};
+
+/* DOM refs */
+const dfBookTabs   = document.querySelectorAll('.df-book-tab');
+const dfVerseInput = document.getElementById('df-verse-input');
+const dfLoadBtn    = document.getElementById('df-load-verse');
+const dfStatus     = document.getElementById('df-status');
+const dfContext    = document.getElementById('df-context');
+const dfPrev       = document.getElementById('df-prev');
+const dfCurr       = document.getElementById('df-curr');
+const dfNext       = document.getElementById('df-next');
+const dfSwapPrev   = document.getElementById('df-swap-prev');
+const dfSwapNext   = document.getElementById('df-swap-next');
+const dfPatchCount = document.getElementById('df-patch-count');
+const dfPatchList  = document.getElementById('df-patch-list');
+const dfCopyPatch  = document.getElementById('df-copy-patch');
+const dfClearPatch = document.getElementById('df-clear-patch');
+
+/* ── Load book ── */
+
+async function dfLoadBook(bookNum) {
+  dfState.book   = bookNum;
+  dfState.verses = [];
+  dfState.focus  = null;
+  dfContext.hidden = true;
+  dfStatus.textContent = 'Loading…';
+  try {
+    const res  = await fetch(`data/book${bookNum}.json`);
+    const data = await res.json();
+    for (const section of data.sections) {
+      for (const e of section.entries) {
+        if (e.type === 'verse') dfState.verses.push(e);
+      }
+    }
+    dfStatus.textContent = `Book ${bookNum} loaded — ${dfState.verses.length} verses.`;
+  } catch(err) {
+    dfStatus.textContent = 'Could not load book ' + bookNum;
+  }
+}
+
+/* ── Render a verse card ── */
+
+function dfVerseCard(verse, label) {
+  if (!verse) return `<div class="df-empty">${label} — no verse</div>`;
+  const farsi  = esc(verse.farsi  || '—');
+  const eng    = esc(verse.english || '—');
+  return `
+    <div class="df-card-label">${label} — #${verse.number}</div>
+    <div class="df-card-farsi">${farsi}</div>
+    <div class="df-card-english">${eng}</div>`;
+}
+
+/* ── Render the 3-verse context panel ── */
+
+function dfRenderContext() {
+  const verses = dfState.verses;
+  const idx    = verses.findIndex(v => v.number === dfState.focus);
+  if (idx === -1) return;
+
+  const prev = verses[idx - 1] || null;
+  const curr = verses[idx];
+  const next = verses[idx + 1] || null;
+
+  dfPrev.innerHTML = dfVerseCard(prev, 'Above');
+  dfCurr.innerHTML = dfVerseCard(curr, 'Focus');
+  dfNext.innerHTML = dfVerseCard(next, 'Below');
+
+  dfSwapPrev.textContent = prev ? `↑ Swap Farsi with #${prev.number}` : '↑ No verse above';
+  dfSwapNext.textContent = next ? `↓ Swap Farsi with #${next.number}` : '↓ No verse below';
+  dfSwapPrev.disabled = !prev;
+  dfSwapNext.disabled = !next;
+
+  dfContext.hidden = false;
+}
+
+/* ── Queue a swap ── */
+
+function dfQueueSwap(numA, numB) {
+  const verses = dfState.verses;
+  const a = verses.find(v => v.number === numA);
+  const b = verses.find(v => v.number === numB);
+  if (!a || !b) return;
+
+  // Apply swap in memory
+  [a.farsi, b.farsi] = [b.farsi, a.farsi];
+
+  // Record in patch
+  dfState.patch.push({ book: dfState.book, verse_a: numA, verse_b: numB });
+
+  dfRenderContext();
+  dfRenderPatch();
+  showToast(`↕ Swapped #${numA} ↔ #${numB}`);
+}
+
+/* ── Render patch queue ── */
+
+function dfRenderPatch() {
+  const count = dfState.patch.length;
+  dfPatchCount.textContent = count
+    ? `${count} fix${count !== 1 ? 'es' : ''} queued`
+    : 'No fixes queued';
+  dfCopyPatch.hidden  = count === 0;
+  dfClearPatch.hidden = count === 0;
+
+  dfPatchList.innerHTML = dfState.patch.map((fix, i) =>
+    `<div class="df-patch-item">
+      <span>Book ${fix.book} — #${fix.verse_a} ↔ #${fix.verse_b}</span>
+      <button class="df-undo-btn" data-idx="${i}">Undo</button>
+    </div>`
+  ).join('');
+
+  dfPatchList.querySelectorAll('.df-undo-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const i   = parseInt(btn.dataset.idx);
+      const fix = dfState.patch[i];
+      // reverse the swap in memory
+      const a = dfState.verses.find(v => v.number === fix.verse_a);
+      const b = dfState.verses.find(v => v.number === fix.verse_b);
+      if (a && b) [a.farsi, b.farsi] = [b.farsi, a.farsi];
+      dfState.patch.splice(i, 1);
+      dfRenderContext();
+      dfRenderPatch();
+      showToast('Undo applied');
+    });
+  });
+}
+
+/* ── Book tabs ── */
+
+dfBookTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    dfBookTabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    dfLoadBook(parseInt(tab.dataset.book));
+  });
+});
+
+/* ── Load verse ── */
+
+dfLoadBtn.addEventListener('click', () => {
+  const num = parseInt(dfVerseInput.value);
+  if (!num) { dfStatus.textContent = 'Enter a verse number first.'; return; }
+  if (!dfState.verses.length) { dfStatus.textContent = 'Load a book first.'; return; }
+  const verse = dfState.verses.find(v => v.number === num);
+  if (!verse) { dfStatus.textContent = `Verse #${num} not found in Book ${dfState.book}.`; return; }
+  dfState.focus = num;
+  dfStatus.textContent = '';
+  dfRenderContext();
+});
+
+dfVerseInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') dfLoadBtn.click();
+});
+
+/* ── Swap buttons ── */
+
+dfSwapPrev.addEventListener('click', () => {
+  const idx  = dfState.verses.findIndex(v => v.number === dfState.focus);
+  const prev = dfState.verses[idx - 1];
+  if (prev) dfQueueSwap(dfState.focus, prev.number);
+});
+
+dfSwapNext.addEventListener('click', () => {
+  const idx  = dfState.verses.findIndex(v => v.number === dfState.focus);
+  const next = dfState.verses[idx + 1];
+  if (next) dfQueueSwap(dfState.focus, next.number);
+});
+
+/* ── Copy patch ── */
+
+dfCopyPatch.addEventListener('click', function() {
+  const patch = {
+    type:  'farsi_alignment_fixes',
+    fixes: dfState.patch,
+  };
+  const json = JSON.stringify(patch, null, 2);
+  navigator.clipboard.writeText(json).then(() => {
+    this.textContent = 'Copied!';
+    this.classList.add('copied');
+    setTimeout(() => { this.textContent = 'Copy Patch'; this.classList.remove('copied'); }, 2000);
+  });
+});
+
+/* ── Clear patch ── */
+
+dfClearPatch.addEventListener('click', () => {
+  if (!confirm('Clear all queued fixes? This cannot be undone.')) return;
+  // Reverse all swaps in memory (reload book to reset)
+  dfLoadBook(dfState.book).then(dfRenderPatch);
+  dfState.patch = [];
+  dfRenderPatch();
+});
+
+/* ── Auto-load Book 1 when section is first opened ── */
+
+document.querySelector('[data-section="data-fixes"]').addEventListener('click', () => {
+  if (!dfState.verses.length) dfLoadBook(1);
+});
