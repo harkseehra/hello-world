@@ -387,9 +387,19 @@ const trCopyPatch   = document.getElementById('tr-copy-patch');
 const trPatchOutput = document.getElementById('tr-patch-output');
 const trPatchPre    = document.getElementById('tr-patch-pre');
 const trGenerate    = document.getElementById('tr-generate');
+const trStartVerse  = document.getElementById('tr-start-verse');
 const trApiKeyInput = document.getElementById('tr-api-key');
 const trSaveKey     = document.getElementById('tr-save-key');
 const trKeyStatus   = document.getElementById('tr-key-status');
+
+/* ── Persist start-verse input ── */
+const savedStartVerse = localStorage.getItem('mv-admin-start-verse');
+if (savedStartVerse) trStartVerse.value = savedStartVerse;
+trStartVerse.addEventListener('change', () => {
+  const v = trStartVerse.value.trim();
+  if (v) localStorage.setItem('mv-admin-start-verse', v);
+  else   localStorage.removeItem('mv-admin-start-verse');
+});
 
 /* ── API key ── */
 
@@ -823,9 +833,15 @@ trGenerate.addEventListener('click', async () => {
     return;
   }
 
-  const toGenerate = trState.verses.filter(v => !v.punjabi).slice(0, 20);
+  const startNum   = parseInt(trStartVerse.value) || 0;
+  const toGenerate = trState.verses
+    .filter(v => !v.punjabi && (startNum === 0 || v.number >= startNum))
+    .slice(0, 20);
   if (!toGenerate.length) {
-    alert('All verses in this book already have translations.');
+    const msg = startNum
+      ? `No untranslated verses found from #${startNum} onwards in Book ${trState.book}.`
+      : 'All verses in this book already have translations.';
+    alert(msg);
     return;
   }
 

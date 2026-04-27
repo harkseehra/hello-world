@@ -339,7 +339,10 @@
 
         <!-- Actions bar -->
         <div id="tr-actions">
-          <button id="tr-generate"    class="btn-primary">⚡ Generate Next 20</button>
+          <div id="tr-generate-group">
+            <input type="number" id="tr-start-verse" placeholder="From verse #" min="1" title="Start generating from this verse number">
+            <button id="tr-generate" class="btn-primary">⚡ Generate Next 20</button>
+          </div>
           <button id="tr-approve-all" class="btn-secondary">✓ Approve All</button>
           <button id="tr-copy-patch"  class="btn-copy-all">Copy Patch</button>
         </div>
