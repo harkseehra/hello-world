@@ -426,7 +426,6 @@ function makeCard(entry) {
       span.textContent  = h.trim();
       span.dataset.part = `fa${i}`;
       span.addEventListener('click', e => {
-        e.stopPropagation();
         showPicker(span, state.book, entry.index, `fa${i}`);
       });
       faInner.appendChild(span);
