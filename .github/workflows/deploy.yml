@@ -28,7 +28,6 @@ jobs:
         run: |
           mkdir _site
           cp index.html _site/
-          cp admin.html _site/
           cp manifest.json _site/
           cp -r css  _site/
           cp -r js   _site/

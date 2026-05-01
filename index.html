@@ -156,11 +156,16 @@
 
     <div class="settings-divider"></div>
 
-    <div class="settings-section">
-      <p class="settings-label">ਪੰਜਾਬੀ · Punjabi</p>
-      <div class="settings-row">
-        <button class="settings-opt active" id="btn-punjabi-on">Show</button>
-        <button class="settings-opt"        id="btn-punjabi-off">Hide</button>
+    <div class="settings-section" id="api-key-section">
+      <p class="settings-label">Translate</p>
+      <div id="api-key-row">
+        <span id="api-key-status">No key saved</span>
+        <button class="settings-opt" id="btn-api-key-edit">Set Key</button>
+      </div>
+      <div id="api-key-form" hidden>
+        <input type="password" id="api-key-input" placeholder="sk-ant-api03-…" autocomplete="off" spellcheck="false">
+        <button id="btn-api-key-save" class="settings-opt">Save</button>
+        <button id="btn-api-key-clear" class="settings-opt">Clear</button>
       </div>
     </div>
 

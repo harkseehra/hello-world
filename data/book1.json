@@ -13,181 +13,121 @@
           "type": "verse",
           "number": 1,
           "farsi": "بشنو از نى چون حكايت مى‏كند / از جدايى‏ها شكايت مى‏كند",
-          "english": "Listen to the reed how it tells a tale, complaining of separations—",
-          "punjabi": "ਸੁਣ ਇਸ ਬੰਸਰੀ ਤੋਂ, ਕਿਵੇਂ ਕਹਾਣੀ ਸੁਣਾਉਂਦੀ ਹੈ / ਜੁਦਾਈ ਦੀਆਂ ਸ਼ਿਕਾਇਤਾਂ ਗਾਉਂਦੀ ਹੈ",
-          "punjabi_status": "approved",
-          "punjabi_confidence": "green"
+          "english": "Listen to the reed how it tells a tale, complaining of separations—"
         },
         {
           "type": "verse",
           "number": 2,
           "farsi": "كز نيستان تا مرا ببريده‏اند / در نفيرم مرد و زن ناليده‏اند",
-          "english": "Saying, “Ever since I was parted from the reed-bed, my lament, has caused man and woman to moan.",
-          "punjabi": "ਕਹਿੰਦੀ ਹੈ: ਜਦੋਂ ਤੋਂ ਨਲਕਾਂ ਦੇ ਬਨ ਤੋਂ ਵੱਖ ਹੋਈ / ਮੇਰੇ ਵੈਣਾਂ ਨੇ ਮਰਦ ਤੇ ਜ਼ਨ ਨੂੰ ਰੁਆਇਆ",
-          "punjabi_status": "approved",
-          "punjabi_confidence": "green"
+          "english": "Saying, “Ever since I was parted from the reed-bed, my lament, has caused man and woman to moan."
         },
         {
           "type": "verse",
           "number": 3,
           "farsi": "سينه خواهم شرحه شرحه از فراق / تا بگويم شرح درد اشتياق‏",
-          "english": "I want a bosom torn by severance, that I may unfold the pain of love-desire.",
-          "punjabi": "ਮੈਨੂੰ ਚਾਹੀਦਾ ਹੈ ਵਿਛੋੜੇ ਨਾਲ ਚੀਰਿਆ ਸੀਨਾ / ਤਾਂ ਜੋ ਲਾਲਸਾ ਦੇ ਦਰਦ ਦੀ ਕਹਾਣੀ ਕਹਾਂ",
-          "punjabi_status": "approved",
-          "punjabi_confidence": "green"
+          "english": "I want a bosom torn by severance, that I may unfold the pain of love-desire."
         },
         {
           "type": "verse",
           "number": 4,
           "farsi": "هر كسى كاو دور ماند از اصل خويش / باز جويد روزگار وصل خويش‏",
-          "english": "Every one who is left far from his source wishes back the time when he was united with it.",
-          "punjabi": "ਜੋ ਕੋਈ ਆਪਣੇ ਅਸਲ ਤੋਂ ਦੂਰ ਰਿਹਾ / ਉਹ ਮਿਲਾਪ ਦੇ ਵੇਲੇ ਨੂੰ ਭਾਲਦਾ ਹੈ",
-          "punjabi_status": "approved",
-          "punjabi_confidence": "green"
+          "english": "Every one who is left far from his source wishes back the time when he was united with it."
         },
         {
           "type": "verse",
           "number": 5,
           "farsi": "من به هر جمعيتى نالان شدم / جفت بد حالان و خوش حالان شدم‏",
-          "english": "In every company I uttered my grieving cry; I consorted with the unhappy and with them that rejoice.",
-          "punjabi": "ਮੈਂ ਹਰ ਮਹਿਫ਼ਿਲ ਵਿੱਚ ਵਿਰਲਾਪ ਕੀਤਾ / ਦੁਖੀਆਂ ਅਤੇ ਸੁਖੀਆਂ ਦੋਵਾਂ ਦਾ ਸੰਗੀ ਬਣਿਆ",
-          "punjabi_status": "approved",
-          "punjabi_confidence": "green"
+          "english": "In every company I uttered my grieving cry; I consorted with the unhappy and with them that rejoice."
         },
         {
           "type": "verse",
           "number": 6,
           "farsi": "هر كسى از ظن خود شد يار من / از درون من نجست اسرار من‏",
-          "english": "Every one became my friend from his own opinion; none sought out my secrets from within me.",
-          "punjabi": "ਹਰ ਕੋਈ ਆਪਣੀ ਸੋਚ ਨਾਲ ਮੇਰਾ ਯਾਰ ਬਣਿਆ / ਕਿਸੇ ਨੇ ਮੇਰੇ ਅੰਦਰੋਂ ਮੇਰੇ ਰਾਜ਼ ਨਾ ਢੂੰਡੇ",
-          "punjabi_status": "approved",
-          "punjabi_confidence": "green"
+          "english": "Every one became my friend from his own opinion; none sought out my secrets from within me."
         },
         {
           "type": "verse",
           "number": 7,
           "farsi": "سر من از ناله‏ى من دور نيست / ليك چشم و گوش را آن نور نيست‏",
-          "english": "My secret is not far from my complaint, but ear and eye lack the light.",
-          "punjabi": "ਮੇਰਾ ਭੇਦ ਮੇਰੇ ਵੈਣਾਂ ਤੋਂ ਦੂਰ ਨਹੀਂ / ਪਰ ਚਸ਼ਮ ਤੇ ਕੰਨਾਂ ਵਿੱਚ ਉਹ ਰੋਸ਼ਨੀ ਨਹੀਂ",
-          "punjabi_status": "approved",
-          "punjabi_confidence": "yellow"
+          "english": "My secret is not far from my complaint, but ear and eye lack the light."
         },
         {
           "type": "verse",
           "number": 8,
           "farsi": "تن ز جان و جان ز تن مستور نيست / ليك كس را ديد جان دستور نيست‏",
-          "english": "Body is not veiled from soul, or soul from body, yet none is permitted to see the soul.",
-          "punjabi": "ਤਨ ਰੂਹ ਤੋਂ ਲੁਕਿਆ ਨਹੀਂ, ਨਾ ਰੂਹ ਤਨ ਤੋਂ / ਪਰ ਕਿਸੇ ਨੂੰ ਰੂਹ ਵੇਖਣ ਦੀ ਇਜਾਜ਼ਤ ਨਹੀਂ",
-          "punjabi_status": "approved",
-          "punjabi_confidence": "yellow"
+          "english": "Body is not veiled from soul, or soul from body, yet none is permitted to see the soul."
         },
         {
           "type": "verse",
           "number": 9,
           "farsi": "آتش است اين بانگ ناى و نيست باد / هر كه اين آتش ندارد نيست باد",
-          "english": "This noise of the reed is fire, it is not wind: whoever has not this fire, may he be nothing!",
-          "punjabi": "ਬੰਸਰੀ ਦੀ ਇਹ ਅਵਾਜ਼ ਅੱਗ ਹੈ, ਹਵਾ ਨਹੀਂ / ਜਿਸ ਕੋਲ ਇਹ ਅੱਗ ਨਹੀਂ, ਉਹ ਮਿਟ ਜਾਵੇ",
-          "punjabi_status": "approved",
-          "punjabi_confidence": "green"
+          "english": "This noise of the reed is fire, it is not wind: whoever has not this fire, may he be nothing!"
         },
         {
           "type": "verse",
           "number": 10,
           "farsi": "آتش عشق است كاندر نى فتاد / جوشش عشق است كاندر مى‏فتاد",
-          "english": "It is the fire of Love that is in the reed, it is the fervour of Love that is in the wine.",
-          "punjabi": "ਬੰਸਰੀ ਵਿੱਚ ਡਿੱਗੀ ਇਸ਼ਕ ਦੀ ਅੱਗ ਹੈ / ਸ਼ਰਾਬ ਵਿੱਚ ਡਿੱਗਿਆ ਇਸ਼ਕ ਦਾ ਜੋਸ਼ ਹੈ",
-          "punjabi_status": "approved",
-          "punjabi_confidence": "green"
+          "english": "It is the fire of Love that is in the reed, it is the fervour of Love that is in the wine."
         },
         {
           "type": "verse",
           "number": 11,
           "farsi": "نى حريف هر كه از يارى بريد / پرده‏هايش پرده‏هاى ما دريد",
-          "english": "The reed is the comrade of every one who has been parted from a friend: its strains pierced our hearts.",
-          "punjabi": "ਬੰਸਰੀ ਉਸ ਦੀ ਹਮਜ਼ੋਲੀ ਜੋ ਯਾਰ ਤੋਂ ਵਿੱਛੜਿਆ / ਇਸ ਦੇ ਸੁਰਾਂ ਨੇ ਸਾਡੇ ਪਰਦੇ ਚਾਕ ਕੀਤੇ",
-          "punjabi_status": "pending",
-          "punjabi_confidence": "green"
+          "english": "The reed is the comrade of every one who has been parted from a friend: its strains pierced our hearts."
         },
         {
           "type": "verse",
           "number": 12,
           "farsi": "همچو نى زهرى و ترياقى كه ديد / همچو نى دمساز و مشتاقى كه ديد",
-          "english": "Who ever saw a poison and antidote like the reed? Who ever saw a sympathiser and a longing lover like the reed?",
-          "punjabi": "ਕਿਸ ਨੇ ਬੰਸਰੀ ਵਰਗਾ ਜ਼ਹਿਰ ਤੇ ਤ੍ਰਿਯਾਕ ਵੇਖਿਆ / ਕਿਸ ਨੇ ਬੰਸਰੀ ਵਰਗਾ ਹਮਦਰਦ ਤੇ ਮੁਸ਼ਤਾਕ ਵੇਖਿਆ",
-          "punjabi_status": "pending",
-          "punjabi_confidence": "green"
+          "english": "Who ever saw a poison and antidote like the reed? Who ever saw a sympathiser and a longing lover like the reed?"
         },
         {
           "type": "verse",
           "number": 13,
           "farsi": "نى حديث راه پر خون مى‏كند / قصه‏هاى عشق مجنون مى‏كند",
-          "english": "The reed tells of the Way full of blood and recounts stories of the passion of Majnun.",
-          "punjabi": "ਬੰਸਰੀ ਖੂਨ ਭਰੇ ਰਾਹ ਦੀ ਕਹਾਣੀ ਕਹਿੰਦੀ ਹੈ / ਮਜਨੂੰ ਦੇ ਇਸ਼ਕ ਦੀਆਂ ਗੱਲਾਂ ਸੁਣਾਉਂਦੀ ਹੈ",
-          "punjabi_status": "pending",
-          "punjabi_confidence": "green"
+          "english": "The reed tells of the Way full of blood and recounts stories of the passion of Majnun."
         },
         {
           "type": "verse",
           "number": 14,
           "farsi": "محرم اين هوش جز بى‏هوش نيست / مر زبان را مشترى جز گوش نيست‏",
-          "english": "Only to the senseless is this sense confided: the tongue has no customer save the ear.",
-          "punjabi": "ਇਸ ਹੋਸ਼ ਦਾ ਮਹਿਰਮ ਬੇਹੋਸ਼ੀ ਤੋਂ ਬਿਨਾਂ ਕੋਈ ਨਹੀਂ / ਜ਼ਬਾਨ ਦਾ ਖਰੀਦਦਾਰ ਕੰਨ ਤੋਂ ਬਿਨਾਂ ਕੋਈ ਨਹੀਂ",
-          "punjabi_status": "pending",
-          "punjabi_confidence": "yellow"
+          "english": "Only to the senseless is this sense confided: the tongue has no customer save the ear."
         },
         {
           "type": "verse",
           "number": 15,
           "farsi": "در غم ما روزها بى‏گاه شد / روزها با سوزها همراه شد",
-          "english": "In our woe the days have become untimely: our days travel hand in hand with burning griefs.",
-          "punjabi": "ਸਾਡੇ ਗ਼ਮ ਵਿੱਚ ਦਿਨ ਬੇਵੇਲੇ ਹੋ ਗਏ / ਦਿਨ ਸੋਜ਼ਾਂ ਦੇ ਨਾਲ ਹਮਰਾਹ ਹੋ ਗਏ",
-          "punjabi_status": "pending",
-          "punjabi_confidence": "green"
+          "english": "In our woe the days have become untimely: our days travel hand in hand with burning griefs."
         },
         {
           "type": "verse",
           "number": 16,
           "farsi": "روزها گر رفت گو رو باك نيست / تو بمان اى آن كه چون تو پاك نيست‏",
-          "english": "If our days are gone, let them go!—It is no matter. Do You remain, for none is holy as You are!",
-          "punjabi": "ਜੇ ਦਿਨ ਚਲੇ ਗਏ ਤਾਂ ਜਾਣ ਦੇ, ਕੋਈ ਗੱਲ ਨਹੀਂ / ਤੂੰ ਰਹਿ, ਓ ਉਹ ਜਿਸ ਵਰਗਾ ਕੋਈ ਪਾਕ ਨਹੀਂ",
-          "punjabi_status": "pending",
-          "punjabi_confidence": "green"
+          "english": "If our days are gone, let them go!—It is no matter. Do You remain, for none is holy as You are!"
         },
         {
           "type": "verse",
           "number": 17,
           "farsi": "هر كه جز ماهى ز آبش سير شد / هر كه بى‏روزى است روزش دير شد",
-          "english": "Whoever is not a fish becomes sated with His water; whoever is without daily bread finds the day long.",
-          "punjabi": "ਮੱਛੀ ਤੋਂ ਬਿਨਾਂ ਹਰ ਕੋਈ ਪਾਣੀ ਤੋਂ ਰੱਜ ਗਿਆ / ਜਿਸ ਦਾ ਰਿਜ਼ਕ ਨਹੀਂ, ਉਸ ਦਾ ਦਿਨ ਲੰਮਾ ਹੋ ਗਿਆ",
-          "punjabi_status": "pending",
-          "punjabi_confidence": "yellow"
+          "english": "Whoever is not a fish becomes sated with His water; whoever is without daily bread finds the day long."
         },
         {
           "type": "verse",
           "number": 18,
           "farsi": "درنيابد حال پخته هيچ خام / پس سخن كوتاه بايد و السلام‏",
-          "english": "None that is raw understands the state of the ripe: therefore my words must be brief. Farewell!",
-          "punjabi": "ਕੱਚਾ ਕਦੇ ਪੱਕੇ ਦਾ ਹਾਲ ਨਹੀਂ ਸਮਝਦਾ / ਇਸ ਲਈ ਗੱਲ ਸੰਖੇਪ ਹੋਣੀ ਚਾਹੀਦੀ ਹੈ, ਅਤੇ ਸਲਾਮ",
-          "punjabi_status": "pending",
-          "punjabi_confidence": "yellow"
+          "english": "None that is raw understands the state of the ripe: therefore my words must be brief. Farewell!"
         },
         {
           "type": "verse",
           "number": 19,
           "farsi": "بند بگسل، باش آزاد اى پسر / چند باشى بند سيم و بند زر",
-          "english": "O son, burst your chains and be free! How long will you be a bondsman toe silver and gold?",
-          "punjabi": "ਜ਼ੰਜੀਰ ਤੋੜ, ਆਜ਼ਾਦ ਹੋ ਜਾ, ਓ ਪੁੱਤਰਾ / ਕਿੰਨਾ ਚਿਰ ਚਾਂਦੀ ਤੇ ਸੋਨੇ ਦੀਆਂ ਬੇੜੀਆਂ ਵਿੱਚ ਰਹੇਂਗਾ",
-          "punjabi_status": "pending",
-          "punjabi_confidence": "green"
+          "english": "O son, burst your chains and be free! How long will you be a bondsman toe silver and gold?"
         },
         {
           "type": "verse",
           "number": 20,
           "farsi": "گر بريزى بحر را در كوزه‏اى / چند گنجد قسمت يك روزه‏اى‏",
-          "english": "If you pour the sea into a pitcher, how much will it hold? One day’s store.",
-          "punjabi": "ਜੇ ਸਮੁੰਦਰ ਨੂੰ ਇੱਕ ਘੜੇ ਵਿੱਚ ਪਾਵੇ / ਕਿੰਨਾ ਕੁ ਸਮਾਵੇਗਾ — ਬੱਸ ਇੱਕ ਦਿਨ ਦੀ ਵੰਡ",
-          "punjabi_status": "pending",
-          "punjabi_confidence": "green"
+          "english": "If you pour the sea into a pitcher, how much will it hold? One day’s store."
         },
         {
           "type": "verse",

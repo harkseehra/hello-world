@@ -221,10 +221,6 @@ async function loadBook(n) {
 }
 
 function flattenBook(data) {
-  // Admin approvals are synced to localStorage immediately — apply them here
-  let overrides = {};
-  try { overrides = JSON.parse(localStorage.getItem(`mv-pa-b${state.book}`) || '{}'); } catch(e) {}
-
   const out = [];
   let idx = 0;
   for (const section of data.sections) {
@@ -232,16 +228,7 @@ function flattenBook(data) {
       out.push({ type: 'heading', title_en: section.title_en, title_fa: section.title_fa, index: idx++ });
     }
     for (const e of section.entries) {
-      const ov = overrides[e.number];
-      out.push({
-        type:           'verse',
-        number:         e.number,
-        farsi:          e.farsi,
-        english:        e.english,
-        punjabi:        ov ? ov.punjabi        : e.punjabi,
-        punjabi_status: ov ? ov.status         : e.punjabi_status,
-        index:          idx++,
-      });
+      out.push({ type: 'verse', number: e.number, farsi: e.farsi, english: e.english, index: idx++ });
     }
   }
   return out;
@@ -427,9 +414,12 @@ function makeCard(entry) {
 
   } else {
     const faWrap = document.createElement('div');
-    faWrap.className = 'verse-fa';
-    faWrap.lang      = 'fa';
-    faWrap.dir       = 'rtl';
+    faWrap.className = 'verse-fa-wrap';
+
+    const faInner = document.createElement('div');
+    faInner.className = 'verse-fa';
+    faInner.lang      = 'fa';
+    faInner.dir       = 'rtl';
 
     (entry.farsi || '').split(' / ').forEach((h, i) => {
       const span = document.createElement('span');
@@ -439,7 +429,20 @@ function makeCard(entry) {
         e.stopPropagation();
         showPicker(span, state.book, entry.index, `fa${i}`);
       });
-      faWrap.appendChild(span);
+      faInner.appendChild(span);
+    });
+
+    faWrap.appendChild(faInner);
+
+    // Restore cached translation if present
+    const cachedTr = trGetCached(state.book, entry.number);
+    if (cachedTr) {
+      faWrap.appendChild(makePaEl(cachedTr, state.book, entry.number, faWrap));
+    }
+
+    faWrap.addEventListener('click', e => {
+      if (e.target.closest('.verse-pa') || e.target.closest('[data-part]')) return;
+      trTranslate(entry.farsi, state.book, entry.number, faWrap);
     });
 
     const enEl = document.createElement('p');
@@ -466,14 +469,6 @@ function makeCard(entry) {
 
     el.appendChild(faWrap);
     el.appendChild(enEl);
-
-    if (entry.punjabi && entry.punjabi_status === 'approved') {
-      const paEl = document.createElement('p');
-      paEl.className   = 'verse-pa';
-      paEl.textContent = entry.punjabi;
-      el.appendChild(paEl);
-    }
-
     el.appendChild(numEl);
     el.appendChild(bmBtn);
     applyHighlights(el, entry);
@@ -935,23 +930,175 @@ btnSettings.addEventListener('click', e => {
   settingsPanel.classList.contains('open') ? closeSettings() : openSettings();
 });
 
-// ── Punjabi toggle ────────────────────────────────────────────────────────────
-const btnPunjabiOn  = document.getElementById('btn-punjabi-on');
-const btnPunjabiOff = document.getElementById('btn-punjabi-off');
+// ── API key + on-demand translation ──────────────────────────────────────────
 
-function setPunjabi(show, save = true) {
-  html.dataset.showPunjabi = show ? 'on' : 'off';
-  btnPunjabiOn.classList.toggle('active',  show);
-  btnPunjabiOff.classList.toggle('active', !show);
-  if (save) localStorage.setItem('mv-punjabi', show ? 'on' : 'off');
-  if (state.pages.length) goToPage(state.page, 0);
+const apiKeyInput   = document.getElementById('api-key-input');
+const apiKeyStatus  = document.getElementById('api-key-status');
+const btnApiKeyEdit = document.getElementById('btn-api-key-edit');
+const btnApiKeySave = document.getElementById('btn-api-key-save');
+const btnApiKeyClear= document.getElementById('btn-api-key-clear');
+const apiKeyForm    = document.getElementById('api-key-form');
+
+function trUpdateKeyStatus() {
+  const k = localStorage.getItem('mv-api-key');
+  if (k) {
+    apiKeyStatus.textContent  = '✓ Key saved';
+    apiKeyStatus.style.color  = 'var(--c-accent)';
+    btnApiKeyEdit.textContent = 'Change';
+  } else {
+    apiKeyStatus.textContent  = 'No key — click to add';
+    apiKeyStatus.style.color  = '';
+    btnApiKeyEdit.textContent = 'Set Key';
+  }
 }
 
-const savedPunjabi = localStorage.getItem('mv-punjabi');
-if (savedPunjabi) setPunjabi(savedPunjabi === 'on', false);
+btnApiKeyEdit.addEventListener('click', () => {
+  apiKeyForm.hidden = !apiKeyForm.hidden;
+  if (!apiKeyForm.hidden) apiKeyInput.focus();
+});
 
-btnPunjabiOn.addEventListener('click',  () => setPunjabi(true));
-btnPunjabiOff.addEventListener('click', () => setPunjabi(false));
+btnApiKeySave.addEventListener('click', () => {
+  const v = apiKeyInput.value.trim();
+  if (!v) return;
+  localStorage.setItem('mv-api-key', v);
+  apiKeyInput.value = '';
+  apiKeyForm.hidden = true;
+  trUpdateKeyStatus();
+});
+
+btnApiKeyClear.addEventListener('click', () => {
+  localStorage.removeItem('mv-api-key');
+  apiKeyForm.hidden = true;
+  trUpdateKeyStatus();
+});
+
+apiKeyInput.addEventListener('keydown', e => { if (e.key === 'Enter') btnApiKeySave.click(); });
+
+trUpdateKeyStatus();
+
+/* ── Translation cache ── */
+
+function trGetCached(book, num) {
+  try {
+    const store = JSON.parse(localStorage.getItem(`mv-tr-b${book}`) || '{}');
+    return store[num] || null;
+  } catch(e) { return null; }
+}
+
+function trSetCached(book, num, text) {
+  try {
+    const store = JSON.parse(localStorage.getItem(`mv-tr-b${book}`) || '{}');
+    store[num] = text;
+    localStorage.setItem(`mv-tr-b${book}`, JSON.stringify(store));
+  } catch(e) {}
+}
+
+/* ── Build translation element ── */
+
+function makePaEl(text, book, num, faWrap) {
+  const pa = document.createElement('div');
+  pa.className = 'verse-pa';
+
+  const span = document.createElement('span');
+  span.className   = 'verse-pa-text';
+  span.textContent = text;
+
+  const refresh = document.createElement('button');
+  refresh.className   = 'verse-pa-refresh';
+  refresh.textContent = '↻';
+  refresh.title       = 'Regenerate translation';
+  refresh.addEventListener('click', e => {
+    e.stopPropagation();
+    pa.remove();
+    trSetCached(book, num, null);
+    // get farsi from faWrap
+    const farsi = Array.from(faWrap.querySelectorAll('.verse-fa span'))
+      .map(s => s.textContent.trim()).join(' / ');
+    trTranslate(farsi, book, num, faWrap, true);
+  });
+
+  pa.appendChild(span);
+  pa.appendChild(refresh);
+  return pa;
+}
+
+/* ── Translate a verse on click ── */
+
+async function trTranslate(farsi, book, num, faWrap, force = false) {
+  if (!farsi) return;
+
+  // Already translated and not forcing refresh
+  if (!force && trGetCached(book, num)) return;
+
+  // If already in flight, ignore
+  if (faWrap.classList.contains('translating')) return;
+
+  const apiKey = localStorage.getItem('mv-api-key');
+  if (!apiKey) {
+    // Nudge user to settings
+    const hint = document.createElement('div');
+    hint.className   = 'verse-pa';
+    hint.style.cssText = 'font-size:13px;font-style:italic;animation:pa-slide-in 0.3s both;';
+    hint.textContent = 'Add API key in Settings ⚙ to translate';
+    faWrap.appendChild(hint);
+    setTimeout(() => hint.remove(), 3000);
+    return;
+  }
+
+  // Loading state
+  faWrap.classList.add('translating');
+  const loader = document.createElement('div');
+  loader.className = 'verse-tr-loader';
+  loader.innerHTML = '<span></span><span></span><span></span>';
+  faWrap.appendChild(loader);
+
+  const prompt = `Translate this Persian couplet from Rumi's Masnavi into Punjabi (Gurmukhi script).
+
+Rules:
+- Write natural, flowing literary Punjabi — not a word-for-word gloss
+- Preserve shared Perso-Arabic-Punjabi words in their Gurmukhi form: ਨੂਰ (noor), ਦਰਖ਼ਤ (darkht), ਇਸ਼ਕ (ishq), ਰੂਹ (ruh), ਦਰਦ (dard), ਦਿਲ (dil), ਜ਼ਿੰਦਗੀ (zindagi), ਖ਼ੁਦਾ (khuda), ਯਾਰ (yaar), ਰਾਜ਼ (raaz), ਹੱਕ (haq), ਫ਼ਨਾ (fana), ਆਸ਼ਿਕ (aashiq), ਮਾਸ਼ੂਕ (mashuq), ਜਾਨ (jaan), ਅਦਬ (adab), ਦੀਵਾਨਾ (deewana), ਹੁਸਨ (husn), ਵਸਲ (vasl), ਹਿਜਰ (hijar) and other cognates
+- When the Farsi uses such a word, use the same Punjabi root — do not substitute a native Punjabi word
+- Separate the two hemistichs with  /
+- Respond with ONLY the Punjabi translation, nothing else — no notes, no transliteration
+
+Persian couplet: ${farsi}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key':         apiKey,
+        'anthropic-version': '2023-06-01',
+        'content-type':      'application/json',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model:      'claude-sonnet-4-6',
+        max_tokens: 256,
+        messages:   [{ role: 'user', content: prompt }],
+      }),
+    });
+
+    if (!res.ok) throw new Error(`API ${res.status}`);
+    const data = await res.json();
+    const text = (data.content?.[0]?.text || '').trim();
+
+    trSetCached(book, num, text);
+    loader.remove();
+    faWrap.classList.remove('translating');
+    faWrap.appendChild(makePaEl(text, book, num, faWrap));
+
+  } catch(err) {
+    loader.remove();
+    faWrap.classList.remove('translating');
+    const errEl = document.createElement('div');
+    errEl.className   = 'verse-pa';
+    errEl.style.cssText = 'font-size:12px;color:var(--c-text-secondary);animation:pa-slide-in 0.3s both;';
+    errEl.textContent = 'Translation failed — check your API key';
+    faWrap.appendChild(errEl);
+    setTimeout(() => errEl.remove(), 4000);
+  }
+}
 
 btnThemeToggle.addEventListener('click', () => {
   const cycle = { light: 'dark', dark: 'kaghaz', kaghaz: 'light' };

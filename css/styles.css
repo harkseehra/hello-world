@@ -437,6 +437,39 @@ button:focus-visible, a:focus-visible {
   font-weight: 600;
 }
 
+/* ── API key setting ─────────────────────────────────────────── */
+#api-key-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+#api-key-status {
+  font-size: 12px;
+  color: var(--c-text-secondary);
+  flex: 1;
+}
+#api-key-form {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+#api-key-input {
+  flex: 1;
+  min-width: 0;
+  padding: 7px 10px;
+  border: 1px solid var(--c-divider);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--c-text);
+  font-size: 12px;
+  font-family: var(--font-mono, monospace);
+  outline: none;
+  transition: border-color 0.15s;
+}
+#api-key-input:focus { border-color: var(--c-accent); }
+
 /* ── Colour swatches ─────────────────────────────────────────── */
 .color-swatch {
   flex: none !important;
@@ -597,21 +630,88 @@ button:focus-visible, a:focus-visible {
               font-family var(--dur-fast) var(--ease-out);
 }
 
-/* ── Punjabi translation ─────────────────────────────────────── */
-[data-show-punjabi="off"] .verse-pa { display: none; }
+/* ── On-demand Punjabi translation ───────────────────────────── */
 
+/* Clickable Farsi wrap affordance */
+.verse-fa-wrap {
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background var(--dur-fast) var(--ease-out);
+  margin: -4px;
+  padding: 4px;
+}
+.verse-fa-wrap:hover { background: rgba(var(--c-accent-rgb, 33,150,212), 0.06); }
+
+/* Loading pulse */
+@keyframes fa-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.35; }
+}
+.verse-fa-wrap.translating .verse-fa {
+  animation: fa-pulse 1.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Loading dots */
+.verse-tr-loader {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--c-divider);
+}
+.verse-tr-loader span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--c-text-en);
+  opacity: 0.4;
+  animation: tr-dot 1.2s ease-in-out infinite;
+}
+.verse-tr-loader span:nth-child(2) { animation-delay: 0.2s; }
+.verse-tr-loader span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes tr-dot {
+  0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+  40%           { opacity: 1;   transform: scale(1.1); }
+}
+
+/* Translation result */
+@keyframes pa-slide-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 .verse-pa {
   font-family: 'Noto Sans Gurmukhi', var(--font-en-sans);
-  font-size: calc(var(--fz-en) * 0.93);
-  line-height: var(--lh-en);
+  font-size: calc(var(--fz-en) * 0.95);
+  line-height: 1.75;
   color: var(--c-text-en);
-  opacity: 0.72;
-  margin-top: 6px;
-  padding-top: 6px;
+  margin-top: 10px;
+  padding-top: 10px;
   border-top: 1px solid var(--c-divider);
-  transition: color var(--dur-mid) var(--ease-out),
-              opacity var(--dur-mid) var(--ease-out);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  transition: color var(--dur-mid) var(--ease-out);
+  animation: pa-slide-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
+.verse-pa-text { flex: 1; }
+.verse-pa-refresh {
+  flex-shrink: 0;
+  opacity: 0;
+  font-size: 13px;
+  color: var(--c-text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: opacity 0.15s, color 0.15s;
+  font-family: inherit;
+}
+.verse-pa:hover .verse-pa-refresh { opacity: 0.6; }
+.verse-pa-refresh:hover { opacity: 1 !important; color: var(--c-accent); }
 
 /* ── Verse number ────────────────────────────────────────────── */
 .verse-num {
