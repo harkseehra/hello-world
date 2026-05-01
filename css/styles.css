@@ -20,13 +20,12 @@
 }
 
 @font-face {
-  font-family: 'AwamiNastaliq';
-  src: url('../fonts/AwamiNastaliq-Regular.woff2') format('woff2');
+  font-family: 'JameelNooriNastaleeq';
+  src: url('../fonts/JameelNooriNastaleeq.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
-
 /* ── 1. Tokens ───────────────────────────────────────────────── */
 
 :root {
@@ -56,7 +55,7 @@
   --font-fa-vazir:    'Vazirmatn', sans-serif;
   --font-fa-arial:    Arial, sans-serif;
   --font-fa-nazanin:  'BNazanin', serif;
-  --font-fa-nastaliq: 'AwamiNastaliq', serif;
+  --font-fa-nastaliq: 'JameelNooriNastaleeq', serif;
   --font-fa:         var(--font-fa-vazir);
 
   --font-en-sans:  'Schibsted Grotesk', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
