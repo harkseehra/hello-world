@@ -19,6 +19,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'AwamiNastaliq';
+  src: url('../fonts/AwamiNastaliq-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ── 1. Tokens ───────────────────────────────────────────────── */
 
 :root {
@@ -48,7 +56,7 @@
   --font-fa-vazir:    'Vazirmatn', sans-serif;
   --font-fa-arial:    Arial, sans-serif;
   --font-fa-nazanin:  'BNazanin', serif;
-  --font-fa-nastaliq: 'Noto Nastaliq Urdu', serif;
+  --font-fa-nastaliq: 'AwamiNastaliq', serif;
   --font-fa:         var(--font-fa-vazir);
 
   --font-en-sans:  'Schibsted Grotesk', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
@@ -375,16 +383,16 @@ button:focus-visible, a:focus-visible {
   position: fixed;
   top: calc(var(--nav-h) + var(--progress-h) + 8px);
   right: 14px;
-  width: 270px;
+  width: 310px;
   background: var(--c-bg);
   border: 1px solid var(--c-divider);
   border-radius: 16px;
-  padding: 20px;
+  padding: 22px 22px 20px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.11), 0 2px 8px rgba(0,0,0,0.06);
   z-index: 910;
   display: none;
   flex-direction: column;
-  gap: 18px;
+  gap: 20px;
   transition: background var(--dur-mid) var(--ease-out),
               border-color var(--dur-mid) var(--ease-out);
 }
@@ -396,7 +404,7 @@ button:focus-visible, a:focus-visible {
   margin: 0 -4px;
 }
 
-.settings-section { display: flex; flex-direction: column; gap: 8px; }
+.settings-section { display: flex; flex-direction: column; gap: 10px; }
 
 .settings-label {
   font-family: var(--font-en-sans);
@@ -409,11 +417,12 @@ button:focus-visible, a:focus-visible {
   transition: color var(--dur-mid) var(--ease-out);
 }
 
-.settings-row { display: flex; flex-wrap: wrap; gap: 5px; }
+.settings-row { display: flex; flex-wrap: wrap; gap: 7px; }
 
 .settings-opt {
   flex: 1;
-  padding: 8px 0;
+  min-width: 56px;
+  padding: 9px 6px;
   border-radius: 8px;
   border: 1px solid var(--c-divider);
   background: transparent;
@@ -424,6 +433,7 @@ button:focus-visible, a:focus-visible {
   opacity: 0.52;
   cursor: pointer;
   transition: all var(--dur-fast) var(--ease-out);
+  white-space: nowrap;
 }
 .settings-opt:hover { opacity: 0.85; background: rgba(0,0,0,0.04); }
 [data-theme="dark"]   .settings-opt:hover  { background: rgba(255,255,255,0.06); }
@@ -1548,11 +1558,12 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
     right: 10px;
     width: auto;
     padding: 20px;
-    gap: 20px;
+    gap: 18px;
   }
   .settings-opt {
-    padding: 11px 6px;
+    padding: 12px 8px;
     font-size: 14px;
+    min-width: 52px;
   }
   .settings-label {
     font-size: 11px;
