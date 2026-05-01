@@ -11,6 +11,21 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'BNazanin';
+  src: url('../fonts/BNazanin.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JameelNooriNastaleeq';
+  src: url('../fonts/JameelNooriNastaleeq.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 /* ── 1. Tokens ───────────────────────────────────────────────── */
 
 :root {
@@ -37,10 +52,10 @@
 
   /* Font stacks */
   --font-fa-vazir:    'Vazirmatn', sans-serif;
-  --font-fa-iransans: 'IRANSansWeb', sans-serif;
-  --font-fa-harmattan:'Harmattan', sans-serif;
-  --font-fa-amiri:    'Amiri', serif;
-  --font-fa:          var(--font-fa-vazir);
+  --font-fa-arial:    Arial, sans-serif;
+  --font-fa-nazanin:  'BNazanin', serif;
+  --font-fa-nastaliq: 'JameelNooriNastaleeq', serif;
+  --font-fa:         var(--font-fa-vazir);
 
   --font-en-sans:  'Schibsted Grotesk', system-ui, sans-serif;
   --font-en-serif: 'Amiri', Georgia, serif;
