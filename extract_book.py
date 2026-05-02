@@ -191,60 +191,91 @@ def assign_verse_numbers(english_items, verse_markers):
 
 # ── Farsi couplet grouping ────────────────────────────────────────────────────
 
-def group_farsi_couplets(farsi_items):
+def group_farsi_couplets(farsi_items, page_num=0, carry_group=None):
     """
     Pair Farsi hemistichs into couplets.
 
     Rules:
-      - Each block may contain 1, 2, or (rarely) 3 hemistichs separated by \\n
+      - Each block may contain 1, 2, or (rarely) 3+ hemistichs separated by \\n
       - Expand all hemistichs into a flat list, assign synthetic sequential y
-      - Walk the list: fill groups of exactly 2; if a new hemistich is > 60 px
-        from the last item in the current group (and group has 1), flush and
-        start fresh. This handles the 3-hemistich page-straddle artifact.
+      - Walk the list: fill groups of exactly 2; large gaps (>120px) within the
+        same page trigger a flush (section break). Cross-page straddling is
+        handled by the carry_group mechanism — the caller passes any incomplete
+        group from the previous page, and this function returns the incomplete
+        group at its end rather than flushing it as a single-hemistich couplet.
+
+    Filters applied during expansion:
+      - Drop fragments with no Arabic characters (English text misclassified)
+      - Drop fragments shorter than 8 characters (PDF copy artifacts, lone words)
+
+    Returns: (couplets, remaining_group)
+      remaining_group is the pending half-couplet to carry to the next page,
+      or [] if all hemistichs were paired.
     """
     verse_blocks   = [(y, t) for y, t, k in farsi_items if k == 'verse']
     heading_blocks = [(y, t) for y, t, k in farsi_items if k != 'verse']
 
-    # Expand
+    # Expand — filter artifacts inline, tag with page number
     expanded = []
     for y, raw in sorted(verse_blocks):
         parts = split_hemistichs(raw)
         for j, part in enumerate(parts):
-            expanded.append((y + j * 0.1, part, y))  # (synth_y, text, orig_y)
+            # Drop non-Arabic fragments (misclassified English, footnotes)
+            if not has_arabic(part):
+                continue
+            # Drop suspiciously short fragments (PDF copy artifacts, stray words)
+            if len(part.strip()) < 8:
+                continue
+            expanded.append((y + j * 0.1, part, y, page_num))
 
-    couplets = []
-    group    = []
+    couplets          = []
+    straddle_couplet  = None  # completed cross-page pair (returned separately)
+    # Start with any pending hemistich carried from the previous page
+    group      = list(carry_group) if carry_group else []
+    has_carry  = bool(carry_group)
 
     def flush():
+        nonlocal straddle_couplet
         if not group:
             return
-        # Use MAX orig_y so cross-block couplets align with their English partner
-        # (the last hemistich is spatially closest to the English verse block)
         y_ref = max(g[2] for g in group)
         text  = ' / '.join(g[1].strip() for g in group if g[1].strip())
-        couplets.append((y_ref, text, 'verse'))
+        if has_carry and any(g[3] != page_num for g in group):
+            # This flush completes a cross-page straddle pair; track separately
+            straddle_couplet = (y_ref, text, 'verse')
+        else:
+            couplets.append((y_ref, text, 'verse'))
         group.clear()
 
     for item in expanded:
-        synth_y, text, orig_y = item
+        synth_y, text, orig_y, pg = item
 
         if len(group) >= 2:
             flush()
 
         if group:
             last_orig_y = group[-1][2]
+            last_pg     = group[-1][3]
             gap = orig_y - last_orig_y
-            if gap > 120:
+            # Only flush on large gap within the SAME page (section break).
+            # Cross-page straddling is intentionally allowed through the carry.
+            if gap > 120 and pg == last_pg:
                 flush()
 
         group.append(item)
 
-    flush()
+    # End of page: flush complete pairs; leave single hemistich as carry
+    remaining = []
+    if len(group) >= 2:
+        flush()
+    elif len(group) == 1:
+        remaining = list(group)
+        group.clear()
 
     for y, t in heading_blocks:
         couplets.append((y, t, 'heading'))
 
-    return sorted(couplets, key=lambda c: c[0])
+    return sorted(couplets, key=lambda c: c[0]), remaining, straddle_couplet
 
 # ── pair Farsi + English ──────────────────────────────────────────────────────
 
@@ -326,15 +357,38 @@ def extract_book(pdf_path, book_number=1,
 
     all_entries = []
     flags       = []
+    carry_fa    = []   # pending half-couplet from previous page
+    carry_en    = None # English verse whose Farsi was carried to the next page
 
     for page_num in range(total):
         page = doc[page_num]
 
         markers, farsi_items, english_items = classify_blocks(page)
-        farsi_couplets   = group_farsi_couplets(farsi_items)
+        farsi_couplets, carry_fa, straddle = group_farsi_couplets(
+            farsi_items, page_num=page_num, carry_group=carry_fa
+        )
         english_numbered = assign_verse_numbers(english_items, markers)
         paired = pair_verses(farsi_couplets, english_numbered)
         paired = merge_headings(paired)
+
+        # ── Straddle resolution ───────────────────────────────────────────
+        # If the previous page ended with an incomplete FA hemistich, the
+        # straddle couplet (H1 from prev page + H2 from this page) is returned
+        # directly as `straddle`. Assign it to the saved carry_en entry.
+        if carry_en is not None:
+            if straddle is not None:
+                carry_en['farsi'] = clean_output(straddle[1])
+            all_entries.append(carry_en)
+            carry_en = None
+
+        # If this page ended with a carry (half-couplet pending), find the
+        # English verse on this page that lost its FA partner and save it.
+        if carry_fa:
+            en_orphans = [e for e in paired
+                          if e['type'] == 'verse' and not e.get('farsi')]
+            if en_orphans:
+                carry_en = en_orphans[-1]
+                paired   = [e for e in paired if e is not carry_en]
 
         verse_entries = [e for e in paired if e['type'] == 'verse']
         unmatched     = [e for e in verse_entries
@@ -346,6 +400,10 @@ def extract_book(pdf_path, book_number=1,
         for e in paired:
             e['page'] = page_num + 1
         all_entries.extend(paired)
+
+    # Flush any remaining carry at end of book
+    if carry_en is not None:
+        all_entries.append(carry_en)
 
     doc.close()
 
