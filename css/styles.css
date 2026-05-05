@@ -164,6 +164,29 @@
 [data-theme="dark"][data-en-color="noir"]      { --c-text-en: #E8E8F2; }
 
 
+/* ── Language display toggle ─────────────────────────────────── */
+[data-lang-display="farsi"]   .verse-en       { display: none; }
+[data-lang-display="english"] .verse-fa       { display: none; }
+[data-lang-display="farsi"]   .scholar-cell--en { display: none; }
+[data-lang-display="english"] .scholar-cell--fa { display: none; }
+
+/* ── Dark mode — phosphorus moonlight glow ───────────────────── */
+[data-theme="dark"] .verse-fa {
+  text-shadow: 0 0 12px rgba(78, 205, 196, 0.25), 0 0 32px rgba(78, 205, 196, 0.08);
+}
+[data-theme="dark"] .verse-en {
+  text-shadow: 0 0 12px rgba(126, 176, 232, 0.22), 0 0 32px rgba(126, 176, 232, 0.07);
+}
+[data-theme="dark"][data-fa-color="irozumi"] .verse-fa {
+  text-shadow: 0 0 12px rgba(224, 225, 224, 0.20), 0 0 32px rgba(224, 225, 224, 0.06);
+}
+
+/* ── Kaghaz — warm sunlight on ink ──────────────────────────── */
+[data-theme="kaghaz"] .verse-fa,
+[data-theme="kaghaz"] .verse-en {
+  text-shadow: 0 -1px 0 rgba(255, 220, 100, 0.30);
+}
+
 /* ── 2. Reset ────────────────────────────────────────────────── */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }

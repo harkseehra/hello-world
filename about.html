@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-font="vazir" data-en-font="sans"
+      data-fa-color="peacock" data-en-color="asagao">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About · مثنوی</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&family=Harmattan:wght@400;500;600;700&family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,600;1,400&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+
+  <style>
+    .about-wrap {
+      max-width: 680px;
+      margin: 80px auto 60px;
+      padding: 0 24px;
+    }
+    .about-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: var(--c-accent);
+      text-decoration: none;
+      margin-bottom: 40px;
+      opacity: 0.8;
+      transition: opacity 150ms;
+    }
+    .about-back:hover { opacity: 1; }
+    .about-title {
+      font-family: var(--font-fa);
+      font-size: 2rem;
+      color: var(--c-text-fa);
+      text-align: right;
+      direction: rtl;
+      margin-bottom: 4px;
+    }
+    .about-subtitle {
+      font-size: 1rem;
+      color: var(--c-text-en);
+      margin-bottom: 48px;
+      opacity: 0.7;
+    }
+    .about-section {
+      margin-bottom: 40px;
+    }
+    .about-section h2 {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--c-heading);
+      margin-bottom: 12px;
+    }
+    .about-wip {
+      background: var(--c-card-bg);
+      border: 1px solid var(--c-card-border);
+      border-radius: 12px;
+      padding: 32px 24px;
+      text-align: center;
+      color: var(--c-text-en);
+      font-size: 1rem;
+      opacity: 0.6;
+    }
+    .about-wip p { margin-top: 8px; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+
+  <nav id="top-nav" aria-label="Main navigation" style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:52px;background:var(--c-nav-bg);border-bottom:1px solid var(--c-nav-border);position:sticky;top:0;z-index:100;">
+    <a href="index.html" class="nav-btn nav-btn--text" style="text-decoration:none;font-size:13px;color:var(--c-accent);">← Reader</a>
+    <span style="font-family:var(--font-fa);font-size:1.1rem;color:var(--c-text-fa);">مثنوی</span>
+    <div style="width:60px;"></div>
+  </nav>
+
+  <div class="about-wrap">
+    <p class="about-title">مثنوی معنوی</p>
+    <p class="about-subtitle">Masnavi · About this project</p>
+
+    <div class="about-section">
+      <h2>Work in progress</h2>
+      <div class="about-wip">
+        ✦ Coming soon
+        <p>This page will share the story behind the project, the source edition used, and the person who built it.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Inherit theme from the reader
+    const t = localStorage.getItem('mv-theme');
+    if (t) document.documentElement.dataset.theme = t === 'sepia' ? 'kaghaz' : t;
+    const f = localStorage.getItem('mv-font');
+    if (f && f !== 'naskh' && f !== 'mirza') document.documentElement.dataset.font = f;
+    const ef = localStorage.getItem('mv-en-font');
+    if (ef) document.documentElement.dataset.enFont = ef;
+    const fc = localStorage.getItem('mv-fa-color');
+    if (fc) document.documentElement.dataset.faColor = fc;
+    const ec = localStorage.getItem('mv-en-color');
+    if (ec) document.documentElement.dataset.enColor = ec;
+  </script>
+</body>
+</html>

@@ -74,6 +74,7 @@
           <line x1="10.5" y1="10.5" x2="14.5" y2="14.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
         </svg>
       </button>
+      <a href="about.html" class="nav-btn nav-btn--text" aria-label="About" id="btn-about">?</a>
       <button id="btn-settings" class="nav-btn nav-btn--text" aria-label="Display options" aria-expanded="false">Aa</button>
       <button id="btn-mode" class="nav-btn" aria-label="Toggle scholar view">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -98,6 +99,26 @@
 
   <!-- ── Settings panel ── -->
   <div id="settings-panel" aria-hidden="true" role="dialog" aria-label="Display options">
+
+    <div class="settings-section">
+      <p class="settings-label">Show</p>
+      <div class="settings-row" id="lang-options">
+        <button class="settings-opt active" data-lang="both">Both</button>
+        <button class="settings-opt"        data-lang="farsi">Farsi</button>
+        <button class="settings-opt"        data-lang="english">English</button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <p class="settings-label">Couplets per page</p>
+      <div class="settings-row" id="per-page-options">
+        <button class="settings-opt active" data-per-page="10">10</button>
+        <button class="settings-opt"        data-per-page="25">25</button>
+        <button class="settings-opt"        data-per-page="50">50</button>
+      </div>
+    </div>
+
+    <div class="settings-divider"></div>
 
     <div class="settings-section">
       <p class="settings-label">Farsi Script</p>
