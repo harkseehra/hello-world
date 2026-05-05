@@ -527,8 +527,8 @@ function makeScholarRow(entry) {
     en.className   = 'scholar-cell scholar-cell--en';
     en.textContent = entry.title_en || '';
 
-    row.appendChild(fa);
     row.appendChild(en);
+    row.appendChild(fa);
 
   } else {
     const fa = document.createElement('div');
@@ -552,8 +552,8 @@ function makeScholarRow(entry) {
     num.textContent = entry.number || '';
     fa.appendChild(num);   // verse number sits under Farsi text, right-aligned
 
-    row.appendChild(fa);
     row.appendChild(en);
+    row.appendChild(fa);
   }
 
   return row;

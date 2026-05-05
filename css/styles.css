@@ -851,7 +851,7 @@ button:focus-visible, a:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-width: 1100px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 20px 16px 120px;
 }
@@ -875,7 +875,7 @@ button:focus-visible, a:focus-visible {
 }
 
 .scholar-cell {
-  padding: 22px 28px;
+  padding: 22px 40px;
 }
 
 .scholar-cell--fa {
