@@ -186,20 +186,25 @@
 [data-lang-display="english"] .scholar-cell--fa { display: none; }
 
 /* ── Dark mode — phosphorus moonlight glow ───────────────────── */
-[data-theme="dark"] .verse-fa {
-  text-shadow: 0 0 12px rgba(78, 205, 196, 0.25), 0 0 32px rgba(78, 205, 196, 0.08);
+[data-theme="dark"] .verse-fa,
+[data-theme="dark"] .scholar-cell--fa {
+  text-shadow: 0 0 14px rgba(78, 205, 196, 0.40), 0 0 36px rgba(78, 205, 196, 0.14);
 }
-[data-theme="dark"] .verse-en {
-  text-shadow: 0 0 12px rgba(126, 176, 232, 0.22), 0 0 32px rgba(126, 176, 232, 0.07);
+[data-theme="dark"] .verse-en,
+[data-theme="dark"] .scholar-cell--en {
+  text-shadow: 0 0 14px rgba(126, 176, 232, 0.35), 0 0 36px rgba(126, 176, 232, 0.12);
 }
-[data-theme="dark"][data-fa-color="irozumi"] .verse-fa {
-  text-shadow: 0 0 12px rgba(224, 225, 224, 0.20), 0 0 32px rgba(224, 225, 224, 0.06);
+[data-theme="dark"][data-fa-color="irozumi"] .verse-fa,
+[data-theme="dark"][data-fa-color="irozumi"] .scholar-cell--fa {
+  text-shadow: 0 0 14px rgba(224, 225, 224, 0.32), 0 0 36px rgba(224, 225, 224, 0.10);
 }
 
 /* ── Kaghaz — warm sunlight on ink ──────────────────────────── */
 [data-theme="kaghaz"] .verse-fa,
-[data-theme="kaghaz"] .verse-en {
-  text-shadow: 0 -1px 0 rgba(255, 220, 100, 0.30);
+[data-theme="kaghaz"] .verse-en,
+[data-theme="kaghaz"] .scholar-cell--fa,
+[data-theme="kaghaz"] .scholar-cell--en {
+  text-shadow: 0 -1px 2px rgba(255, 210, 60, 0.50), 0 1px 3px rgba(140, 85, 10, 0.18);
 }
 
 /* ── 2. Reset ────────────────────────────────────────────────── */
@@ -1482,34 +1487,6 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
   white-space: nowrap;
 }
 
-
-/* ── 16. Phosphor glow (dark mode only) ──────────────────────── */
-
-[data-theme="dark"] .verse-fa,
-[data-theme="dark"] .scholar-cell--fa {
-  text-shadow:
-    0 0 18px rgba(235, 190, 95, 0.20),
-    0 0 48px rgba(215, 155, 65, 0.09);
-}
-[data-theme="dark"] .heading-fa,
-[data-theme="dark"] .scholar-heading .scholar-cell--fa {
-  text-shadow:
-    0 0 24px rgba(235, 190, 95, 0.18),
-    0 0 60px rgba(215, 155, 65, 0.08);
-}
-
-[data-theme="dark"] .verse-en,
-[data-theme="dark"] .scholar-cell--en {
-  text-shadow:
-    0 0 18px rgba(180, 215, 255, 0.14),
-    0 0 48px rgba(150, 190, 240, 0.06);
-}
-[data-theme="dark"] .heading-en,
-[data-theme="dark"] .scholar-heading .scholar-cell--en {
-  text-shadow:
-    0 0 24px rgba(180, 215, 255, 0.12),
-    0 0 60px rgba(150, 190, 240, 0.05);
-}
 
 
 /* ── 17. Mobile burger menu ──────────────────────────────────── */
