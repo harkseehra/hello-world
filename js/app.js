@@ -550,7 +550,7 @@ function makeScholarRow(entry) {
     const num = document.createElement('span');
     num.className   = 'scholar-num';
     num.textContent = entry.number || '';
-    fa.appendChild(num);   // verse number sits under Farsi text, right-aligned
+    en.appendChild(num);   // verse number below English text
 
     row.appendChild(en);
     row.appendChild(fa);

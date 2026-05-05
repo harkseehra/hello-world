@@ -876,6 +876,9 @@ button:focus-visible, a:focus-visible {
 
 .scholar-cell {
   padding: 22px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .scholar-cell--fa {
@@ -930,7 +933,7 @@ button:focus-visible, a:focus-visible {
   font-weight: 300;
   color: var(--c-verse-num);
   display: block;
-  text-align: right;
+  text-align: left;
   margin-top: 8px;
 }
 
