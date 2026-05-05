@@ -26,6 +26,19 @@
   font-style: normal;
   font-display: swap;
 }
+
+/* Harkhy OG — composite: Nastaleeq non-joiners + Nazanin body */
+@font-face {
+  font-family: 'HarkhyOG';
+  src: url('../fonts/AwamiNastaliq-Regular.woff2') format('woff2');
+  unicode-range: U+0621-U+0625, U+0627, U+062F-U+0632, U+0648, U+0671, U+0698;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'HarkhyOG';
+  src: url('../fonts/BNazanin.woff') format('woff');
+  font-display: swap;
+}
 /* ── 1. Tokens ───────────────────────────────────────────────── */
 
 :root {
@@ -56,6 +69,7 @@
   --font-fa-arial:    Arial, sans-serif;
   --font-fa-nazanin:  'BNazanin', serif;
   --font-fa-nastaliq: 'JameelNooriNastaleeq', serif;
+  --font-fa-harkhy:   'HarkhyOG', serif;
   --font-fa:         var(--font-fa-vazir);
 
   --font-en-sans:  'Schibsted Grotesk', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
@@ -88,6 +102,7 @@
 [data-font="arial"]    { --font-fa: var(--font-fa-arial); }
 [data-font="nazanin"]  { --font-fa: var(--font-fa-nazanin); }
 [data-font="nastaliq"] { --font-fa: var(--font-fa-nastaliq); }
+[data-font="harkhy"]   { --font-fa: var(--font-fa-harkhy); }
 [data-en-font="serif"] { --font-en: var(--font-en-serif); }
 
 /* Arial: heavier weight to compensate for its thinner stroke design */
