@@ -2,29 +2,29 @@
 'use strict';
 
 // ── Size tables ───────────────────────────────────────────────────────────────
-const SIZE_STEPS  = 6;
-const SIZE_EN     = [16, 18, 20, 22, 24, 26];
-const SIZE_FA_V   = [20, 22, 24, 26, 28, 30];     // Vazirmatn
-const LH_FA_V     = [2.05, 2.05, 2.10, 2.10, 2.15, 2.20];
-const SIZE_FA_L   = [23, 25, 28, 30, 32, 35];     // Nazanin (+15%)
-const LH_FA_L     = [2.00, 2.00, 2.05, 2.05, 2.10, 2.15];
-const SIZE_FA_A   = [24, 26, 29, 31, 34, 37];     // Arial (+20%, heavier optical weight)
-const LH_FA_A     = [2.00, 2.00, 2.05, 2.05, 2.10, 2.15];
-const LH_EN       = [1.80, 1.80, 1.80, 1.80, 1.85, 1.85];
-
-const VERSES_PER_PAGE = 10;
+const SIZE_STEPS  = 8;
+const SIZE_EN     = [14, 16, 18, 20, 22, 24, 26, 28];
+const SIZE_FA_V   = [20, 22, 24, 26, 28, 30, 32, 34];     // Vazirmatn
+const LH_FA_V     = [2.05, 2.05, 2.10, 2.10, 2.15, 2.15, 2.20, 2.20];
+const SIZE_FA_L   = [23, 25, 28, 30, 32, 35, 38, 41];     // Nazanin (+15%)
+const LH_FA_L     = [2.00, 2.00, 2.05, 2.05, 2.10, 2.15, 2.20, 2.20];
+const SIZE_FA_A   = [24, 26, 29, 31, 34, 37, 40, 43];     // Arial (+20%, heavier optical weight)
+const LH_FA_A     = [2.00, 2.00, 2.05, 2.05, 2.10, 2.15, 2.20, 2.20];
+const LH_EN       = [1.80, 1.80, 1.80, 1.80, 1.85, 1.85, 1.90, 1.90];
 
 // ── State ─────────────────────────────────────────────────────────────────────
 const state = {
-  book:     1,
-  mode:     'focus',
-  font:     'vazir',
-  theme:    'light',
-  sizeStep: 1,        // step 1 → en:18 px, naskh fa:22 px
-  page:     0,
-  pages:    [],
-  cache:    {},
-  entries:  [],
+  book:        1,
+  mode:        'focus',
+  font:        'vazir',
+  theme:       'light',
+  sizeStep:    3,        // step 3 → en:20px, fa:26px (~20% bigger than old default)
+  perPage:     10,
+  langDisplay: 'both',
+  page:        0,
+  pages:       [],
+  cache:       {},
+  entries:     [],
 };
 
 // ── DOM ───────────────────────────────────────────────────────────────────────
@@ -97,9 +97,16 @@ function initFont() {
 
 
   const savedStep = localStorage.getItem('mv-size-step');
-  if (savedStep !== null) {
-    state.sizeStep = Math.max(0, Math.min(SIZE_STEPS - 1, parseInt(savedStep)));
-  }
+  state.sizeStep = savedStep !== null
+    ? Math.max(0, Math.min(SIZE_STEPS - 1, parseInt(savedStep)))
+    : 3;  // default: step 3 (~20% bigger than original step 1)
+
+  const savedPerPage = localStorage.getItem('mv-per-page');
+  if (savedPerPage) state.perPage = +savedPerPage;
+
+  const savedLang = localStorage.getItem('mv-lang');
+  state.langDisplay = savedLang || 'both';
+  html.dataset.langDisplay = state.langDisplay;
 
   applySizes();
 }
@@ -170,6 +177,31 @@ function setEnColor(c, save = true) {
 }
 
 
+// ── Couplets per page ─────────────────────────────────────────────────────────
+
+function setPerPage(n, save = true) {
+  state.perPage = n;
+  document.querySelectorAll('[data-per-page]').forEach(b =>
+    b.classList.toggle('active', +b.dataset.perPage === n));
+  const firstNum = state.pages[state.page]?.find(e => e.type === 'verse')?.number;
+  state.pages = buildPages(state.entries);
+  const targetPage = firstNum != null
+    ? Math.max(0, state.pages.findIndex(p => p.some(e => e.type === 'verse' && e.number >= firstNum)))
+    : 0;
+  goToPage(Math.max(0, targetPage), 0);
+  if (save) localStorage.setItem('mv-per-page', n);
+}
+
+// ── Language display ──────────────────────────────────────────────────────────
+
+function setLangDisplay(val, save = true) {
+  state.langDisplay    = val;
+  html.dataset.langDisplay = val;
+  document.querySelectorAll('[data-lang]').forEach(b =>
+    b.classList.toggle('active', b.dataset.lang === val));
+  if (save) localStorage.setItem('mv-lang', val);
+}
+
 // ── Size ──────────────────────────────────────────────────────────────────────
 
 function applySizes() {
@@ -234,7 +266,7 @@ function flattenBook(data) {
 }
 
 // Split entries into pages of N verses; headings ride with their batch
-function buildPages(entries) {
+function buildPages(entries, perPage = state.perPage) {
   const pages = [];
   let page = [];
   let verseCount = 0;
@@ -243,7 +275,7 @@ function buildPages(entries) {
     page.push(e);
     if (e.type === 'verse') {
       verseCount++;
-      if (verseCount === VERSES_PER_PAGE) {
+      if (verseCount === perPage) {
         pages.push(page);
         page = [];
         verseCount = 0;
@@ -1026,6 +1058,16 @@ enColorOpts.addEventListener('click', e => {
 });
 
 
+document.getElementById('per-page-options')?.addEventListener('click', e => {
+  const btn = e.target.closest('[data-per-page]');
+  if (btn) setPerPage(+btn.dataset.perPage);
+});
+
+document.getElementById('lang-options')?.addEventListener('click', e => {
+  const btn = e.target.closest('[data-lang]');
+  if (btn) setLangDisplay(btn.dataset.lang);
+});
+
 sizeUpBtn.addEventListener('click',   sizeUp);
 sizeDownBtn.addEventListener('click', sizeDown);
 
@@ -1079,6 +1121,12 @@ window.addEventListener('resize', () => {
 (async function boot() {
   initTheme();
   initFont();
+
+  // Sync per-page and lang button active states after initFont sets state
+  document.querySelectorAll('[data-per-page]').forEach(b =>
+    b.classList.toggle('active', +b.dataset.perPage === state.perPage));
+  document.querySelectorAll('[data-lang]').forEach(b =>
+    b.classList.toggle('active', b.dataset.lang === state.langDisplay));
 
   const lastBook = parseInt(localStorage.getItem('mv-last-book')) || 1;
   const lastPage = parseInt(localStorage.getItem('mv-last-page')) || 0;
