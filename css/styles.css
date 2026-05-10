@@ -354,10 +354,12 @@ button:focus-visible, a:focus-visible {
   font-weight: 500;
   white-space: nowrap;
   opacity: 0.35;
-  transition: opacity var(--dur-fast) var(--ease-out),
-              color var(--dur-mid) var(--ease-out);
+  transition: opacity    var(--dur-fast) var(--ease-out),
+              color      var(--dur-mid)  var(--ease-out),
+              transform  120ms           var(--ease-spring);
 }
 .book-tab:hover { opacity: 0.62; }
+.book-tab:active { transform: scale(0.88); }
 .book-tab.active { opacity: 1; color: var(--c-accent); }
 
 /* Thin pill under active tab */
@@ -391,11 +393,13 @@ button:focus-visible, a:focus-visible {
   font-size: 13px;
   font-weight: 600;
   letter-spacing: -0.01em;
-  transition: opacity var(--dur-fast) var(--ease-out),
+  transition: opacity    var(--dur-fast) var(--ease-out),
               background var(--dur-fast) var(--ease-out),
-              color var(--dur-mid) var(--ease-out);
+              color      var(--dur-mid)  var(--ease-out),
+              transform  120ms           var(--ease-spring);
 }
-.nav-btn:hover { opacity: 0.72; background: rgba(0,0,0,0.05); }
+.nav-btn:hover  { opacity: 0.72; background: rgba(0,0,0,0.05); }
+.nav-btn:active { transform: scale(0.88); }
 [data-theme="dark"]  .nav-btn:hover { background: rgba(255,255,255,0.07); }
 [data-theme="kaghaz"] .nav-btn:hover { background: rgba(60,40,20,0.06); }
 
@@ -425,7 +429,10 @@ button:focus-visible, a:focus-visible {
   transition: background var(--dur-mid) var(--ease-out),
               border-color var(--dur-mid) var(--ease-out);
 }
-#settings-panel.open { display: flex; }
+#settings-panel.open {
+  display: flex;
+  animation: settingsSpring 280ms var(--ease-spring) both;
+}
 
 .settings-divider {
   height: 1px;
@@ -1595,6 +1602,41 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
   transition: opacity var(--dur-mid) var(--ease-out);
 }
 #toc-backdrop.visible { display: block; }
+
+/* ── 17b. Animations ─────────────────────────────────────────── */
+
+@keyframes itemEnterRight {
+  from { opacity: 0; transform: translateX(22px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes itemEnterLeft {
+  from { opacity: 0; transform: translateX(-22px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes settingsSpring {
+  from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+/* Focus page — per-card stagger on navigation */
+#focus-scroll[data-dir="next"] .verse-unit {
+  animation: itemEnterRight 420ms var(--ease-out) both;
+  animation-delay: calc(min(var(--i, 0), 7) * 30ms);
+}
+#focus-scroll[data-dir="prev"] .verse-unit {
+  animation: itemEnterLeft 420ms var(--ease-out) both;
+  animation-delay: calc(min(var(--i, 0), 7) * 30ms);
+}
+
+/* Scholar page — per-row stagger on navigation */
+#scholar-grid[data-dir="next"] .scholar-row {
+  animation: itemEnterRight 420ms var(--ease-out) both;
+  animation-delay: calc(min(var(--i, 0), 8) * 24ms);
+}
+#scholar-grid[data-dir="prev"] .scholar-row {
+  animation: itemEnterLeft 420ms var(--ease-out) both;
+  animation-delay: calc(min(var(--i, 0), 8) * 24ms);
+}
 
 /* ── 18. Reduced motion ──────────────────────────────────────── */
 

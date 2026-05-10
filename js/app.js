@@ -356,6 +356,10 @@ async function switchBook(n) {
 
     if (exitAnim) exitAnim.cancel();   // remove fill so element is paint-ready
 
+    const dirVal = dir > 0 ? 'next' : 'prev';
+    focusScroll.dataset.dir = dirVal;
+    scholarGrid.dataset.dir = dirVal;
+
     if (state.mode === 'focus') {
       renderFocusPage(state.pages[0]);
       focusScroll.scrollTop = 0;
@@ -365,13 +369,6 @@ async function switchBook(n) {
     }
     updatePager();
     refreshBookmarkButtons();
-
-    // Slide new content in from the opposite side
-    activeEl.animate(
-      [{ opacity: 0, transform: `translateX(${dir > 0 ? '36px' : '-36px'})` },
-       { opacity: 1, transform: 'translateX(0)' }],
-      { duration: 400, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
-    );
 
   } catch (err) {
     console.error(err);
@@ -386,7 +383,11 @@ async function switchBook(n) {
 function renderFocusPage(entries) {
   focusScroll.innerHTML = '';
   const frag = document.createDocumentFragment();
-  entries.forEach(e => frag.appendChild(makeCard(e)));
+  entries.forEach((e, i) => {
+    const el = makeCard(e);
+    el.style.setProperty('--i', i);
+    frag.appendChild(el);
+  });
   focusScroll.appendChild(frag);
 }
 
@@ -399,6 +400,15 @@ function goToPage(targetPage, dir = 1) {
   localStorage.setItem('mv-last-book', state.book);
   localStorage.setItem('mv-last-page', targetPage);
 
+  const dirVal = dir > 0 ? 'next' : dir < 0 ? 'prev' : null;
+  if (dirVal) {
+    focusScroll.dataset.dir = dirVal;
+    scholarGrid.dataset.dir = dirVal;
+  } else {
+    delete focusScroll.dataset.dir;
+    delete scholarGrid.dataset.dir;
+  }
+
   if (state.mode === 'focus') {
     renderFocusPage(state.pages[state.page]);
     focusScroll.scrollTop = 0;
@@ -408,16 +418,6 @@ function goToPage(targetPage, dir = 1) {
   }
   updatePager();
   refreshBookmarkButtons();
-
-  if (dir === 0) return;  // TOC / search jump — instant, no animation
-
-  const target = state.mode === 'focus' ? focusScroll : scholarGrid;
-  const yIn    = dir > 0 ? '18px' : '-18px';
-  target.animate(
-    [{ opacity: 0, transform: `translateY(${yIn})` },
-     { opacity: 1, transform: 'translateY(0)' }],
-    { duration: 380, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
-  );
 }
 
 function makeCard(entry) {
@@ -505,7 +505,11 @@ function makeCard(entry) {
 function renderScholarPage(entries) {
   scholarGrid.innerHTML = '';
   const frag = document.createDocumentFragment();
-  entries.forEach(e => frag.appendChild(makeScholarRow(e)));
+  entries.forEach((e, i) => {
+    const row = makeScholarRow(e);
+    row.style.setProperty('--i', i);
+    frag.appendChild(row);
+  });
   scholarGrid.appendChild(frag);
 }
 
