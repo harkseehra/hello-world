@@ -1,0 +1,328 @@
+# CLAUDE.md — masnavi farsi → shahmukhi punjabi
+
+## project
+
+build a two-part web app for translating rumi's masnavi (book 4) from farsi into shahmukhi punjabi.
+
+- **public reader** at `/` — displays approved translations, farsi left / shahmukhi punjabi right
+- **private workbench** at `/admin` — password-gated translation tool for harkirat (sole user), where AI drafts couplets and harkirat surgically edits them couplet-by-couplet, then approves in batches of 10/25/50
+
+reuse harkirat's existing masnavi reader site as the visual foundation. strip the english column. keep two-column layout (farsi + shahmukhi punjabi).
+
+starting scope: book 4 only. ~3,800 couplets. ship book 4 fully before considering any other book.
+
+## design — DO NOT CHANGE ANYTHING
+
+**critical: do not propose, suggest, or apply any visual design changes.** harkirat has already designed the frontend. your job is to use the existing design as-is.
+
+- use the exact fonts, colors, spacing, layout, and components from harkirat's existing masnavi reader site
+- do not introduce new color tokens, do not suggest accent colors, do not propose typography changes
+- do not "improve" the design
+- if you need to add a new UI element (e.g., the admin workbench cards, batch controls), match the existing visual style of the reader exactly — same font stack, same spacing rhythm, same component idioms
+
+the only design-related work you may do is wiring up a **naskh / nastaliq script toggle** as a placeholder. when harkirat is ready to actually pick fonts for each mode, he will discuss it with you directly. until then, the toggle can be a no-op or switch between whatever two fonts already exist in the current design.
+
+if you find yourself wanting to write a comment about design, stop. delete it.
+
+## stack
+
+- next.js (app router) + typescript
+- whatever css setup the existing reader uses (do not change it)
+- node + fs for json file storage (no database — single-user solo project, json on disk is sufficient)
+- anthropic sdk for claude API calls
+- github pages for public reader hosting (workbench runs locally only)
+
+## data model
+
+all state lives in flat json files. no db.
+
+### `data/book_4.json`
+
+array of couplet records, one per couplet:
+
+```ts
+type Couplet = {
+  id: string;              // "b4_0001" through "b4_3800"
+  daftar: 4;
+  couplet_number: number;  // 1-indexed within the daftar
+  farsi: string;           // original farsi couplet, two lines joined with newline
+  punjabi_draft: string;   // AI's first output, never overwritten after first generation
+  punjabi_final: string;   // harkirat's approved version
+  edit_count: number;      // number of regenerate/word-swap actions before approval
+  status: "untranslated" | "draft" | "approved";
+  approved_at: string | null;  // ISO timestamp
+  batch_id: string | null;
+};
+```
+
+initial seed: ingest book 4 farsi text from ganjoor.net (or another clean source — confirm with harkirat). pre-populate all 3,800 records with farsi filled in and status="untranslated".
+
+### `data/logs/book_4.jsonl`
+
+append-only jsonl. one line per action. never read by app at runtime — for harkirat to scan manually when updating `system_prompt.md`.
+
+```ts
+type LogEntry = {
+  ts: string;
+  couplet_id: string;
+  action: "draft_generated" | "word_swap" | "regenerate" | "approve";
+  before: string | null;
+  after: string;
+  details?: Record<string, any>;
+};
+```
+
+### `public/book_4.json`
+
+production data the reader consumes. only contains approved couplets (status="approved"). written by the "approve batch & push to reader" action.
+
+### `system_prompt.md`
+
+the live, harkirat-edited system prompt. loaded once per workbench session and included in every API call. structure:
+
+```markdown
+# translation philosophy
+- accurate meaning over poetic form (nicholson-style faithful prose)
+- preserve sufi register, dignified plain shahmukhi punjabi
+- no forced rhyme, no meter constraints
+- allow 1:1, 1:2, or 2:1 couplet alignment when meaning needs breathing room
+
+# script rules
+- output exclusively in shahmukhi (perso-arabic) script
+- never gurmukhi, never devanagari, never roman transliteration in final output
+
+# vocabulary preferences
+- prefer persian-rooted vocabulary over sanskritized punjabi
+- examples (grow as harkirat notices AI drift):
+  - nur not chamak
+  - (more added over time)
+
+# current word substitutions
+(specific word-level rules harkirat adds as he notices AI drift)
+```
+
+harkirat edits this file directly via claude code as patterns emerge. there is no in-app "teach AI" UI.
+
+## the workbench — components
+
+### auth
+
+single password stored as env var `WORKBENCH_PASSWORD`. middleware on `/admin/*` routes. one input field, sets a session cookie. no user accounts.
+
+### `/admin` — main workbench view
+
+layout: vertical scroll of couplet cards. controls bar at top, "approve batch" button at bottom.
+
+**controls bar:**
+- batch size selector: 10 / 25 / 50
+- "jump to couplet" input (e.g., "1247")
+- current position indicator: "couplet 76-100 of 3800, book 4"
+- script toggle: naskh | nastaliq (placeholder — see design section)
+
+**couplet card** (one per couplet in the current batch):
+
+```
+#b4_0076                          [draft]
+
+[farsi couplet]
+
+─────────
+
+[shahmukhi punjabi draft, clickable tokens]
+
+[roman punjabi input field for typing new words/verbs in latin letters]
+
+[regenerate couplet]  [approve]
+```
+
+each shahmukhi word in the draft is wrapped as a clickable token. click → popover.
+
+**word popover:**
+- shows 3-5 alternative shahmukhi words for that position (fetched via API)
+- selecting one replaces the word inline immediately (no full regenerate)
+- has a "type your own" inline field for ad-hoc replacement
+- logs `word_swap` action
+
+**regenerate button:**
+- takes current `punjabi_final` state (with any word swaps already applied) + the roman punjabi input field content + the original farsi
+- calls the regenerate API endpoint
+- replaces the draft with the new output
+- logs `regenerate` action with before/after
+
+**approve button:**
+- sets status="approved" on this couplet
+- copies current draft → `punjabi_final`
+- locks the card (no further edits unless explicitly unlocked)
+- logs `approve` action
+
+**approve batch button (bottom of view):**
+- enabled only when all couplets in current batch are status="approved"
+- writes approved couplets to `public/book_4.json`
+- advances batch position to next 10/25/50
+
+### untranslated couplets
+
+when entering a batch where couplets have status="untranslated", auto-trigger draft generation for all couplets in the batch on first load (concurrent API calls, rate-limited to 5 at a time). show loading state per card. once draft arrives, status becomes "draft" and card becomes editable.
+
+## the AI layer
+
+### API client
+
+single `lib/claude.ts` module. exports three functions corresponding to the three call types.
+
+session-level system prompt: read `system_prompt.md` once when workbench session starts (module-level cache or context provider), pass it as the system parameter on every API call. don't re-read on every call. don't include it in messages.
+
+**no tools, no function calling.** the AI relies entirely on its training + the system prompt + per-call context. keep prompts lean.
+
+### model
+
+use `claude-sonnet-4-6` for all three call types. one model, one provider, one mental model. do not introduce other providers or models without explicit harkirat instruction.
+
+- `max_tokens: 500` for draft and regenerate (couplets are short)
+- `max_tokens: 200` for word alternatives
+
+### call 1: `draftCouplet(farsi: string, previousCouplets: Couplet[]): string`
+
+input: the farsi couplet + last 2-3 approved couplets (for narrative continuity context).
+
+prompt structure:
+```
+<context>
+previous approved couplets in this section:
+1. {farsi} → {punjabi_final}
+2. {farsi} → {punjabi_final}
+3. {farsi} → {punjabi_final}
+</context>
+
+<task>
+translate the following farsi couplet into shahmukhi punjabi, following the philosophy and rules in the system prompt. output only the punjabi couplet, no explanation.
+
+farsi: {farsi}
+</task>
+```
+
+returns the AI's punjabi couplet as a string.
+
+### call 2: `wordAlternatives(farsi: string, currentDraft: string, clickedWord: string): string[]`
+
+input: farsi couplet + current punjabi draft + the specific word the user clicked.
+
+prompt:
+```
+<context>
+farsi couplet: {farsi}
+current shahmukhi punjabi translation: {currentDraft}
+the user clicked on this word in the translation: {clickedWord}
+</context>
+
+<task>
+suggest 3-5 alternative shahmukhi punjabi words for {clickedWord} that fit the verse's meaning and register. consider persian-rooted alternatives where appropriate. output as a JSON array of strings, nothing else.
+</task>
+```
+
+parse JSON array. return 3-5 strings.
+
+### call 3: `regenerateCouplet(farsi: string, draftWithEdits: string, romanInput: string): string`
+
+input: farsi couplet + current draft (already containing harkirat's word swaps) + roman punjabi text the user typed (e.g., "vichaar karda hai" for a verb).
+
+prompt:
+```
+<context>
+farsi couplet: {farsi}
+current draft (with my edits applied): {draftWithEdits}
+additional words/phrases i want to include (written in roman punjabi, please render properly in shahmukhi): {romanInput}
+</context>
+
+<task>
+produce the final shahmukhi punjabi couplet integrating the existing draft and the roman input. preserve my word choices in the draft unless they're now grammatically broken. render the roman input into proper shahmukhi. output only the punjabi couplet, no explanation.
+</task>
+```
+
+returns the integrated punjabi couplet.
+
+## the public reader
+
+reuse the existing masnavi reader site code. modifications:
+
+- remove english column entirely (it's now two-column, not three)
+- left column: farsi (from `public/book_4.json` field `farsi`)
+- right column: shahmukhi punjabi (from `public/book_4.json` field `punjabi_final`)
+- only render couplets with status="approved"
+- script toggle placeholder: naskh | nastaliq (harkirat will wire up actual font behavior later)
+- pagination: match the existing reader's pattern exactly
+- couplet number visible in margin (match existing pattern)
+- daftar number in page header
+- about page at `/about` — single page, harkirat-written content (the only place his name/context appears)
+
+no comments, no analytics, no search, no english fallback, no design changes.
+
+## build order
+
+build in phases. each phase delivers something testable. don't move to next phase until current one works end-to-end.
+
+### phase 1 — foundation
+
+- next.js repo setup, typescript
+- copy existing reader code into `/app/page.tsx`, strip english column
+- keep all existing styling untouched
+- script toggle (placeholder UI only)
+- create `data/book_4.json` seeded with first 10 couplets (harkirat will provide farsi + his manual punjabi translations as initial seed/style examples)
+- `/about` page (placeholder, harkirat fills in content later)
+
+### phase 2 — workbench shell
+
+- middleware password gate on `/admin`
+- `/admin` page with batch view: render couplet cards from `data/book_4.json`
+- batch size selector, jump-to-couplet, position indicator (all functional)
+- approve button: just toggles status="approved" in the local json, no AI yet
+- no AI calls in this phase — verify ui/data flow works first
+
+### phase 3 — AI integration
+
+- create `system_prompt.md` (initial version: translation philosophy + script rules + vocabulary preferences)
+- `lib/claude.ts` with the three call functions
+- wire up: untranslated couplets auto-draft on batch load
+- wire up: word click → popover with alternatives
+- wire up: regenerate button
+- logging plumbing (`data/logs/book_4.jsonl`)
+
+### phase 4 — publishing
+
+- implement "approve batch & push to reader" → writes to `public/book_4.json`
+- deploy reader to github pages
+- workbench stays local-only (never deployed publicly)
+
+### phase 5 — translate book 4
+
+- not a build phase, a usage phase
+- harkirat works through ~3,800 couplets in batches
+- `system_prompt.md` updated by harkirat directly when patterns emerge
+
+## explicitly out of scope for v1
+
+- dictionary integration / lookup tools / frequency-ranked common-word files
+- multi-model strategies (no deepseek, no mixed providers)
+- search across translated couplets
+- reader feedback / commenting
+- multi-user support
+- automatic deploy
+- analytics
+- english fallback
+- pdf / book export
+- couplet history beyond logs
+- mobile-specific workbench (desktop only)
+- any design changes to the existing reader
+
+## conventions
+
+- lowercase commits and PR titles (harkirat's preference)
+- no emoji in code or commits
+- terse comments, no preambles in generated code
+- typescript strict mode on
+- no new design tokens, no new color variables, no new fonts beyond what the existing reader already uses
+- ask before adding dependencies — keep the dependency list small
+
+## hand-off
+
+once this spec is implemented through phase 4, hand the keys to harkirat. he runs phase 5 (the actual translation) and edits `system_prompt.md` as needed. no further code changes expected during translation unless a real bug surfaces.
