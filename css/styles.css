@@ -29,15 +29,7 @@
 
 @font-face {
   font-family: 'ArabicTransparent';
-  src: url('../fonts/Arabic-Transparent.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'RozNastaleeq';
-  src: url('../fonts/RozUrduPunjabiNastaleeq.ttf') format('truetype');
+  src: url('../Arabic-Transparent.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -74,7 +66,6 @@
   --font-fa-nazanin:     'BNazanin', serif;
   --font-fa-nastaliq:    'NooriNastaliq', serif;
   --font-fa-transparent: 'ArabicTransparent', serif;
-  --font-fa-roz:         'RozNastaleeq', serif;
   --font-fa:         var(--font-fa-vazir);
 
   --font-en-sans:  'Schibsted Grotesk', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
@@ -108,7 +99,6 @@
 [data-font="nazanin"]  { --font-fa: var(--font-fa-nazanin); }
 [data-font="nastaliq"] { --font-fa: var(--font-fa-nastaliq); }
 [data-font="transparent"] { --font-fa: var(--font-fa-transparent); }
-[data-font="roz"]         { --font-fa: var(--font-fa-roz); }
 [data-font="nastaliq"] [lang="fa"] { word-spacing: 0.28em; }
 [data-en-font="serif"] { --font-en: var(--font-en-serif); }
 
