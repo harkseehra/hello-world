@@ -44,21 +44,26 @@
   /* Light mode */
   --c-bg:           #F2F2F7;
   --c-text-fa:      #3C3D3E;   /* Irozumi — default Farsi colour */
-  --c-text-en:      #1747B0;   /* Asa-Gao — default English colour */
+  --c-text-en:      #3D5A80;   /* Manuscript — default English colour */
   --c-heading:      #007F7A;
   --c-heading-text: #1C1C1E;
   --c-verse-num:    rgba(91, 95, 206, 0.28);
   --c-divider:      rgba(0, 0, 0, 0.08);
-  --c-nav-bg:       #FFFFFF;
-  --c-nav-border:   rgba(0, 0, 0, 0.09);
+
+  --c-nav-bg:       rgba(255, 255, 255, 0.72);
+  --c-nav-border:   rgba(0, 0, 0, 0.05);
+
+  --c-panel-bg:     rgba(255, 255, 255, 0.75);
+  --c-panel-border: rgba(0, 0, 0, 0.06);
+
   --fa-outline-color: rgba(0,0,0,0.28);      /* day: dark outline on light bg */
 
   --c-card-bg:             #FFFFFF;
-  --c-card-border:         rgba(0, 0, 0, 0.07);
-  --c-card-shadow:         0 1px 4px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.04);
-  --c-card-radius:         18px;
+  --c-card-border:         rgba(0, 0, 0, 0.04);
+  --c-card-shadow:         0 1px 3px rgba(0,0,0,0.02), 0 4px 12px rgba(0,0,0,0.03);
+  --c-card-radius:         16px;
   --c-heading-card-bg:     #EBEBF0;
-  --c-heading-card-border: rgba(0, 0, 0, 0.06);
+  --c-heading-card-border: rgba(0, 0, 0, 0.04);
 
   /* Font stacks */
   --font-fa-vazir:       'Vazirmatn', sans-serif;
@@ -109,71 +114,83 @@
 /* ── Dark ────────────────────────────────────────────────────── */
 [data-theme="dark"] {
   --c-bg:           #0F0E0E;
-  --c-text-fa:      #4ECDC4;   /* dark Peacock default */
-  --c-text-en:      #7EB0E8;   /* dark Asa-Gao default */
+  --c-text-fa:      #E0E1E0;   /* dark Irozumi default */
+  --c-text-en:      #A3C4E8;   /* dark Manuscript default */
   --c-heading:      #B4B8B4;
   --c-heading-text: #E0E1E0;
   --c-accent:       #8284F2;
   --c-accent-rgb:   130, 132, 242;
   --c-verse-num:    rgba(224, 225, 224, 0.28);
   --c-divider:      rgba(255, 255, 255, 0.09);
-  --c-nav-bg:       #0F0E0E;
-  --c-nav-border:   rgba(255, 255, 255, 0.09);
+
+  --c-nav-bg:       rgba(15, 14, 14, 0.72);
+  --c-nav-border:   rgba(255, 255, 255, 0.06);
+
+  --c-panel-bg:     rgba(28, 28, 30, 0.75);
+  --c-panel-border: rgba(255, 255, 255, 0.08);
+
   --fa-outline-color: rgba(255,255,255,0.55); /* dark: white outline on dark bg */
 
   --c-card-bg:             #1C1C1E;
-  --c-card-border:         rgba(255, 255, 255, 0.08);
+  --c-card-border:         rgba(255, 255, 255, 0.06);
   --c-card-shadow:         none;
   --c-heading-card-bg:     #2C2C2E;
-  --c-heading-card-border: rgba(255, 255, 255, 0.06);
+  --c-heading-card-border: rgba(255, 255, 255, 0.05);
 }
 
 /* ── کاغذ (Kaghaz — warm paper) ──────────────────────────────── */
 [data-theme="kaghaz"] {
   --c-bg:           #fff4e6;
-  --c-text-fa:      #2B5957;   /* Peacock muted on warm paper */
-  --c-text-en:      #3D408A;   /* Asa-Gao muted on warm paper */
+  --c-text-fa:      #3C3D3E;   /* Irozumi default on warm paper */
+  --c-text-en:      #34506E;   /* Manuscript default on warm paper */
   --c-heading:      #8B5E3C;
   --c-heading-text: #1A1208;
   --c-accent:       #5B5FCE;
   --c-accent-rgb:   91, 95, 206;
   --c-verse-num:    rgba(91, 95, 206, 0.28);
   --c-divider:      rgba(60, 40, 20, 0.09);
-  --c-nav-bg:       #fff8ed;
-  --c-nav-border:   rgba(60, 40, 20, 0.09);
+
+  --c-nav-bg:       rgba(255, 248, 237, 0.72);
+  --c-nav-border:   rgba(60, 40, 20, 0.06);
+
+  --c-panel-bg:     rgba(255, 248, 237, 0.75);
+  --c-panel-border: rgba(60, 40, 20, 0.08);
+
   --fa-outline-color: rgba(60,40,20,0.25);    /* kaghaz: warm dark outline on parchment */
 
   --c-card-bg:             #fffaf2;
-  --c-card-border:         rgba(60, 40, 20, 0.08);
-  --c-card-shadow:         0 1px 3px rgba(60,40,20,0.07);
+  --c-card-border:         rgba(60, 40, 20, 0.05);
+  --c-card-shadow:         0 1px 3px rgba(60,40,20,0.03);
   --c-heading-card-bg:     #fef4e0;
-  --c-heading-card-border: rgba(60, 40, 20, 0.06);
+  --c-heading-card-border: rgba(60, 40, 20, 0.04);
 }
 
 /* ── Farsi colour tokens ─────────────────────────────────────── */
-[data-theme="light"][data-fa-color="irozumi"],
+[data-theme="light"][data-fa-color="irozumi"]  { --c-text-fa: #3C3D3E; }
 [data-theme="kaghaz"][data-fa-color="irozumi"] { --c-text-fa: #3C3D3E; }
-[data-theme="light"][data-fa-color="nila"],
-[data-theme="kaghaz"][data-fa-color="nila"]    { --c-text-fa: #2C3A8C; }
-[data-theme="light"][data-fa-color="qahwa"],
-[data-theme="kaghaz"][data-fa-color="qahwa"]   { --c-text-fa: #6F4E37; }
-[data-theme="light"][data-fa-color="sorkh"],
-[data-theme="kaghaz"][data-fa-color="sorkh"]   { --c-text-fa: #CC3333; }
+[data-theme="light"][data-fa-color="lajevard"] { --c-text-fa: #1B4D8F; }
+[data-theme="kaghaz"][data-fa-color="lajevard"]{ --c-text-fa: #173F78; }
+[data-theme="light"][data-fa-color="firoozeh"] { --c-text-fa: #0C7566; }
+[data-theme="kaghaz"][data-fa-color="firoozeh"]{ --c-text-fa: #0A6355; }
+[data-theme="light"][data-fa-color="sharabi"]  { --c-text-fa: #7A2848; }
+[data-theme="kaghaz"][data-fa-color="sharabi"] { --c-text-fa: #6B2240; }
+
 [data-theme="dark"][data-fa-color="irozumi"]   { --c-text-fa: #E0E1E0; }
-[data-theme="dark"][data-fa-color="nila"]      { --c-text-fa: #7EA8E8; }
-[data-theme="dark"][data-fa-color="qahwa"]     { --c-text-fa: #C4956A; }
-[data-theme="dark"][data-fa-color="sorkh"]     { --c-text-fa: #E07878; }
+[data-theme="dark"][data-fa-color="lajevard"]  { --c-text-fa: #8ABAEF; }
+[data-theme="dark"][data-fa-color="firoozeh"]  { --c-text-fa: #5DDDC5; }
+[data-theme="dark"][data-fa-color="sharabi"]   { --c-text-fa: #D4869F; }
 
 /* ── English colour tokens ───────────────────────────────────── */
-[data-theme="light"][data-en-color="asagao"],
-[data-theme="kaghaz"][data-en-color="asagao"]  { --c-text-en: #1747B0; }
-[data-theme="light"][data-en-color="konpeki"]  { --c-text-en: #0077CC; }
-[data-theme="kaghaz"][data-en-color="konpeki"] { --c-text-en: #0066AA; }
-[data-theme="light"][data-en-color="noir"],
-[data-theme="kaghaz"][data-en-color="noir"]    { --c-text-en: #1C1C1E; }
-[data-theme="dark"][data-en-color="asagao"]    { --c-text-en: #7EB0E8; }
-[data-theme="dark"][data-en-color="konpeki"]   { --c-text-en: #56C0FF; }
-[data-theme="dark"][data-en-color="noir"]      { --c-text-en: #E8E8F2; }
+[data-theme="light"][data-en-color="manuscript"]  { --c-text-en: #3D5A80; }
+[data-theme="kaghaz"][data-en-color="manuscript"] { --c-text-en: #34506E; }
+[data-theme="light"][data-en-color="ink"]         { --c-text-en: #1A5C5A; }
+[data-theme="kaghaz"][data-en-color="ink"]        { --c-text-en: #165250; }
+[data-theme="light"][data-en-color="noir"]        { --c-text-en: #1C1C1E; }
+[data-theme="kaghaz"][data-en-color="noir"]       { --c-text-en: #1C1C1E; }
+
+[data-theme="dark"][data-en-color="manuscript"]   { --c-text-en: #A3C4E8; }
+[data-theme="dark"][data-en-color="ink"]          { --c-text-en: #72D4C8; }
+[data-theme="dark"][data-en-color="noir"]         { --c-text-en: #E8E8F2; }
 
 
 /* ── Language display toggle ─────────────────────────────────── */
@@ -183,17 +200,34 @@
 [data-lang-display="english"] .scholar-cell--fa { display: none; }
 
 /* ── Dark mode — phosphorus moonlight glow ───────────────────── */
-[data-theme="dark"] .verse-fa,
-[data-theme="dark"] .scholar-cell--fa {
-  text-shadow: 0 0 14px rgba(78, 205, 196, 0.40), 0 0 36px rgba(78, 205, 196, 0.14);
-}
-[data-theme="dark"] .verse-en,
-[data-theme="dark"] .scholar-cell--en {
-  text-shadow: 0 0 14px rgba(126, 176, 232, 0.35), 0 0 36px rgba(126, 176, 232, 0.12);
-}
 [data-theme="dark"][data-fa-color="irozumi"] .verse-fa,
 [data-theme="dark"][data-fa-color="irozumi"] .scholar-cell--fa {
   text-shadow: 0 0 14px rgba(224, 225, 224, 0.32), 0 0 36px rgba(224, 225, 224, 0.10);
+}
+[data-theme="dark"][data-fa-color="lajevard"] .verse-fa,
+[data-theme="dark"][data-fa-color="lajevard"] .scholar-cell--fa {
+  text-shadow: 0 0 14px rgba(138, 186, 239, 0.35), 0 0 36px rgba(138, 186, 239, 0.12);
+}
+[data-theme="dark"][data-fa-color="firoozeh"] .verse-fa,
+[data-theme="dark"][data-fa-color="firoozeh"] .scholar-cell--fa {
+  text-shadow: 0 0 14px rgba(93, 221, 197, 0.40), 0 0 36px rgba(93, 221, 197, 0.14);
+}
+[data-theme="dark"][data-fa-color="sharabi"] .verse-fa,
+[data-theme="dark"][data-fa-color="sharabi"] .scholar-cell--fa {
+  text-shadow: 0 0 14px rgba(212, 134, 159, 0.35), 0 0 36px rgba(212, 134, 159, 0.12);
+}
+
+[data-theme="dark"][data-en-color="noir"] .verse-en,
+[data-theme="dark"][data-en-color="noir"] .scholar-cell--en {
+  text-shadow: 0 0 14px rgba(232, 232, 242, 0.32), 0 0 36px rgba(232, 232, 242, 0.10);
+}
+[data-theme="dark"][data-en-color="manuscript"] .verse-en,
+[data-theme="dark"][data-en-color="manuscript"] .scholar-cell--en {
+  text-shadow: 0 0 14px rgba(163, 196, 232, 0.35), 0 0 36px rgba(163, 196, 232, 0.12);
+}
+[data-theme="dark"][data-en-color="ink"] .verse-en,
+[data-theme="dark"][data-en-color="ink"] .scholar-cell--en {
+  text-shadow: 0 0 14px rgba(114, 212, 200, 0.40), 0 0 36px rgba(114, 212, 200, 0.14);
 }
 
 /* ── Kaghaz — warm sunlight on ink ──────────────────────────── */
@@ -256,6 +290,8 @@ button:focus-visible, a:focus-visible {
   height: calc(var(--nav-h) + var(--safe-top));
   padding-top: var(--safe-top);
   background: var(--c-nav-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid var(--c-nav-border);
   display: flex;
   align-items: center;
@@ -427,11 +463,13 @@ button:focus-visible, a:focus-visible {
   top: calc(var(--nav-h) + var(--progress-h) + 8px);
   right: 14px;
   width: 310px;
-  background: var(--c-bg);
-  border: 1px solid var(--c-divider);
-  border-radius: 16px;
+  background: var(--c-panel-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--c-panel-border);
+  border-radius: 20px;
   padding: 22px 22px 20px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.11), 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.05);
   z-index: 910;
   display: none;
   flex-direction: column;
@@ -474,7 +512,7 @@ button:focus-visible, a:focus-visible {
 
 .settings-opt {
   padding: 9px 10px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid var(--c-divider);
   background: transparent;
   font-family: var(--font-en-sans);
@@ -963,8 +1001,10 @@ button:focus-visible, a:focus-visible {
   top: calc(var(--nav-h) + var(--progress-h));
   left: 0; bottom: 0;
   width: 320px;
-  background: var(--c-bg);
-  border-right: 1px solid var(--c-divider);
+  background: var(--c-panel-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-right: 1px solid var(--c-panel-border);
   transform: translateX(-100%);
   transition: transform var(--dur-mid) var(--ease-out),
               background var(--dur-mid) var(--ease-out),
@@ -977,7 +1017,7 @@ button:focus-visible, a:focus-visible {
 }
 #toc-panel.open {
   transform: translateX(0);
-  box-shadow: 6px 0 28px rgba(0,0,0,0.07);
+  box-shadow: 6px 0 28px rgba(0,0,0,0.04);
 }
 
 #toc-header {
@@ -1035,8 +1075,10 @@ button:focus-visible, a:focus-visible {
   top: calc(var(--nav-h) + var(--progress-h));
   right: 0; bottom: 0;
   width: 320px;
-  background: var(--c-bg);
-  border-left: 1px solid var(--c-divider);
+  background: var(--c-panel-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-left: 1px solid var(--c-panel-border);
   transform: translateX(100%);
   transition: transform var(--dur-mid) var(--ease-out),
               background var(--dur-mid) var(--ease-out),
@@ -1049,7 +1091,7 @@ button:focus-visible, a:focus-visible {
 }
 #bookmark-panel.open {
   transform: translateX(0);
-  box-shadow: -6px 0 28px rgba(0,0,0,0.07);
+  box-shadow: -6px 0 28px rgba(0,0,0,0.04);
 }
 
 #bookmark-header {
@@ -1188,10 +1230,12 @@ button:focus-visible, a:focus-visible {
   transform: translateX(-50%) translateY(-8px) scale(0.98);
   width: min(600px, 92vw);
   max-height: 70vh;
-  background: var(--c-bg);
-  border: 1px solid var(--c-divider);
-  border-radius: 16px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  background: var(--c-panel-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--c-panel-border);
+  border-radius: 20px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.05);
   z-index: 860;
   opacity: 0; pointer-events: none;
   display: flex;
@@ -1276,11 +1320,13 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: var(--c-bg);
-  border: 1px solid var(--c-divider);
+  background: var(--c-panel-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--c-panel-border);
   border-radius: 100px;
   padding: 4px 0;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 0 0 0.5px rgba(0,0,0,0.04);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.04);
   z-index: 500;
   transition: background  var(--dur-mid) var(--ease-out),
               border-color var(--dur-mid) var(--ease-out),
@@ -1289,7 +1335,7 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
 
 [data-theme="dark"] #theme-pill,
 [data-theme="dark"] #size-pill {
-  box-shadow: 0 2px 16px rgba(0,0,0,0.40), 0 0 0 0.5px rgba(255,255,255,0.06);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
 }
 
 /* Theme pill sits above the vertical midpoint; size pill below */
@@ -1431,11 +1477,13 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
   display: flex;
   align-items: center;
   gap: 4px;
-  background: var(--c-bg);
-  border: 1px solid var(--c-divider);
+  background: var(--c-panel-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--c-panel-border);
   border-radius: 100px;
   padding: 6px 8px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.10), 0 0 0 0.5px rgba(0,0,0,0.04);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.04);
   z-index: 400;
   opacity: 0.72;
   transition: background var(--dur-mid) var(--ease-out),
@@ -1446,7 +1494,7 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
 #pager:hover { opacity: 1; }
 
 [data-theme="dark"] #pager {
-  box-shadow: 0 4px 20px rgba(0,0,0,0.40), 0 0 0 0.5px rgba(255,255,255,0.06);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
 }
 
 #pager[hidden] { display: none; }
@@ -1506,9 +1554,11 @@ mark { background: rgba(var(--c-accent-rgb), 0.13); color: var(--c-accent); bord
   position: fixed;
   top: calc(var(--nav-h) + var(--progress-h));
   left: 0; right: 0;
-  background: var(--c-nav-bg);
-  border-bottom: 1px solid var(--c-nav-border);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.09);
+  background: var(--c-panel-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--c-panel-border);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.05);
   z-index: 895;
   opacity: 0;
   pointer-events: none;

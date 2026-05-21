@@ -89,11 +89,17 @@ function initFont() {
 
   const savedFaColor = localStorage.getItem('mv-fa-color');
   const removedFaColors = ['peacock', 'khun', 'zafarani'];
-  const resolvedFaColor = removedFaColors.includes(savedFaColor) ? 'irozumi' : savedFaColor;
+  let resolvedFaColor = removedFaColors.includes(savedFaColor) ? 'irozumi' : savedFaColor;
+  if (resolvedFaColor === 'nila') resolvedFaColor = 'lajevard';
+  else if (resolvedFaColor === 'qahwa') resolvedFaColor = 'firoozeh';
+  else if (resolvedFaColor === 'sorkh') resolvedFaColor = 'sharabi';
   if (resolvedFaColor) setFaColor(resolvedFaColor, false);
 
   const savedEnColor = localStorage.getItem('mv-en-color');
-  if (savedEnColor) setEnColor(savedEnColor, false);
+  let resolvedEnColor = savedEnColor;
+  if (resolvedEnColor === 'asagao') resolvedEnColor = 'manuscript';
+  else if (resolvedEnColor === 'konpeki') resolvedEnColor = 'ink';
+  if (resolvedEnColor) setEnColor(resolvedEnColor, false);
 
 
   const savedStep = localStorage.getItem('mv-size-step');
